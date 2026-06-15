@@ -251,18 +251,21 @@
       background: var(--accent);
       color: #020617;
       box-shadow: 0 0 24px rgba(56,189,248,0.65);
+      transform: scale(1.04);
     }
 
     .tile.correct {
       background: var(--good);
       color: white;
       box-shadow: 0 0 24px rgba(34,197,94,0.6);
+      transform: scale(1.04);
     }
 
     .tile.wrong {
       background: var(--bad);
       color: white;
       box-shadow: 0 0 24px rgba(239,68,68,0.6);
+      transform: scale(0.96);
     }
 
     .big-prompt {
@@ -376,7 +379,7 @@
 
       <div class="card game-card" onclick="showScreen('memory')">
         <h2>Memory Grid</h2>
-        <p>Watch the pattern, then repeat it. Each round gets longer. You have three lives.</p>
+        <p>Watch the pattern, then repeat it. Each tile has its own sound. You have three lives.</p>
         <button>Play Memory Grid</button>
       </div>
 
@@ -403,7 +406,7 @@
 
       <div class="card">
         <h2 class="game-title">Memory Grid</h2>
-        <p class="instructions">Watch the glowing tiles. When the pattern ends, tap the same tiles in order. A mistake costs one life and replays the same pattern.</p>
+        <p class="instructions">Watch the glowing tiles and listen to the sounds. Repeat the same pattern in order. A mistake costs one life and replays the same pattern.</p>
 
         <div class="hud">
           <div class="stat">
@@ -579,8 +582,13 @@
 
     function updateSoundButtons() {
       const label = state.soundEnabled ? "Sound: On" : "Sound: Off";
+
       document.querySelectorAll("button").forEach(button => {
-        if (button.textContent === "Sound" || button.id === "soundButton" || button.textContent.startsWith("Sound:")) {
+        if (
+          button.id === "soundButton" ||
+          button.textContent === "Sound" ||
+          button.textContent.startsWith("Sound:")
+        ) {
           button.textContent = label;
         }
       });
@@ -601,6 +609,13 @@
       acceptingInput: false,
       gameStarted: false
     };
+
+    const memoryFrequencies = [
+      261.63, 293.66, 329.63, 392.00,
+      440.00, 493.88, 523.25, 587.33,
+      659.25, 783.99, 880.00, 987.77,
+      1046.50, 1174.66, 1318.51, 1567.98
+    ];
 
     const memoryGrid = document.getElementById("memoryGrid");
 
@@ -624,7 +639,7 @@
       memory.gameStarted = true;
 
       updateMemoryHud();
-      setFeedback("memoryFeedback", "Watch the pattern.", "");
+      setFeedback("memoryFeedback", "Watch and listen to the pattern.", "");
       nextMemoryRound();
     }
 
@@ -650,8 +665,12 @@
 
       for (const index of memory.sequence) {
         await wait(350);
+
         tiles[index].classList.add("active");
+        playMemoryTileSound(index);
+
         await wait(450);
+
         tiles[index].classList.remove("active");
       }
 
@@ -668,7 +687,7 @@
       const expected = memory.sequence[memory.inputIndex];
 
       if (index === expected) {
-        playCorrectSignal();
+        playMemoryTileSound(index);
 
         tiles[index].classList.add("correct");
         setTimeout(() => tiles[index].classList.remove("correct"), 180);
@@ -707,6 +726,18 @@
       }
 
       updateMemoryHud();
+    }
+
+    function playMemoryTileSound(index) {
+      if (!state.soundEnabled) return;
+
+      const frequency = memoryFrequencies[index % memoryFrequencies.length];
+
+      playTone(frequency, 0.18, "sine", 0.09);
+
+      if (navigator.vibrate) {
+        navigator.vibrate(15);
+      }
     }
 
     // ---------------------------
