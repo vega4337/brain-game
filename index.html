@@ -56,6 +56,7 @@
       align-items: center;
       justify-content: space-between;
       margin-bottom: 18px;
+      gap: 12px;
     }
 
     .brand {
@@ -83,6 +84,7 @@
       border-radius: 999px;
       font-size: 13px;
       color: var(--muted);
+      white-space: nowrap;
     }
 
     .screen {
@@ -181,6 +183,13 @@
       transform: scale(0.98);
     }
 
+    .settings-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
     .topbar {
       display: flex;
       gap: 10px;
@@ -247,11 +256,13 @@
     .tile.correct {
       background: var(--good);
       color: white;
+      box-shadow: 0 0 24px rgba(34,197,94,0.6);
     }
 
     .tile.wrong {
       background: var(--bad);
       color: white;
+      box-shadow: 0 0 24px rgba(239,68,68,0.6);
     }
 
     .big-prompt {
@@ -309,6 +320,25 @@
       margin-top: auto;
       padding-top: 18px;
     }
+
+    @media (max-width: 390px) {
+      .brand h1 {
+        font-size: 25px;
+      }
+
+      .big-prompt {
+        font-size: 46px;
+      }
+
+      .tile {
+        font-size: 20px;
+        border-radius: 17px;
+      }
+
+      button {
+        padding: 14px 14px;
+      }
+    }
   </style>
 </head>
 
@@ -339,9 +369,14 @@
         </div>
       </div>
 
+      <div class="settings-row">
+        <button id="soundButton" class="secondary" onclick="toggleSound()">Sound: On</button>
+        <button class="secondary" onclick="resetStats()">Reset Stats</button>
+      </div>
+
       <div class="card game-card" onclick="showScreen('memory')">
         <h2>Memory Grid</h2>
-        <p>Watch the pattern, then repeat it. Each round gets longer.</p>
+        <p>Watch the pattern, then repeat it. Each round gets longer. You have three lives.</p>
         <button>Play Memory Grid</button>
       </div>
 
@@ -362,12 +397,13 @@
     <section id="memory" class="screen">
       <div class="topbar">
         <button class="secondary" onclick="returnHome()">Home</button>
+        <button class="secondary" onclick="toggleSound()">Sound</button>
         <button onclick="startMemory()">Start</button>
       </div>
 
       <div class="card">
         <h2 class="game-title">Memory Grid</h2>
-        <p class="instructions">Watch the glowing tiles. When the pattern ends, tap the same tiles in order.</p>
+        <p class="instructions">Watch the glowing tiles. When the pattern ends, tap the same tiles in order. A mistake costs one life and replays the same pattern.</p>
 
         <div class="hud">
           <div class="stat">
@@ -393,6 +429,7 @@
     <section id="focus" class="screen">
       <div class="topbar">
         <button class="secondary" onclick="returnHome()">Home</button>
+        <button class="secondary" onclick="toggleSound()">Sound</button>
         <button onclick="startFocus()">Start</button>
       </div>
 
@@ -432,6 +469,7 @@
     <section id="math" class="screen">
       <div class="topbar">
         <button class="secondary" onclick="returnHome()">Home</button>
+        <button class="secondary" onclick="toggleSound()">Sound</button>
         <button onclick="startMath()">Start</button>
       </div>
 
@@ -469,13 +507,17 @@
     const state = {
       totalScore: Number(localStorage.getItem("ms_totalScore") || 0),
       plays: Number(localStorage.getItem("ms_plays") || 0),
-      bestGame: localStorage.getItem("ms_bestGame") || "—"
+      bestGame: localStorage.getItem("ms_bestGame") || "—",
+      soundEnabled: localStorage.getItem("ms_soundEnabled") !== "false"
     };
+
+    let audioContext = null;
 
     function updateHomeStats() {
       document.getElementById("totalScore").textContent = state.totalScore;
       document.getElementById("plays").textContent = state.plays;
       document.getElementById("bestGame").textContent = state.bestGame;
+      updateSoundButtons();
     }
 
     function saveScore(gameName, score) {
@@ -483,6 +525,7 @@
       state.plays += 1;
 
       const currentBest = Number(localStorage.getItem(`ms_best_${gameName}`) || 0);
+
       if (score > currentBest) {
         localStorage.setItem(`ms_best_${gameName}`, score);
         state.bestGame = gameName;
@@ -491,12 +534,29 @@
 
       localStorage.setItem("ms_totalScore", state.totalScore);
       localStorage.setItem("ms_plays", state.plays);
+
+      updateHomeStats();
+    }
+
+    function resetStats() {
+      localStorage.removeItem("ms_totalScore");
+      localStorage.removeItem("ms_plays");
+      localStorage.removeItem("ms_bestGame");
+      localStorage.removeItem("ms_best_Memory");
+      localStorage.removeItem("ms_best_Focus");
+      localStorage.removeItem("ms_best_Math");
+
+      state.totalScore = 0;
+      state.plays = 0;
+      state.bestGame = "—";
+
       updateHomeStats();
     }
 
     function showScreen(id) {
       document.querySelectorAll(".screen").forEach(screen => screen.classList.remove("active"));
       document.getElementById(id).classList.add("active");
+      initializeAudio();
     }
 
     function returnHome() {
@@ -504,6 +564,26 @@
       stopMath();
       showScreen("home");
       updateHomeStats();
+    }
+
+    function toggleSound() {
+      state.soundEnabled = !state.soundEnabled;
+      localStorage.setItem("ms_soundEnabled", String(state.soundEnabled));
+      updateSoundButtons();
+
+      if (state.soundEnabled) {
+        initializeAudio();
+        playTone(660, 0.07, "sine", 0.06);
+      }
+    }
+
+    function updateSoundButtons() {
+      const label = state.soundEnabled ? "Sound: On" : "Sound: Off";
+      document.querySelectorAll("button").forEach(button => {
+        if (button.textContent === "Sound" || button.id === "soundButton" || button.textContent.startsWith("Sound:")) {
+          button.textContent = label;
+        }
+      });
     }
 
     updateHomeStats();
@@ -518,7 +598,8 @@
       level: 1,
       score: 0,
       lives: 3,
-      acceptingInput: false
+      acceptingInput: false,
+      gameStarted: false
     };
 
     const memoryGrid = document.getElementById("memoryGrid");
@@ -532,12 +613,16 @@
     }
 
     function startMemory() {
+      initializeAudio();
+
       memory.sequence = [];
       memory.inputIndex = 0;
       memory.level = 1;
       memory.score = 0;
       memory.lives = 3;
       memory.acceptingInput = false;
+      memory.gameStarted = true;
+
       updateMemoryHud();
       setFeedback("memoryFeedback", "Watch the pattern.", "");
       nextMemoryRound();
@@ -560,6 +645,9 @@
     async function playMemorySequence() {
       const tiles = [...document.querySelectorAll("#memoryGrid .tile")];
 
+      memory.acceptingInput = false;
+      memory.inputIndex = 0;
+
       for (const index of memory.sequence) {
         await wait(350);
         tiles[index].classList.add("active");
@@ -572,12 +660,16 @@
     }
 
     function handleMemoryTap(index) {
-      if (!memory.acceptingInput) return;
+      if (!memory.acceptingInput || !memory.gameStarted) return;
+
+      initializeAudio();
 
       const tiles = [...document.querySelectorAll("#memoryGrid .tile")];
       const expected = memory.sequence[memory.inputIndex];
 
       if (index === expected) {
+        playCorrectSignal();
+
         tiles[index].classList.add("correct");
         setTimeout(() => tiles[index].classList.remove("correct"), 180);
 
@@ -593,18 +685,23 @@
           setTimeout(nextMemoryRound, 800);
         }
       } else {
+        playWrongSignal();
+
         tiles[index].classList.add("wrong");
         setTimeout(() => tiles[index].classList.remove("wrong"), 220);
 
         memory.lives -= 1;
         memory.acceptingInput = false;
-        setFeedback("memoryFeedback", "Wrong tile.", "bad");
+        memory.inputIndex = 0;
+
+        updateMemoryHud();
 
         if (memory.lives <= 0) {
+          memory.gameStarted = false;
           setFeedback("memoryFeedback", `Game over. Score: ${memory.score}`, "bad");
           saveScore("Memory", memory.score);
         } else {
-          updateMemoryHud();
+          setFeedback("memoryFeedback", "Wrong tile. Watch the pattern again.", "bad");
           setTimeout(playMemorySequence, 900);
         }
       }
@@ -625,6 +722,7 @@
 
     const focus = {
       active: false,
+      locked: false,
       time: 30,
       score: 0,
       streak: 0,
@@ -633,11 +731,15 @@
     };
 
     function startFocus() {
+      initializeAudio();
       stopFocus();
+
       focus.active = true;
+      focus.locked = false;
       focus.time = 30;
       focus.score = 0;
       focus.streak = 0;
+
       updateFocusHud();
       nextFocusPrompt();
 
@@ -659,6 +761,7 @@
       if (focus.timer) clearInterval(focus.timer);
       focus.timer = null;
       focus.active = false;
+      focus.locked = false;
     }
 
     function updateFocusHud() {
@@ -668,33 +771,47 @@
     }
 
     function nextFocusPrompt() {
+      if (!focus.active) return;
+
       const word = randomItem(focusColors);
       const color = randomItem(focusColors);
 
       focus.answer = color.name;
+      focus.locked = false;
 
       const prompt = document.getElementById("focusPrompt");
       prompt.textContent = word.label;
       prompt.style.color = color.css;
-
-      setFeedback("focusFeedback", "", "");
     }
 
     function answerFocus(color) {
-      if (!focus.active) return;
+      if (!focus.active || focus.locked) return;
+
+      initializeAudio();
+      focus.locked = true;
 
       if (color === focus.answer) {
+        playCorrectSignal();
+
         focus.streak += 1;
         focus.score += 10 + Math.min(focus.streak * 2, 20);
         setFeedback("focusFeedback", "Correct", "good");
       } else {
+        playWrongSignal();
+
         focus.streak = 0;
         focus.score = Math.max(0, focus.score - 5);
         setFeedback("focusFeedback", "Wrong", "bad");
       }
 
       updateFocusHud();
-      nextFocusPrompt();
+
+      setTimeout(() => {
+        if (focus.active) {
+          setFeedback("focusFeedback", "", "");
+          nextFocusPrompt();
+        }
+      }, 180);
     }
 
     // ---------------------------
@@ -703,6 +820,7 @@
 
     const math = {
       active: false,
+      locked: false,
       time: 30,
       score: 0,
       streak: 0,
@@ -711,11 +829,15 @@
     };
 
     function startMath() {
+      initializeAudio();
       stopMath();
+
       math.active = true;
+      math.locked = false;
       math.time = 30;
       math.score = 0;
       math.streak = 0;
+
       updateMathHud();
       nextMathProblem();
 
@@ -737,6 +859,7 @@
       if (math.timer) clearInterval(math.timer);
       math.timer = null;
       math.active = false;
+      math.locked = false;
     }
 
     function updateMathHud() {
@@ -746,6 +869,8 @@
     }
 
     function nextMathProblem() {
+      if (!math.active) return;
+
       const a = rand(2, 20);
       const b = rand(2, 20);
       const operations = ["+", "-", "×"];
@@ -766,6 +891,8 @@
       }
 
       math.answer = answer;
+      math.locked = false;
+
       document.getElementById("mathPrompt").textContent = prompt;
 
       const choices = makeMathChoices(answer);
@@ -779,8 +906,6 @@
         button.onclick = () => answerMath(choice);
         box.appendChild(button);
       });
-
-      setFeedback("mathFeedback", "", "");
     }
 
     function makeMathChoices(answer) {
@@ -789,27 +914,106 @@
       while (set.size < 4) {
         const offset = rand(-12, 12);
         const fake = answer + offset;
-        if (fake >= 0 && fake !== answer) set.add(fake);
+
+        if (fake >= 0 && fake !== answer) {
+          set.add(fake);
+        }
       }
 
       return [...set].sort(() => Math.random() - 0.5);
     }
 
     function answerMath(choice) {
-      if (!math.active) return;
+      if (!math.active || math.locked) return;
+
+      initializeAudio();
+      math.locked = true;
 
       if (choice === math.answer) {
+        playCorrectSignal();
+
         math.streak += 1;
         math.score += 10 + Math.min(math.streak * 2, 20);
         setFeedback("mathFeedback", "Correct", "good");
       } else {
+        playWrongSignal();
+
         math.streak = 0;
         math.score = Math.max(0, math.score - 5);
         setFeedback("mathFeedback", "Wrong", "bad");
       }
 
       updateMathHud();
-      nextMathProblem();
+
+      setTimeout(() => {
+        if (math.active) {
+          setFeedback("mathFeedback", "", "");
+          nextMathProblem();
+        }
+      }, 180);
+    }
+
+    // ---------------------------
+    // SOUND + HAPTIC FEEDBACK
+    // ---------------------------
+
+    function initializeAudio() {
+      const AudioContext = window.AudioContext || window.webkitAudioContext;
+      if (!AudioContext) return null;
+
+      if (!audioContext) {
+        audioContext = new AudioContext();
+      }
+
+      if (audioContext.state === "suspended") {
+        audioContext.resume();
+      }
+
+      return audioContext;
+    }
+
+    function playCorrectSignal() {
+      if (!state.soundEnabled) return;
+
+      playTone(880, 0.08, "sine", 0.08);
+      setTimeout(() => playTone(1175, 0.09, "sine", 0.07), 75);
+
+      if (navigator.vibrate) {
+        navigator.vibrate(20);
+      }
+    }
+
+    function playWrongSignal() {
+      if (!state.soundEnabled) return;
+
+      playTone(160, 0.16, "sawtooth", 0.09);
+      setTimeout(() => playTone(110, 0.18, "sawtooth", 0.08), 110);
+
+      if (navigator.vibrate) {
+        navigator.vibrate([60, 30, 60]);
+      }
+    }
+
+    function playTone(frequency, duration, type = "sine", volume = 0.08) {
+      if (!state.soundEnabled) return;
+
+      const context = initializeAudio();
+      if (!context) return;
+
+      const oscillator = context.createOscillator();
+      const gain = context.createGain();
+
+      oscillator.type = type;
+      oscillator.frequency.value = frequency;
+
+      gain.gain.setValueAtTime(volume, context.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, context.currentTime + duration);
+
+      oscillator.connect(gain);
+      gain.connect(context.destination);
+
+      oscillator.start();
+      oscillator.stop(context.currentTime + duration);
     }
 
     // ---------------------------
