@@ -1,0 +1,838 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-title" content="MindSprint" />
+  <meta name="theme-color" content="#111827" />
+  <title>MindSprint Brain Games</title>
+
+  <style>
+    :root {
+      --bg: #0f172a;
+      --panel: #111827;
+      --panel-light: #1f2937;
+      --text: #f9fafb;
+      --muted: #9ca3af;
+      --accent: #38bdf8;
+      --good: #22c55e;
+      --bad: #ef4444;
+      --yellow: #facc15;
+      --purple: #a855f7;
+      --orange: #fb923c;
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at top, #1e3a8a 0%, transparent 32%),
+        linear-gradient(180deg, #020617 0%, var(--bg) 100%);
+      color: var(--text);
+      display: flex;
+      justify-content: center;
+      padding: env(safe-area-inset-top) 16px env(safe-area-inset-bottom);
+      touch-action: manipulation;
+    }
+
+    .app {
+      width: 100%;
+      max-width: 460px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      padding: 18px 0;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 18px;
+    }
+
+    .brand {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .brand h1 {
+      font-size: 28px;
+      line-height: 1;
+      margin: 0;
+      letter-spacing: -0.04em;
+    }
+
+    .brand span {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .pill {
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.06);
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .screen {
+      display: none;
+      animation: fade 0.2s ease-out;
+    }
+
+    .screen.active {
+      display: block;
+    }
+
+    @keyframes fade {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .card {
+      background: rgba(17, 24, 39, 0.88);
+      border: 1px solid rgba(255,255,255,0.10);
+      border-radius: 24px;
+      padding: 18px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.28);
+      backdrop-filter: blur(12px);
+    }
+
+    .game-card {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 14px;
+      cursor: pointer;
+    }
+
+    .game-card h2 {
+      margin: 0;
+      font-size: 21px;
+      letter-spacing: -0.02em;
+    }
+
+    .game-card p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.4;
+      font-size: 14px;
+    }
+
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .stat {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 18px;
+      padding: 12px;
+      text-align: center;
+    }
+
+    .stat strong {
+      display: block;
+      font-size: 22px;
+    }
+
+    .stat span {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    button {
+      border: none;
+      border-radius: 18px;
+      padding: 15px 18px;
+      font-size: 16px;
+      font-weight: 700;
+      color: #020617;
+      background: var(--accent);
+      cursor: pointer;
+      width: 100%;
+    }
+
+    button.secondary {
+      background: rgba(255,255,255,0.09);
+      color: var(--text);
+      border: 1px solid rgba(255,255,255,0.10);
+    }
+
+    button.danger {
+      background: var(--bad);
+      color: white;
+    }
+
+    button:active {
+      transform: scale(0.98);
+    }
+
+    .topbar {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .topbar button {
+      width: auto;
+      flex: 1;
+      padding: 12px;
+      font-size: 14px;
+    }
+
+    .game-title {
+      font-size: 26px;
+      margin: 0 0 6px;
+      letter-spacing: -0.04em;
+    }
+
+    .instructions {
+      color: var(--muted);
+      margin: 0 0 16px;
+      line-height: 1.45;
+    }
+
+    .hud {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .hud .stat strong {
+      font-size: 19px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      margin: 18px 0;
+    }
+
+    .tile {
+      aspect-ratio: 1;
+      border-radius: 20px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.12);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      font-weight: 800;
+      user-select: none;
+      transition: 0.15s;
+    }
+
+    .tile.active {
+      background: var(--accent);
+      color: #020617;
+      box-shadow: 0 0 24px rgba(56,189,248,0.65);
+    }
+
+    .tile.correct {
+      background: var(--good);
+      color: white;
+    }
+
+    .tile.wrong {
+      background: var(--bad);
+      color: white;
+    }
+
+    .big-prompt {
+      min-height: 160px;
+      border-radius: 24px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.10);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 20px;
+      margin-bottom: 16px;
+      font-size: 54px;
+      font-weight: 900;
+      letter-spacing: -0.06em;
+    }
+
+    .choice-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }
+
+    .choice-grid button {
+      min-height: 68px;
+    }
+
+    .red { background: #ef4444; color: white; }
+    .blue { background: #3b82f6; color: white; }
+    .green { background: #22c55e; color: white; }
+    .yellow { background: #facc15; color: #111827; }
+
+    .feedback {
+      min-height: 28px;
+      text-align: center;
+      font-weight: 800;
+      margin-top: 12px;
+    }
+
+    .feedback.good { color: var(--good); }
+    .feedback.bad { color: var(--bad); }
+
+    .math-box {
+      font-size: 52px;
+      font-weight: 900;
+      letter-spacing: -0.05em;
+    }
+
+    .footer-note {
+      color: var(--muted);
+      font-size: 12px;
+      text-align: center;
+      line-height: 1.4;
+      margin-top: auto;
+      padding-top: 18px;
+    }
+  </style>
+</head>
+
+<body>
+  <main class="app">
+    <header>
+      <div class="brand">
+        <h1>MindSprint</h1>
+        <span>Fast brain-training mini games</span>
+      </div>
+      <div class="pill">Mobile Ready</div>
+    </header>
+
+    <!-- HOME -->
+    <section id="home" class="screen active">
+      <div class="stats-row">
+        <div class="stat">
+          <strong id="totalScore">0</strong>
+          <span>Total Score</span>
+        </div>
+        <div class="stat">
+          <strong id="bestGame">—</strong>
+          <span>Best Game</span>
+        </div>
+        <div class="stat">
+          <strong id="plays">0</strong>
+          <span>Plays</span>
+        </div>
+      </div>
+
+      <div class="card game-card" onclick="showScreen('memory')">
+        <h2>Memory Grid</h2>
+        <p>Watch the pattern, then repeat it. Each round gets longer.</p>
+        <button>Play Memory Grid</button>
+      </div>
+
+      <div class="card game-card" onclick="showScreen('focus')">
+        <h2>Focus Colors</h2>
+        <p>Ignore the word. Tap the actual color of the text before time runs out.</p>
+        <button>Play Focus Colors</button>
+      </div>
+
+      <div class="card game-card" onclick="showScreen('math')">
+        <h2>Speed Math</h2>
+        <p>Solve quick arithmetic problems under pressure.</p>
+        <button>Play Speed Math</button>
+      </div>
+    </section>
+
+    <!-- MEMORY GAME -->
+    <section id="memory" class="screen">
+      <div class="topbar">
+        <button class="secondary" onclick="returnHome()">Home</button>
+        <button onclick="startMemory()">Start</button>
+      </div>
+
+      <div class="card">
+        <h2 class="game-title">Memory Grid</h2>
+        <p class="instructions">Watch the glowing tiles. When the pattern ends, tap the same tiles in order.</p>
+
+        <div class="hud">
+          <div class="stat">
+            <strong id="memoryLevel">1</strong>
+            <span>Level</span>
+          </div>
+          <div class="stat">
+            <strong id="memoryScore">0</strong>
+            <span>Score</span>
+          </div>
+          <div class="stat">
+            <strong id="memoryLives">3</strong>
+            <span>Lives</span>
+          </div>
+        </div>
+
+        <div class="grid" id="memoryGrid"></div>
+        <div id="memoryFeedback" class="feedback"></div>
+      </div>
+    </section>
+
+    <!-- FOCUS GAME -->
+    <section id="focus" class="screen">
+      <div class="topbar">
+        <button class="secondary" onclick="returnHome()">Home</button>
+        <button onclick="startFocus()">Start</button>
+      </div>
+
+      <div class="card">
+        <h2 class="game-title">Focus Colors</h2>
+        <p class="instructions">Tap the color of the text, not the word itself.</p>
+
+        <div class="hud">
+          <div class="stat">
+            <strong id="focusTime">30</strong>
+            <span>Seconds</span>
+          </div>
+          <div class="stat">
+            <strong id="focusScore">0</strong>
+            <span>Score</span>
+          </div>
+          <div class="stat">
+            <strong id="focusStreak">0</strong>
+            <span>Streak</span>
+          </div>
+        </div>
+
+        <div id="focusPrompt" class="big-prompt">READY</div>
+
+        <div class="choice-grid">
+          <button class="red" onclick="answerFocus('red')">Red</button>
+          <button class="blue" onclick="answerFocus('blue')">Blue</button>
+          <button class="green" onclick="answerFocus('green')">Green</button>
+          <button class="yellow" onclick="answerFocus('yellow')">Yellow</button>
+        </div>
+
+        <div id="focusFeedback" class="feedback"></div>
+      </div>
+    </section>
+
+    <!-- MATH GAME -->
+    <section id="math" class="screen">
+      <div class="topbar">
+        <button class="secondary" onclick="returnHome()">Home</button>
+        <button onclick="startMath()">Start</button>
+      </div>
+
+      <div class="card">
+        <h2 class="game-title">Speed Math</h2>
+        <p class="instructions">Pick the correct answer as quickly as possible.</p>
+
+        <div class="hud">
+          <div class="stat">
+            <strong id="mathTime">30</strong>
+            <span>Seconds</span>
+          </div>
+          <div class="stat">
+            <strong id="mathScore">0</strong>
+            <span>Score</span>
+          </div>
+          <div class="stat">
+            <strong id="mathStreak">0</strong>
+            <span>Streak</span>
+          </div>
+        </div>
+
+        <div id="mathPrompt" class="big-prompt math-box">READY</div>
+        <div id="mathChoices" class="choice-grid"></div>
+        <div id="mathFeedback" class="feedback"></div>
+      </div>
+    </section>
+
+    <div class="footer-note">
+      Original web game. No Lumosity branding, assets, or exact game copies included.
+    </div>
+  </main>
+
+  <script>
+    const state = {
+      totalScore: Number(localStorage.getItem("ms_totalScore") || 0),
+      plays: Number(localStorage.getItem("ms_plays") || 0),
+      bestGame: localStorage.getItem("ms_bestGame") || "—"
+    };
+
+    function updateHomeStats() {
+      document.getElementById("totalScore").textContent = state.totalScore;
+      document.getElementById("plays").textContent = state.plays;
+      document.getElementById("bestGame").textContent = state.bestGame;
+    }
+
+    function saveScore(gameName, score) {
+      state.totalScore += score;
+      state.plays += 1;
+
+      const currentBest = Number(localStorage.getItem(`ms_best_${gameName}`) || 0);
+      if (score > currentBest) {
+        localStorage.setItem(`ms_best_${gameName}`, score);
+        state.bestGame = gameName;
+        localStorage.setItem("ms_bestGame", gameName);
+      }
+
+      localStorage.setItem("ms_totalScore", state.totalScore);
+      localStorage.setItem("ms_plays", state.plays);
+      updateHomeStats();
+    }
+
+    function showScreen(id) {
+      document.querySelectorAll(".screen").forEach(screen => screen.classList.remove("active"));
+      document.getElementById(id).classList.add("active");
+    }
+
+    function returnHome() {
+      stopFocus();
+      stopMath();
+      showScreen("home");
+      updateHomeStats();
+    }
+
+    updateHomeStats();
+
+    // ---------------------------
+    // MEMORY GRID
+    // ---------------------------
+
+    const memory = {
+      sequence: [],
+      inputIndex: 0,
+      level: 1,
+      score: 0,
+      lives: 3,
+      acceptingInput: false
+    };
+
+    const memoryGrid = document.getElementById("memoryGrid");
+
+    for (let i = 0; i < 16; i++) {
+      const tile = document.createElement("div");
+      tile.className = "tile";
+      tile.textContent = i + 1;
+      tile.onclick = () => handleMemoryTap(i);
+      memoryGrid.appendChild(tile);
+    }
+
+    function startMemory() {
+      memory.sequence = [];
+      memory.inputIndex = 0;
+      memory.level = 1;
+      memory.score = 0;
+      memory.lives = 3;
+      memory.acceptingInput = false;
+      updateMemoryHud();
+      setFeedback("memoryFeedback", "Watch the pattern.", "");
+      nextMemoryRound();
+    }
+
+    function updateMemoryHud() {
+      document.getElementById("memoryLevel").textContent = memory.level;
+      document.getElementById("memoryScore").textContent = memory.score;
+      document.getElementById("memoryLives").textContent = memory.lives;
+    }
+
+    function nextMemoryRound() {
+      memory.acceptingInput = false;
+      memory.inputIndex = 0;
+      memory.sequence.push(Math.floor(Math.random() * 16));
+      updateMemoryHud();
+      playMemorySequence();
+    }
+
+    async function playMemorySequence() {
+      const tiles = [...document.querySelectorAll("#memoryGrid .tile")];
+
+      for (const index of memory.sequence) {
+        await wait(350);
+        tiles[index].classList.add("active");
+        await wait(450);
+        tiles[index].classList.remove("active");
+      }
+
+      setFeedback("memoryFeedback", "Your turn.", "");
+      memory.acceptingInput = true;
+    }
+
+    function handleMemoryTap(index) {
+      if (!memory.acceptingInput) return;
+
+      const tiles = [...document.querySelectorAll("#memoryGrid .tile")];
+      const expected = memory.sequence[memory.inputIndex];
+
+      if (index === expected) {
+        tiles[index].classList.add("correct");
+        setTimeout(() => tiles[index].classList.remove("correct"), 180);
+
+        memory.inputIndex += 1;
+        memory.score += 10;
+
+        if (memory.inputIndex === memory.sequence.length) {
+          memory.level += 1;
+          memory.score += 25;
+          memory.acceptingInput = false;
+          setFeedback("memoryFeedback", "Correct. Next round.", "good");
+          updateMemoryHud();
+          setTimeout(nextMemoryRound, 800);
+        }
+      } else {
+        tiles[index].classList.add("wrong");
+        setTimeout(() => tiles[index].classList.remove("wrong"), 220);
+
+        memory.lives -= 1;
+        memory.acceptingInput = false;
+        setFeedback("memoryFeedback", "Wrong tile.", "bad");
+
+        if (memory.lives <= 0) {
+          setFeedback("memoryFeedback", `Game over. Score: ${memory.score}`, "bad");
+          saveScore("Memory", memory.score);
+        } else {
+          updateMemoryHud();
+          setTimeout(playMemorySequence, 900);
+        }
+      }
+
+      updateMemoryHud();
+    }
+
+    // ---------------------------
+    // FOCUS COLORS
+    // ---------------------------
+
+    const focusColors = [
+      { name: "red", label: "RED", css: "#ef4444" },
+      { name: "blue", label: "BLUE", css: "#3b82f6" },
+      { name: "green", label: "GREEN", css: "#22c55e" },
+      { name: "yellow", label: "YELLOW", css: "#facc15" }
+    ];
+
+    const focus = {
+      active: false,
+      time: 30,
+      score: 0,
+      streak: 0,
+      answer: null,
+      timer: null
+    };
+
+    function startFocus() {
+      stopFocus();
+      focus.active = true;
+      focus.time = 30;
+      focus.score = 0;
+      focus.streak = 0;
+      updateFocusHud();
+      nextFocusPrompt();
+
+      focus.timer = setInterval(() => {
+        focus.time -= 1;
+        updateFocusHud();
+
+        if (focus.time <= 0) {
+          stopFocus();
+          setFeedback("focusFeedback", `Time. Score: ${focus.score}`, "good");
+          document.getElementById("focusPrompt").textContent = "DONE";
+          document.getElementById("focusPrompt").style.color = "white";
+          saveScore("Focus", focus.score);
+        }
+      }, 1000);
+    }
+
+    function stopFocus() {
+      if (focus.timer) clearInterval(focus.timer);
+      focus.timer = null;
+      focus.active = false;
+    }
+
+    function updateFocusHud() {
+      document.getElementById("focusTime").textContent = focus.time;
+      document.getElementById("focusScore").textContent = focus.score;
+      document.getElementById("focusStreak").textContent = focus.streak;
+    }
+
+    function nextFocusPrompt() {
+      const word = randomItem(focusColors);
+      const color = randomItem(focusColors);
+
+      focus.answer = color.name;
+
+      const prompt = document.getElementById("focusPrompt");
+      prompt.textContent = word.label;
+      prompt.style.color = color.css;
+
+      setFeedback("focusFeedback", "", "");
+    }
+
+    function answerFocus(color) {
+      if (!focus.active) return;
+
+      if (color === focus.answer) {
+        focus.streak += 1;
+        focus.score += 10 + Math.min(focus.streak * 2, 20);
+        setFeedback("focusFeedback", "Correct", "good");
+      } else {
+        focus.streak = 0;
+        focus.score = Math.max(0, focus.score - 5);
+        setFeedback("focusFeedback", "Wrong", "bad");
+      }
+
+      updateFocusHud();
+      nextFocusPrompt();
+    }
+
+    // ---------------------------
+    // SPEED MATH
+    // ---------------------------
+
+    const math = {
+      active: false,
+      time: 30,
+      score: 0,
+      streak: 0,
+      answer: null,
+      timer: null
+    };
+
+    function startMath() {
+      stopMath();
+      math.active = true;
+      math.time = 30;
+      math.score = 0;
+      math.streak = 0;
+      updateMathHud();
+      nextMathProblem();
+
+      math.timer = setInterval(() => {
+        math.time -= 1;
+        updateMathHud();
+
+        if (math.time <= 0) {
+          stopMath();
+          setFeedback("mathFeedback", `Time. Score: ${math.score}`, "good");
+          document.getElementById("mathPrompt").textContent = "DONE";
+          document.getElementById("mathChoices").innerHTML = "";
+          saveScore("Math", math.score);
+        }
+      }, 1000);
+    }
+
+    function stopMath() {
+      if (math.timer) clearInterval(math.timer);
+      math.timer = null;
+      math.active = false;
+    }
+
+    function updateMathHud() {
+      document.getElementById("mathTime").textContent = math.time;
+      document.getElementById("mathScore").textContent = math.score;
+      document.getElementById("mathStreak").textContent = math.streak;
+    }
+
+    function nextMathProblem() {
+      const a = rand(2, 20);
+      const b = rand(2, 20);
+      const operations = ["+", "-", "×"];
+      const op = randomItem(operations);
+
+      let answer;
+      let prompt;
+
+      if (op === "+") {
+        answer = a + b;
+        prompt = `${a} + ${b}`;
+      } else if (op === "-") {
+        answer = Math.max(a, b) - Math.min(a, b);
+        prompt = `${Math.max(a, b)} - ${Math.min(a, b)}`;
+      } else {
+        answer = a * b;
+        prompt = `${a} × ${b}`;
+      }
+
+      math.answer = answer;
+      document.getElementById("mathPrompt").textContent = prompt;
+
+      const choices = makeMathChoices(answer);
+      const box = document.getElementById("mathChoices");
+      box.innerHTML = "";
+
+      choices.forEach(choice => {
+        const button = document.createElement("button");
+        button.className = "secondary";
+        button.textContent = choice;
+        button.onclick = () => answerMath(choice);
+        box.appendChild(button);
+      });
+
+      setFeedback("mathFeedback", "", "");
+    }
+
+    function makeMathChoices(answer) {
+      const set = new Set([answer]);
+
+      while (set.size < 4) {
+        const offset = rand(-12, 12);
+        const fake = answer + offset;
+        if (fake >= 0 && fake !== answer) set.add(fake);
+      }
+
+      return [...set].sort(() => Math.random() - 0.5);
+    }
+
+    function answerMath(choice) {
+      if (!math.active) return;
+
+      if (choice === math.answer) {
+        math.streak += 1;
+        math.score += 10 + Math.min(math.streak * 2, 20);
+        setFeedback("mathFeedback", "Correct", "good");
+      } else {
+        math.streak = 0;
+        math.score = Math.max(0, math.score - 5);
+        setFeedback("mathFeedback", "Wrong", "bad");
+      }
+
+      updateMathHud();
+      nextMathProblem();
+    }
+
+    // ---------------------------
+    // HELPERS
+    // ---------------------------
+
+    function wait(ms) {
+      return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    function rand(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    function randomItem(arr) {
+      return arr[Math.floor(Math.random() * arr.length)];
+    }
+
+    function setFeedback(id, text, type) {
+      const el = document.getElementById(id);
+      el.textContent = text;
+      el.className = `feedback ${type || ""}`;
+    }
+  </script>
+</body>
+</html>
