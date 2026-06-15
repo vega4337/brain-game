@@ -2,14 +2,21 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+  />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-title" content="MindSprint" />
   <meta name="theme-color" content="#111827" />
-  <title>MindSprint Brain Games</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700;800&display=swap" rel="stylesheet">
+  <title>MindSprint</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700;800&display=swap"
+    rel="stylesheet"
+  />
 
   <style>
     :root {
@@ -24,7 +31,9 @@
       --yellow: #facc15;
       --purple: #a855f7;
       --orange: #fb923c;
-      --font-display: 'Space Grotesk', system-ui, sans-serif;
+      --green: #22c55e;
+      --line: rgba(255, 255, 255, 0.08);
+      --font-display: "Space Grotesk", system-ui, sans-serif;
     }
 
     * {
@@ -32,14 +41,19 @@
       -webkit-tap-highlight-color: transparent;
     }
 
+    html,
     body {
       margin: 0;
-      min-height: 100vh;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      padding: 0;
+      min-height: 100%;
       background:
         radial-gradient(circle at top, #1e3a8a 0%, transparent 32%),
         linear-gradient(180deg, #020617 0%, var(--bg) 100%);
       color: var(--text);
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    body {
       display: flex;
       justify-content: center;
       padding: env(safe-area-inset-top) 16px env(safe-area-inset-bottom);
@@ -52,34 +66,36 @@
       min-height: 100vh;
       display: flex;
       flex-direction: column;
-      padding: 18px 0;
+      padding: 18px 0 28px;
     }
 
     header {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 18px;
       gap: 12px;
+      margin-bottom: 18px;
     }
 
     .brand {
       display: flex;
       flex-direction: column;
-      gap: 2px;
+      gap: 4px;
+      min-width: 0;
     }
 
     .brand h1 {
-      font-family: var(--font-display);
-      font-size: 28px;
-      line-height: 1;
       margin: 0;
-      letter-spacing: -0.02em;
+      font-family: var(--font-display);
+      font-size: 30px;
+      line-height: 1;
+      letter-spacing: -0.03em;
     }
 
     .brand span {
       color: var(--muted);
       font-size: 13px;
+      line-height: 1.3;
     }
 
     .header-actions {
@@ -90,17 +106,27 @@
     }
 
     .icon-btn {
-      width: 40px;
-      height: 40px;
+      width: 42px;
+      height: 42px;
       border-radius: 50%;
       background: rgba(255,255,255,0.06);
       border: 1px solid rgba(255,255,255,0.10);
       color: var(--text);
-      font-size: 17px;
-      padding: 0;
       display: flex;
       align-items: center;
       justify-content: center;
+      padding: 0;
+      cursor: pointer;
+    }
+
+    .icon-btn svg {
+      width: 20px;
+      height: 20px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
     }
 
     .screen {
@@ -114,7 +140,7 @@
 
     @keyframes fade {
       from { opacity: 0; transform: translateY(6px); }
-      to { opacity: 1; transform: translateY(0); }
+      to   { opacity: 1; transform: translateY(0); }
     }
 
     .card {
@@ -124,76 +150,7 @@
       padding: 18px;
       box-shadow: 0 20px 60px rgba(0,0,0,0.28);
       backdrop-filter: blur(12px);
-    }
-
-    .game-card {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
       margin-bottom: 14px;
-      cursor: pointer;
-    }
-
-    .game-card-head {
-      display: flex;
-      gap: 12px;
-      align-items: flex-start;
-    }
-
-    .game-icon {
-      width: 46px;
-      height: 46px;
-      min-width: 46px;
-      border-radius: 14px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 22px;
-    }
-
-    .game-card-text { flex: 1; min-width: 0; }
-
-    .game-card h2 {
-      margin: 0;
-      font-family: var(--font-display);
-      font-size: 21px;
-      letter-spacing: -0.02em;
-    }
-
-    .game-card p {
-      margin: 4px 0 0;
-      color: var(--muted);
-      line-height: 1.4;
-      font-size: 13.5px;
-    }
-
-    .game-card-foot {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .game-card-foot button {
-      width: auto;
-      flex: 1;
-      padding: 12px;
-      font-size: 14px;
-    }
-
-    .best-pill {
-      font-size: 12px;
-      color: var(--muted);
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.08);
-      padding: 10px 12px;
-      border-radius: 12px;
-      white-space: nowrap;
-    }
-
-    .best-pill strong {
-      color: var(--text);
-      font-family: var(--font-display);
-      margin-left: 3px;
     }
 
     .stats-row {
@@ -215,11 +172,60 @@
       display: block;
       font-family: var(--font-display);
       font-size: 22px;
+      line-height: 1.1;
     }
 
     .stat span {
+      display: block;
       color: var(--muted);
       font-size: 12px;
+      margin-top: 6px;
+      line-height: 1.2;
+    }
+
+    .section-title {
+      margin: 0 0 10px;
+      font-family: var(--font-display);
+      font-size: 18px;
+      letter-spacing: -0.02em;
+    }
+
+    .subtle {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.45;
+      margin: 0;
+    }
+
+    .row-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .input-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    input,
+    textarea {
+      width: 100%;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.06);
+      color: var(--text);
+      border-radius: 16px;
+      padding: 14px;
+      font-size: 15px;
+      outline: none;
+      font-family: inherit;
+    }
+
+    input::placeholder,
+    textarea::placeholder {
+      color: var(--muted);
     }
 
     button {
@@ -247,15 +253,7 @@
     }
 
     button:active {
-      transform: scale(0.98);
-    }
-
-    button:focus-visible,
-    .game-card:focus-visible,
-    .tile:focus-visible,
-    .reaction-box:focus-visible {
-      outline: 2px solid var(--accent);
-      outline-offset: 2px;
+      transform: scale(0.985);
     }
 
     .topbar {
@@ -271,10 +269,97 @@
       font-size: 14px;
     }
 
+    .game-card {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      cursor: pointer;
+    }
+
+    .game-card-head {
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+    }
+
+    .game-icon {
+      width: 50px;
+      height: 50px;
+      min-width: 50px;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 11px;
+      border: 1px solid rgba(255,255,255,0.06);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.04);
+    }
+
+    .game-icon svg {
+      width: 100%;
+      height: 100%;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 2.1;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .game-card-text {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .game-card h2 {
+      margin: 0;
+      font-family: var(--font-display);
+      font-size: 21px;
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+    }
+
+    .game-card p {
+      margin: 6px 0 0;
+      color: var(--muted);
+      line-height: 1.42;
+      font-size: 13.5px;
+    }
+
+    .game-card-foot {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .game-card-foot button {
+      flex: 1;
+      width: auto;
+      padding: 12px;
+      font-size: 14px;
+    }
+
+    .best-pill {
+      font-size: 12px;
+      color: var(--muted);
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+      padding: 10px 12px;
+      border-radius: 14px;
+      white-space: nowrap;
+      min-width: 84px;
+      text-align: center;
+    }
+
+    .best-pill strong {
+      color: var(--text);
+      font-family: var(--font-display);
+      margin-left: 4px;
+    }
+
     .game-title {
+      margin: 0 0 6px;
       font-family: var(--font-display);
       font-size: 26px;
-      margin: 0 0 6px;
       letter-spacing: -0.02em;
     }
 
@@ -282,17 +367,27 @@
       color: var(--muted);
       margin: 0 0 16px;
       line-height: 1.45;
+      font-size: 14px;
     }
 
     .hud {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(4, 1fr);
       gap: 8px;
       margin-bottom: 16px;
     }
 
+    .hud .stat {
+      padding: 10px 8px;
+    }
+
     .hud .stat strong {
-      font-size: 19px;
+      font-size: 18px;
+    }
+
+    .hud .stat span {
+      font-size: 11px;
+      margin-top: 4px;
     }
 
     .grid {
@@ -306,7 +401,7 @@
       display: grid;
       grid-template-columns: repeat(5, 1fr);
       gap: 10px;
-      margin: 18px 0;
+      margin: 18px 0 10px;
     }
 
     .tile {
@@ -322,24 +417,28 @@
       font-weight: 800;
       user-select: none;
       transition: 0.15s;
+      cursor: pointer;
     }
 
     .tile.active {
       background: var(--accent);
       color: #020617;
       box-shadow: 0 0 24px rgba(56,189,248,0.65);
+      transform: scale(1.03);
     }
 
     .tile.correct {
       background: var(--good);
       color: white;
-      box-shadow: 0 0 24px rgba(34,197,94,0.6);
+      box-shadow: 0 0 24px rgba(34,197,94,0.5);
+      transform: scale(1.03);
     }
 
     .tile.wrong {
       background: var(--bad);
       color: white;
-      box-shadow: 0 0 24px rgba(239,68,68,0.6);
+      box-shadow: 0 0 24px rgba(239,68,68,0.5);
+      transform: scale(0.97);
     }
 
     .big-prompt {
@@ -368,9 +467,35 @@
     }
 
     @keyframes digitPulse {
-      from { transform: scale(0.6); opacity: 0; }
+      from { transform: scale(0.7); opacity: 0; }
       to { transform: scale(1); opacity: 1; }
     }
+
+    .choice-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }
+
+    .choice-grid button {
+      min-height: 68px;
+    }
+
+    .red { background: #ef4444; color: white; }
+    .blue { background: #3b82f6; color: white; }
+    .green { background: #22c55e; color: white; }
+    .yellow { background: #facc15; color: #111827; }
+
+    .feedback {
+      min-height: 28px;
+      text-align: center;
+      font-weight: 800;
+      margin-top: 12px;
+      font-size: 14px;
+    }
+
+    .feedback.good { color: var(--good); }
+    .feedback.bad  { color: var(--bad); }
 
     .reaction-box {
       min-height: 220px;
@@ -402,54 +527,142 @@
 
     .reaction-box.go {
       background: var(--good);
-      color: #022c0f;
+      color: #062c12;
       border-color: var(--good);
-      box-shadow: 0 0 32px rgba(34,197,94,0.45);
+      box-shadow: 0 0 32px rgba(34,197,94,0.42);
     }
 
-    .choice-grid {
+    .mini-metrics {
       display: grid;
-      grid-template-columns: repeat(2, 1fr);
+      grid-template-columns: repeat(3, 1fr);
       gap: 10px;
-    }
-
-    .choice-grid button {
-      min-height: 68px;
-    }
-
-    .red { background: #ef4444; color: white; }
-    .blue { background: #3b82f6; color: white; }
-    .green { background: #22c55e; color: white; }
-    .yellow { background: #facc15; color: #111827; }
-
-    .feedback {
-      min-height: 28px;
-      text-align: center;
-      font-weight: 800;
       margin-top: 12px;
     }
 
-    .feedback.good { color: var(--good); }
-    .feedback.bad { color: var(--bad); }
-
-    .math-box {
-      font-size: 52px;
+    canvas.chart {
+      width: 100%;
+      height: 170px;
+      display: block;
+      border-radius: 16px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      margin-top: 12px;
     }
 
-    .section-title {
-      font-size: 13px;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
+    .progress-insight {
+      margin-top: 10px;
       color: var(--muted);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .session-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .session-item {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: center;
+      padding: 12px 14px;
+      border-radius: 16px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .session-item .left {
+      min-width: 0;
+    }
+
+    .session-item .name {
       font-weight: 700;
-      margin: 22px 0 10px;
+      font-size: 14px;
     }
 
-    .section-title:first-of-type {
-      margin-top: 6px;
+    .session-item .meta {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 4px;
+      line-height: 1.35;
     }
 
-    /* Modals */
+    .session-item .right {
+      text-align: right;
+      white-space: nowrap;
+    }
+
+    .session-item .score {
+      font-family: var(--font-display);
+      font-size: 20px;
+    }
+
+    .session-item .label {
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .setting-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 14px;
+      padding: 14px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .setting-row:last-of-type {
+      border-bottom: none;
+    }
+
+    .setting-row strong {
+      display: block;
+      font-size: 15px;
+    }
+
+    .setting-row p {
+      margin: 4px 0 0;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.35;
+    }
+
+    .toggle {
+      width: 50px;
+      height: 30px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.12);
+      position: relative;
+      flex-shrink: 0;
+      cursor: pointer;
+      border: none;
+      padding: 0;
+    }
+
+    .toggle::after {
+      content: "";
+      position: absolute;
+      top: 3px;
+      left: 3px;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: var(--muted);
+      transition: left 0.2s, background 0.2s;
+    }
+
+    .toggle.on {
+      background: rgba(56,189,248,0.32);
+    }
+
+    .toggle.on::after {
+      left: 23px;
+      background: var(--accent);
+    }
+
     .modal-overlay {
       position: fixed;
       inset: 0;
@@ -462,38 +675,39 @@
       backdrop-filter: blur(6px);
     }
 
-    .modal-overlay.active { display: flex; }
+    .modal-overlay.active {
+      display: flex;
+    }
 
     .modal-card {
+      width: 100%;
+      max-width: 390px;
       background: var(--panel);
       border: 1px solid rgba(255,255,255,0.12);
       border-radius: 24px;
-      padding: 26px 22px;
-      width: 100%;
-      max-width: 380px;
-      text-align: center;
+      padding: 24px 20px;
       animation: modalIn 0.22s ease-out;
+      text-align: center;
     }
 
     @keyframes modalIn {
       from { opacity: 0; transform: translateY(18px) scale(0.97); }
-      to { opacity: 1; transform: translateY(0) scale(1); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
     }
 
     .results-score {
+      margin: 6px 0 4px;
       font-family: var(--font-display);
       font-size: 58px;
-      font-weight: 800;
-      margin: 6px 0 4px;
-      letter-spacing: -0.03em;
       color: var(--accent);
+      line-height: 1;
     }
 
     .results-best {
-      color: var(--muted);
       font-size: 14px;
-      margin-bottom: 6px;
+      color: var(--muted);
       min-height: 18px;
+      margin-bottom: 8px;
     }
 
     .results-best.new {
@@ -505,38 +719,34 @@
       display: flex;
       flex-direction: column;
       gap: 8px;
-      margin: 10px 0 4px;
+      margin-top: 12px;
+      text-align: left;
     }
 
     .results-stat-row {
       display: flex;
       justify-content: space-between;
+      gap: 10px;
       background: rgba(255,255,255,0.05);
-      padding: 10px 14px;
       border-radius: 12px;
+      padding: 10px 14px;
       font-size: 14px;
     }
 
-    .results-stat-row strong { font-family: var(--font-display); }
+    .results-stat-row strong {
+      font-family: var(--font-display);
+    }
 
-    .toast {
-      padding: 10px 12px;
-      border-radius: 12px;
-      font-size: 13px;
-      margin: 8px 0;
+    .results-explainer {
       text-align: left;
-    }
-
-    .toast.achievement {
-      background: rgba(250,204,21,0.10);
-      border: 1px solid rgba(250,204,21,0.28);
-      color: var(--yellow);
-    }
-
-    .toast.streak {
-      background: rgba(251,146,60,0.10);
-      border: 1px solid rgba(251,146,60,0.28);
-      color: var(--orange);
+      margin-top: 12px;
+      padding: 12px 14px;
+      border-radius: 14px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.45;
     }
 
     .modal-actions {
@@ -545,9 +755,11 @@
       margin-top: 14px;
     }
 
-    .modal-actions button { width: auto; flex: 1; }
+    .modal-actions button {
+      flex: 1;
+      width: auto;
+    }
 
-    /* Countdown */
     .countdown-overlay {
       position: fixed;
       inset: 0;
@@ -559,7 +771,9 @@
       backdrop-filter: blur(4px);
     }
 
-    .countdown-overlay.active { display: flex; }
+    .countdown-overlay.active {
+      display: flex;
+    }
 
     #countdownNumber {
       font-family: var(--font-display);
@@ -570,159 +784,27 @@
     }
 
     @keyframes countdownPulse {
-      from { transform: scale(0.5); opacity: 0; }
-      to { transform: scale(1); opacity: 1; }
+      from { transform: scale(0.55); opacity: 0; }
+      to   { transform: scale(1); opacity: 1; }
     }
 
-    /* Confetti */
-    .confetti-piece {
-      position: fixed;
-      top: -12px;
-      width: 8px;
-      height: 14px;
-      opacity: 0.9;
-      z-index: 70;
-      pointer-events: none;
-      border-radius: 2px;
-      animation: confettiFall linear forwards;
-    }
-
-    @keyframes confettiFall {
-      to { transform: translateY(110vh) rotate(540deg); opacity: 0; }
-    }
-
-    /* Stats screen */
-    .best-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 10px;
-      margin-bottom: 6px;
-    }
-
-    .best-card {
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-left: 3px solid var(--card-accent, var(--accent));
-      border-radius: 16px;
-      padding: 14px;
-    }
-
-    .best-icon { font-size: 20px; margin-bottom: 4px; }
-    .best-name { font-size: 12px; color: var(--muted); }
-    .best-score {
-      font-family: var(--font-display);
-      font-size: 22px;
-      font-weight: 800;
-      margin-top: 2px;
-    }
-
-    .activity-chart {
-      display: flex;
-      align-items: flex-end;
-      gap: 6px;
-      height: 100px;
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,255,255,0.06);
-      border-radius: 14px;
-      padding: 10px;
-      margin-bottom: 6px;
-    }
-
-    .chart-bar {
-      flex: 1;
-      border-radius: 6px 6px 2px 2px;
-      min-height: 6px;
-      transition: height 0.3s ease;
-    }
-
-    .muted-note {
+    .empty-note {
       color: var(--muted);
       font-size: 13px;
       text-align: center;
-      padding: 10px 0;
-      margin: 0;
+      padding: 14px 0 4px;
     }
 
-    .achievements-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 10px;
-    }
-
-    .achievement {
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 16px;
-      padding: 14px 10px;
-      text-align: center;
-      opacity: 0.45;
-      filter: grayscale(1);
-      transition: 0.2s;
-    }
-
-    .achievement.unlocked {
-      opacity: 1;
-      filter: none;
-      border-color: rgba(250,204,21,0.35);
-      background: rgba(250,204,21,0.06);
-    }
-
-    .achievement-icon { font-size: 26px; margin-bottom: 4px; }
-    .achievement-name { font-weight: 700; font-size: 12.5px; }
-    .achievement-desc {
-      color: var(--muted);
-      font-size: 11px;
-      margin-top: 3px;
-      line-height: 1.3;
-    }
-
-    /* Settings */
-    .setting-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 14px;
-      padding: 14px 0;
-      border-bottom: 1px solid rgba(255,255,255,0.06);
-    }
-
-    .setting-row:last-of-type { border-bottom: none; }
-    .setting-row strong { display: block; font-size: 15px; }
-    .setting-row p { margin: 3px 0 0; font-size: 12px; color: var(--muted); }
-
-    .toggle {
-      width: 50px;
-      height: 30px;
-      border-radius: 999px;
-      background: rgba(255,255,255,0.12);
-      position: relative;
-      padding: 0;
-      flex-shrink: 0;
-      transition: background 0.2s;
-    }
-
-    .toggle::after {
-      content: '';
-      position: absolute;
-      top: 3px;
-      left: 3px;
-      width: 24px;
-      height: 24px;
-      border-radius: 50%;
-      background: var(--muted);
-      transition: left 0.2s, background 0.2s;
-    }
-
-    .toggle.on { background: rgba(56,189,248,0.32); }
-    .toggle.on::after { left: 23px; background: var(--accent); }
-
-    .footer-note {
-      color: var(--muted);
-      font-size: 12px;
-      text-align: center;
-      line-height: 1.4;
-      margin-top: auto;
-      padding-top: 18px;
+    @media (max-width: 390px) {
+      .brand h1 { font-size: 27px; }
+      .big-prompt { font-size: 44px; }
+      .recall-prompt { font-size: 58px; }
+      .tile { font-size: 20px; border-radius: 17px; }
+      .results-score { font-size: 48px; }
+      #countdownNumber { font-size: 82px; }
+      .reaction-box { min-height: 190px; font-size: 20px; }
+      .hud { grid-template-columns: repeat(4, 1fr); }
+      .hud .stat strong { font-size: 16px; }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -730,22 +812,11 @@
         animation-duration: 0.01ms !important;
         animation-iteration-count: 1 !important;
         transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
       }
-    }
-
-    @media (max-width: 390px) {
-      .brand h1 { font-size: 25px; }
-      .big-prompt { font-size: 46px; }
-      .recall-prompt { font-size: 58px; }
-      .tile { font-size: 20px; border-radius: 17px; }
-      button { padding: 14px 14px; }
-      .results-score { font-size: 46px; }
-      #countdownNumber { font-size: 80px; }
-      .reaction-box { min-height: 190px; font-size: 19px; }
     }
   </style>
 </head>
-
 <body>
   <main class="app">
     <header>
@@ -753,9 +824,29 @@
         <h1>MindSprint</h1>
         <span>Fast brain-training mini games</span>
       </div>
+
       <div class="header-actions">
-        <button class="icon-btn" onclick="showScreen('stats')" aria-label="Stats">ð</button>
-        <button class="icon-btn" onclick="showScreen('settings')" aria-label="Settings">âï¸</button>
+        <button class="icon-btn" onclick="showScreen('stats')" aria-label="Stats">
+          <svg viewBox="0 0 24 24">
+            <path d="M4 20V10"></path>
+            <path d="M10 20V4"></path>
+            <path d="M16 20v-7"></path>
+            <path d="M22 20v-12"></path>
+          </svg>
+        </button>
+        <button class="icon-btn" onclick="showScreen('settings')" aria-label="Settings">
+          <svg viewBox="0 0 24 24">
+            <path d="M12 3v2"></path>
+            <path d="M12 19v2"></path>
+            <path d="M3 12h2"></path>
+            <path d="M19 12h2"></path>
+            <path d="M5.6 5.6l1.4 1.4"></path>
+            <path d="M17 17l1.4 1.4"></path>
+            <path d="M18.4 5.6L17 7"></path>
+            <path d="M7 17l-1.4 1.4"></path>
+            <circle cx="12" cy="12" r="4"></circle>
+          </svg>
+        </button>
       </div>
     </header>
 
@@ -763,91 +854,167 @@
     <section id="home" class="screen active">
       <div class="stats-row">
         <div class="stat">
-          <strong id="totalScore">0</strong>
+          <strong id="homeTotalScore">0</strong>
           <span>Total Score</span>
         </div>
         <div class="stat">
-          <strong id="streakValue">0</strong>
-          <span>ð¥ Day Streak</span>
+          <strong id="homeDayStreak">0</strong>
+          <span>Day Streak</span>
         </div>
         <div class="stat">
-          <strong id="plays">0</strong>
+          <strong id="homePlays">0</strong>
           <span>Plays</span>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2 class="section-title">Progress</h2>
+        <p class="subtle">Your Brain Activity Index is a performance score built from accuracy, speed, and consistency.</p>
+
+        <div class="mini-metrics">
+          <div class="stat">
+            <strong id="homeBrainIndex">0</strong>
+            <span>Brain Index</span>
+          </div>
+          <div class="stat">
+            <strong id="homeAccuracy">0%</strong>
+            <span>Accuracy</span>
+          </div>
+          <div class="stat">
+            <strong id="homeAvgSpeed">—</strong>
+            <span>Avg Speed</span>
+          </div>
+        </div>
+
+        <canvas id="homeChart" class="chart"></canvas>
+        <p id="homeInsight" class="progress-insight">Play a few rounds to start building a trend.</p>
+      </div>
+
+      <div class="card">
+        <h2 class="section-title">Player</h2>
+        <p class="subtle">Add your info if you want to export your results into your email app.</p>
+
+        <div class="input-row">
+          <input id="playerName" type="text" placeholder="Name" />
+          <input id="playerEmail" type="email" placeholder="Email" />
+        </div>
+
+        <div class="row-2" style="margin-top:12px;">
+          <button class="secondary" onclick="savePlayerProfile()">Save Info</button>
+          <button onclick="emailResults()">Email Results</button>
         </div>
       </div>
 
       <div class="card game-card" onclick="showScreen('memory')">
         <div class="game-card-head">
-          <div class="game-icon" style="background:rgba(56,189,248,0.16); color:#38bdf8;">ð§ </div>
+          <div class="game-icon" style="background:rgba(56,189,248,0.16); color:#38bdf8;">
+            <svg viewBox="0 0 24 24">
+              <rect x="4" y="4" width="6" height="6" rx="1"></rect>
+              <rect x="14" y="4" width="6" height="6" rx="1"></rect>
+              <rect x="4" y="14" width="6" height="6" rx="1"></rect>
+              <rect x="14" y="14" width="6" height="6" rx="1"></rect>
+            </svg>
+          </div>
           <div class="game-card-text">
             <h2>Memory Grid</h2>
-            <p>Watch the pattern, then repeat it. Three lives, growing sequences.</p>
+            <p>Watch the pattern, listen to the tones, then repeat it. Three lives, growing sequences.</p>
           </div>
         </div>
         <div class="game-card-foot">
-          <span class="best-pill">Best <strong id="homeBestMemory">0</strong></span>
+          <span class="best-pill">Best <strong id="bestMemory">0</strong></span>
           <button>Play</button>
         </div>
       </div>
 
       <div class="card game-card" onclick="showScreen('focus')">
         <div class="game-card-head">
-          <div class="game-icon" style="background:rgba(250,204,21,0.16); color:#facc15;">ð¯</div>
+          <div class="game-icon" style="background:rgba(250,204,21,0.16); color:#facc15;">
+            <svg viewBox="0 0 24 24">
+              <circle cx="12" cy="12" r="8"></circle>
+              <circle cx="12" cy="12" r="3"></circle>
+              <path d="M12 4v2"></path>
+              <path d="M12 18v2"></path>
+              <path d="M4 12h2"></path>
+              <path d="M18 12h2"></path>
+            </svg>
+          </div>
           <div class="game-card-text">
             <h2>Focus Colors</h2>
             <p>Ignore the word, tap the actual color. 30 seconds on the clock.</p>
           </div>
         </div>
         <div class="game-card-foot">
-          <span class="best-pill">Best <strong id="homeBestFocus">0</strong></span>
+          <span class="best-pill">Best <strong id="bestFocus">0</strong></span>
           <button>Play</button>
         </div>
       </div>
 
       <div class="card game-card" onclick="showScreen('math')">
         <div class="game-card-head">
-          <div class="game-icon" style="background:rgba(251,146,60,0.16); color:#fb923c;">ð§®</div>
+          <div class="game-icon" style="background:rgba(251,146,60,0.16); color:#fb923c;">
+            <svg viewBox="0 0 24 24">
+              <path d="M7 6h10"></path>
+              <path d="M7 12h10"></path>
+              <path d="M7 18h10"></path>
+              <path d="M12 3v6"></path>
+              <path d="M9 9l6 6"></path>
+              <path d="M15 9l-6 6"></path>
+            </svg>
+          </div>
           <div class="game-card-text">
             <h2>Speed Math</h2>
             <p>Solve quick arithmetic problems before time runs out.</p>
           </div>
         </div>
         <div class="game-card-foot">
-          <span class="best-pill">Best <strong id="homeBestMath">0</strong></span>
+          <span class="best-pill">Best <strong id="bestMath">0</strong></span>
           <button>Play</button>
         </div>
       </div>
 
       <div class="card game-card" onclick="showScreen('reaction')">
         <div class="game-card-head">
-          <div class="game-icon" style="background:rgba(34,197,94,0.16); color:#22c55e;">â¡</div>
+          <div class="game-icon" style="background:rgba(34,197,94,0.16); color:#22c55e;">
+            <svg viewBox="0 0 24 24">
+              <path d="M13 2L4 14h6l-1 8 9-12h-6l1-8z"></path>
+            </svg>
+          </div>
           <div class="game-card-text">
             <h2>Reaction Time</h2>
-            <p>Tap the instant it turns green. Five rounds, milliseconds matter.</p>
+            <p>Tap the instant it turns green. Five rounds. Milliseconds matter.</p>
           </div>
         </div>
         <div class="game-card-foot">
-          <span class="best-pill">Best <strong id="homeBestReaction">0</strong></span>
+          <span class="best-pill">Best <strong id="bestReaction">0</strong></span>
           <button>Play</button>
         </div>
       </div>
 
       <div class="card game-card" onclick="showScreen('recall')">
         <div class="game-card-head">
-          <div class="game-icon" style="background:rgba(168,85,247,0.16); color:#a855f7;">ð¢</div>
+          <div class="game-icon" style="background:rgba(168,85,247,0.16); color:#a855f7;">
+            <svg viewBox="0 0 24 24">
+              <path d="M7 7h10"></path>
+              <path d="M7 12h10"></path>
+              <path d="M7 17h10"></path>
+              <circle cx="5" cy="7" r="1"></circle>
+              <circle cx="19" cy="12" r="1"></circle>
+              <circle cx="5" cy="17" r="1"></circle>
+            </svg>
+          </div>
           <div class="game-card-text">
             <h2>Number Recall</h2>
             <p>Memorize a growing string of digits, then tap them back in order.</p>
           </div>
         </div>
         <div class="game-card-foot">
-          <span class="best-pill">Best <strong id="homeBestRecall">0</strong></span>
+          <span class="best-pill">Best <strong id="bestRecall">0</strong></span>
           <button>Play</button>
         </div>
       </div>
     </section>
 
-    <!-- MEMORY GRID -->
+    <!-- MEMORY -->
     <section id="memory" class="screen">
       <div class="topbar">
         <button class="secondary" onclick="returnHome()">Home</button>
@@ -856,21 +1023,16 @@
 
       <div class="card">
         <h2 class="game-title">Memory Grid</h2>
-        <p class="instructions">Watch the glowing tiles. When the pattern ends, tap the same tiles in order. A mistake costs one life and replays the same pattern.</p>
+        <p class="instructions">
+          Watch the glowing tiles and listen to the sounds. Repeat the same pattern in order.
+          A mistake costs one life and replays the same pattern.
+        </p>
 
         <div class="hud">
-          <div class="stat">
-            <strong id="memoryLevel">1</strong>
-            <span>Level</span>
-          </div>
-          <div class="stat">
-            <strong id="memoryScore">0</strong>
-            <span>Score</span>
-          </div>
-          <div class="stat">
-            <strong id="memoryLives">3</strong>
-            <span>Lives</span>
-          </div>
+          <div class="stat"><strong id="memoryLevel">1</strong><span>Level</span></div>
+          <div class="stat"><strong id="memoryScore">0</strong><span>Score</span></div>
+          <div class="stat"><strong id="memoryLives">3</strong><span>Lives</span></div>
+          <div class="stat"><strong id="memoryAvg">—</strong><span>Avg Tap</span></div>
         </div>
 
         <div class="grid" id="memoryGrid"></div>
@@ -878,7 +1040,7 @@
       </div>
     </section>
 
-    <!-- FOCUS GAME -->
+    <!-- FOCUS -->
     <section id="focus" class="screen">
       <div class="topbar">
         <button class="secondary" onclick="returnHome()">Home</button>
@@ -890,18 +1052,10 @@
         <p class="instructions">Tap the color of the text, not the word itself.</p>
 
         <div class="hud">
-          <div class="stat">
-            <strong id="focusTime">30</strong>
-            <span>Seconds</span>
-          </div>
-          <div class="stat">
-            <strong id="focusScore">0</strong>
-            <span>Score</span>
-          </div>
-          <div class="stat">
-            <strong id="focusStreak">0</strong>
-            <span>Streak</span>
-          </div>
+          <div class="stat"><strong id="focusTime">30</strong><span>Seconds</span></div>
+          <div class="stat"><strong id="focusScore">0</strong><span>Score</span></div>
+          <div class="stat"><strong id="focusCorrect">0</strong><span>Correct</span></div>
+          <div class="stat"><strong id="focusAccuracy">0%</strong><span>Accuracy</span></div>
         </div>
 
         <div id="focusPrompt" class="big-prompt">READY</div>
@@ -917,7 +1071,7 @@
       </div>
     </section>
 
-    <!-- MATH GAME -->
+    <!-- MATH -->
     <section id="math" class="screen">
       <div class="topbar">
         <button class="secondary" onclick="returnHome()">Home</button>
@@ -929,27 +1083,19 @@
         <p class="instructions">Pick the correct answer as quickly as possible.</p>
 
         <div class="hud">
-          <div class="stat">
-            <strong id="mathTime">30</strong>
-            <span>Seconds</span>
-          </div>
-          <div class="stat">
-            <strong id="mathScore">0</strong>
-            <span>Score</span>
-          </div>
-          <div class="stat">
-            <strong id="mathStreak">0</strong>
-            <span>Streak</span>
-          </div>
+          <div class="stat"><strong id="mathTime">30</strong><span>Seconds</span></div>
+          <div class="stat"><strong id="mathScore">0</strong><span>Score</span></div>
+          <div class="stat"><strong id="mathCorrect">0</strong><span>Correct</span></div>
+          <div class="stat"><strong id="mathAccuracy">0%</strong><span>Accuracy</span></div>
         </div>
 
-        <div id="mathPrompt" class="big-prompt math-box">READY</div>
+        <div id="mathPrompt" class="big-prompt">READY</div>
         <div id="mathChoices" class="choice-grid"></div>
         <div id="mathFeedback" class="feedback"></div>
       </div>
     </section>
 
-    <!-- REACTION TIME -->
+    <!-- REACTION -->
     <section id="reaction" class="screen">
       <div class="topbar">
         <button class="secondary" onclick="returnHome()">Home</button>
@@ -958,31 +1104,26 @@
 
       <div class="card">
         <h2 class="game-title">Reaction Time</h2>
-        <p class="instructions">Wait for the box to turn green, then tap it as fast as you can. Tapping too early restarts the round.</p>
+        <p class="instructions">
+          Wait for the box to turn green, then tap it as fast as you can. Tapping too early restarts the round.
+        </p>
 
         <div class="hud">
-          <div class="stat">
-            <strong id="reactionRound">0 / 5</strong>
-            <span>Round</span>
-          </div>
-          <div class="stat">
-            <strong id="reactionLast">â</strong>
-            <span>Last (ms)</span>
-          </div>
-          <div class="stat">
-            <strong id="reactionBest">â</strong>
-            <span>Best (ms)</span>
-          </div>
+          <div class="stat"><strong id="reactionRound">0 / 5</strong><span>Round</span></div>
+          <div class="stat"><strong id="reactionLast">—</strong><span>Last</span></div>
+          <div class="stat"><strong id="reactionBest">—</strong><span>Best</span></div>
+          <div class="stat"><strong id="reactionAvg">—</strong><span>Average</span></div>
         </div>
 
         <div id="reactionBox" class="reaction-box" onclick="handleReactionTap()">
           <span id="reactionText">Tap Start to begin</span>
         </div>
+
         <div id="reactionFeedback" class="feedback"></div>
       </div>
     </section>
 
-    <!-- NUMBER RECALL -->
+    <!-- RECALL -->
     <section id="recall" class="screen">
       <div class="topbar">
         <button class="secondary" onclick="returnHome()">Home</button>
@@ -991,30 +1132,24 @@
 
       <div class="card">
         <h2 class="game-title">Number Recall</h2>
-        <p class="instructions">Watch the digits appear one at a time, then tap them back in the same order. A mistake costs one life.</p>
+        <p class="instructions">
+          Watch the digits appear one at a time, then tap them back in the same order. A mistake costs one life.
+        </p>
 
         <div class="hud">
-          <div class="stat">
-            <strong id="recallLevel">1</strong>
-            <span>Level</span>
-          </div>
-          <div class="stat">
-            <strong id="recallScore">0</strong>
-            <span>Score</span>
-          </div>
-          <div class="stat">
-            <strong id="recallLives">3</strong>
-            <span>Lives</span>
-          </div>
+          <div class="stat"><strong id="recallLevel">1</strong><span>Level</span></div>
+          <div class="stat"><strong id="recallScore">0</strong><span>Score</span></div>
+          <div class="stat"><strong id="recallLives">3</strong><span>Lives</span></div>
+          <div class="stat"><strong id="recallAvg">—</strong><span>Avg Tap</span></div>
         </div>
 
         <div id="recallPrompt" class="big-prompt recall-prompt">Ready</div>
-        <div class="numpad" id="recallPad"></div>
+        <div id="recallPad" class="numpad"></div>
         <div id="recallFeedback" class="feedback"></div>
       </div>
     </section>
 
-    <!-- STATS & ACHIEVEMENTS -->
+    <!-- STATS -->
     <section id="stats" class="screen">
       <div class="topbar">
         <button class="secondary" onclick="returnHome()">Home</button>
@@ -1024,28 +1159,21 @@
         <h2 class="game-title">Your Stats</h2>
 
         <div class="stats-row">
-          <div class="stat">
-            <strong id="statsTotalScore">0</strong>
-            <span>Total Score</span>
-          </div>
-          <div class="stat">
-            <strong id="statsStreak">0</strong>
-            <span>Day Streak</span>
-          </div>
-          <div class="stat">
-            <strong id="statsBestStreak">0</strong>
-            <span>Best Streak</span>
-          </div>
+          <div class="stat"><strong id="statsTotalScore">0</strong><span>Total Score</span></div>
+          <div class="stat"><strong id="statsBrain">0</strong><span>Brain Index</span></div>
+          <div class="stat"><strong id="statsBestStreak">0</strong><span>Best Streak</span></div>
         </div>
 
-        <div class="section-title">Personal Bests</div>
-        <div class="best-grid" id="bestGrid"></div>
+        <div class="mini-metrics">
+          <div class="stat"><strong id="statsAccuracy">0%</strong><span>Accuracy</span></div>
+          <div class="stat"><strong id="statsAvgSpeed">—</strong><span>Avg Speed</span></div>
+          <div class="stat"><strong id="statsSessions">0</strong><span>Sessions</span></div>
+        </div>
 
-        <div class="section-title">Recent Activity</div>
-        <div class="activity-chart" id="activityChart"></div>
+        <canvas id="statsChart" class="chart"></canvas>
+        <p id="statsInsight" class="progress-insight">Your trend will appear here as you play.</p>
 
-        <div class="section-title">Achievements</div>
-        <div class="achievements-grid" id="achievementsGrid"></div>
+        <div class="session-list" id="recentSessions"></div>
       </div>
     </section>
 
@@ -1061,43 +1189,47 @@
         <div class="setting-row">
           <div>
             <strong>Sound effects</strong>
-            <p>Tones for correct and incorrect answers</p>
+            <p>Enable tones for correct, wrong, countdowns, and Memory Grid notes.</p>
           </div>
-          <button class="toggle" id="soundToggle" onclick="toggleSound()" aria-label="Toggle sound"></button>
+          <button id="soundToggle" class="toggle" onclick="toggleSound()" aria-label="Toggle sound"></button>
         </div>
 
         <div class="setting-row">
           <div>
             <strong>Haptics</strong>
-            <p>Vibration feedback on supported devices</p>
+            <p>Enable vibration feedback on supported devices.</p>
           </div>
-          <button class="toggle" id="hapticsToggle" onclick="toggleHaptics()" aria-label="Toggle haptics"></button>
+          <button id="hapticsToggle" class="toggle" onclick="toggleHaptics()" aria-label="Toggle haptics"></button>
         </div>
 
-        <button class="danger" style="margin-top: 20px;" onclick="openConfirmReset()">Reset All Stats</button>
+        <button class="danger" style="margin-top:18px;" onclick="openConfirmReset()">Reset All Stats</button>
       </div>
     </section>
 
     <!-- RESULTS MODAL -->
     <div id="resultsModal" class="modal-overlay">
       <div class="modal-card">
-        <h2 id="resultsGameName" class="game-title" style="margin-bottom: 0;">Game</h2>
-        <div class="results-score" id="resultsScore">0</div>
-        <div class="results-best" id="resultsBestRow"></div>
-        <div id="resultsToasts"></div>
-        <div class="results-stats" id="resultsStats"></div>
+        <h2 id="resultsGameName" class="game-title" style="margin-bottom:0;">Game</h2>
+        <div id="resultsScore" class="results-score">0</div>
+        <div id="resultsBestRow" class="results-best"></div>
+        <div id="resultsStats" class="results-stats"></div>
+        <div id="resultsExplainer" class="results-explainer"></div>
+
         <div class="modal-actions">
           <button class="secondary" onclick="resultsHome()">Home</button>
+          <button class="secondary" onclick="emailResults()">Email</button>
           <button onclick="playAgainFromResults()">Play Again</button>
         </div>
       </div>
     </div>
 
-    <!-- RESET CONFIRM MODAL -->
+    <!-- RESET MODAL -->
     <div id="confirmModal" class="modal-overlay">
       <div class="modal-card">
         <h2 class="game-title">Reset everything?</h2>
-        <p class="instructions" style="margin-bottom: 4px;">This clears your total score, streak, personal bests, and achievements. It can't be undone.</p>
+        <p class="instructions" style="margin-bottom:4px;">
+          This clears your total score, progress history, best scores, and saved stats.
+        </p>
         <div class="modal-actions">
           <button class="secondary" onclick="closeConfirmReset()">Cancel</button>
           <button class="danger" onclick="doResetStats()">Reset</button>
@@ -1105,323 +1237,698 @@
       </div>
     </div>
 
-    <!-- COUNTDOWN OVERLAY -->
+    <!-- COUNTDOWN -->
     <div id="countdownOverlay" class="countdown-overlay">
       <div id="countdownNumber">3</div>
-    </div>
-
-    <div class="footer-note">
-      Original web game. No Lumosity branding, assets, or exact game copies included.
     </div>
   </main>
 
   <script>
-    // ---------------------------
-    // CONSTANTS & LABELS
-    // ---------------------------
+    // -----------------------------------------
+    // STORAGE / STATE
+    // -----------------------------------------
+    const STORAGE_KEY = "mindSprint_v3";
 
-    const gameLabels = { Memory: 'Memory Grid', Focus: 'Focus Colors', Math: 'Speed Math', Reaction: 'Reaction Time', Recall: 'Number Recall' };
-    const gameIcons  = { Memory: 'ð§ ', Focus: 'ð¯', Math: 'ð§®', Reaction: 'â¡', Recall: 'ð¢' };
-    const gameColors = { Memory: '#38bdf8', Focus: '#facc15', Math: '#fb923c', Reaction: '#22c55e', Recall: '#a855f7' };
-
-    const hasStorage = typeof window !== 'undefined' && !!window.storage;
-    const reduceMotion = typeof window.matchMedia === 'function' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-    const defaultProfile = {
+    const defaultState = {
       totalScore: 0,
       plays: 0,
-      bestScores: { Memory: 0, Focus: 0, Math: 0, Reaction: 0, Recall: 0 },
-      bestLevels: { Memory: 0, Recall: 0 },
-      bestStreaks: { Focus: 0, Math: 0 },
+      player: {
+        name: "",
+        email: ""
+      },
+      bestScores: {
+        Memory: 0,
+        Focus: 0,
+        Math: 0,
+        Reaction: 0,
+        Recall: 0
+      },
+      bestLevels: {
+        Memory: 0,
+        Recall: 0
+      },
+      bestStreaks: {
+        Focus: 0,
+        Math: 0
+      },
       bestReactionMs: null,
-      streak: { current: 0, longest: 0, lastDate: null },
-      settings: { sound: true, haptics: true },
-      achievements: []
+      streak: {
+        current: 0,
+        longest: 0,
+        lastDate: null
+      },
+      settings: {
+        sound: true,
+        haptics: true
+      },
+      sessions: []
     };
 
-    function clone(obj) {
-      return JSON.parse(JSON.stringify(obj));
-    }
-
-    let profile = clone(defaultProfile);
-    let history = [];
+    let state = loadState();
+    let audioContext = null;
     let activeGameKey = null;
+    let lastSession = null;
 
-    // ---------------------------
-    // PERSISTENCE
-    // ---------------------------
-
-    function normalizeProfile(loaded) {
-      const p = clone(defaultProfile);
-      if (!loaded) return p;
-      p.totalScore = Number(loaded.totalScore) || 0;
-      p.plays = Number(loaded.plays) || 0;
-      p.bestScores = { ...p.bestScores, ...(loaded.bestScores || {}) };
-      p.bestLevels = { ...p.bestLevels, ...(loaded.bestLevels || {}) };
-      p.bestStreaks = { ...p.bestStreaks, ...(loaded.bestStreaks || {}) };
-      p.bestReactionMs = (typeof loaded.bestReactionMs === 'number') ? loaded.bestReactionMs : null;
-      p.streak = { ...p.streak, ...(loaded.streak || {}) };
-      p.settings = { ...p.settings, ...(loaded.settings || {}) };
-      p.achievements = Array.isArray(loaded.achievements) ? loaded.achievements : [];
-      return p;
-    }
-
-    async function loadData() {
-      if (!hasStorage) return;
+    function loadState() {
       try {
-        const result = await window.storage.get('gamedata');
-        if (result && result.value) {
-          const parsed = JSON.parse(result.value);
-          profile = normalizeProfile(parsed.profile);
-          history = Array.isArray(parsed.history) ? parsed.history.slice(-30) : [];
-        }
-      } catch (err) {
-        // No saved data yet - start fresh with defaults.
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return structuredClone(defaultState);
+        const parsed = JSON.parse(raw);
+
+        return {
+          ...structuredClone(defaultState),
+          ...parsed,
+          player: { ...structuredClone(defaultState).player, ...(parsed.player || {}) },
+          bestScores: { ...structuredClone(defaultState).bestScores, ...(parsed.bestScores || {}) },
+          bestLevels: { ...structuredClone(defaultState).bestLevels, ...(parsed.bestLevels || {}) },
+          bestStreaks: { ...structuredClone(defaultState).bestStreaks, ...(parsed.bestStreaks || {}) },
+          streak: { ...structuredClone(defaultState).streak, ...(parsed.streak || {}) },
+          settings: { ...structuredClone(defaultState).settings, ...(parsed.settings || {}) },
+          sessions: Array.isArray(parsed.sessions) ? parsed.sessions.slice(-60) : []
+        };
+      } catch {
+        return structuredClone(defaultState);
       }
     }
 
-    async function saveData() {
-      if (!hasStorage) return;
-      try {
-        await window.storage.set('gamedata', JSON.stringify({ profile, history }));
-      } catch (err) {
-        console.error('MindSprint: could not save progress', err);
-      }
+    function saveState() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
     }
 
-    // ---------------------------
+    // -----------------------------------------
+    // UTILITIES
+    // -----------------------------------------
+    function rand(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    function randomItem(arr) {
+      return arr[Math.floor(Math.random() * arr.length)];
+    }
+
+    function clamp(value, min, max) {
+      return Math.max(min, Math.min(max, value));
+    }
+
+    function average(values) {
+      const clean = values.filter(v => Number.isFinite(v) && v > 0);
+      if (!clean.length) return 0;
+      return clean.reduce((sum, value) => sum + value, 0) / clean.length;
+    }
+
+    function formatMs(ms) {
+      if (!ms || !Number.isFinite(ms)) return "—";
+      if (ms >= 1000) return (ms / 1000).toFixed(2) + "s";
+      return Math.round(ms) + "ms";
+    }
+
+    function wait(ms) {
+      return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    function dateOnlyString(d = new Date()) {
+      return d.getFullYear() + "-" +
+        String(d.getMonth() + 1).padStart(2, "0") + "-" +
+        String(d.getDate()).padStart(2, "0");
+    }
+
+    function setFeedback(id, text, type = "") {
+      const el = document.getElementById(id);
+      el.textContent = text;
+      el.className = "feedback" + (type ? " " + type : "");
+    }
+
+    function vibrate(pattern) {
+      if (!state.settings.haptics) return;
+      if (navigator.vibrate) navigator.vibrate(pattern);
+    }
+
+    function savePlayerProfile() {
+      state.player.name = document.getElementById("playerName").value.trim();
+      state.player.email = document.getElementById("playerEmail").value.trim();
+      saveState();
+      renderAll();
+    }
+
+    function populatePlayerProfile() {
+      document.getElementById("playerName").value = state.player.name || "";
+      document.getElementById("playerEmail").value = state.player.email || "";
+    }
+
+    function updateStreak() {
+      const today = dateOnlyString(new Date());
+      if (state.streak.lastDate === today) return;
+
+      const now = new Date();
+      const yesterday = new Date(now);
+      yesterday.setDate(yesterday.getDate() - 1);
+      const yesterdayStr = dateOnlyString(yesterday);
+
+      if (state.streak.lastDate === yesterdayStr) {
+        state.streak.current += 1;
+      } else {
+        state.streak.current = 1;
+      }
+
+      state.streak.lastDate = today;
+      state.streak.longest = Math.max(state.streak.longest, state.streak.current);
+    }
+
+    function getAggregateStats() {
+      const sessions = state.sessions;
+      let totalCorrect = 0;
+      let totalWrong = 0;
+      let speedSamples = [];
+      let brainSamples = [];
+
+      sessions.forEach(s => {
+        totalCorrect += s.correct || 0;
+        totalWrong += s.wrong || 0;
+        if (s.avgMs) speedSamples.push(s.avgMs);
+        if (s.brainIndex) brainSamples.push(s.brainIndex);
+      });
+
+      const totalAnswers = totalCorrect + totalWrong;
+      return {
+        accuracy: totalAnswers ? Math.round((totalCorrect / totalAnswers) * 100) : 0,
+        avgMs: speedSamples.length ? Math.round(average(speedSamples)) : 0,
+        brainIndex: brainSamples.length ? Math.round(average(brainSamples.slice(-8))) : 0
+      };
+    }
+
+    function buildInsight() {
+      const sessions = state.sessions.slice(-6);
+      if (!sessions.length) return "Play a few rounds to start building a trend.";
+
+      const latest = sessions[sessions.length - 1];
+      const recentAvg = Math.round(average(sessions.map(s => s.brainIndex || 0)));
+
+      let trendText = "steady";
+      if (sessions.length >= 4) {
+        const earlier = average(sessions.slice(0, Math.floor(sessions.length / 2)).map(s => s.brainIndex || 0));
+        const later = average(sessions.slice(Math.floor(sessions.length / 2)).map(s => s.brainIndex || 0));
+        if (later > earlier + 4) trendText = "improving";
+        else if (later < earlier - 4) trendText = "slipping";
+      }
+
+      return `Latest: ${latest.gameLabel} — Brain Index ${latest.brainIndex}, accuracy ${latest.accuracy}%, avg speed ${formatMs(latest.avgMs)}. Your recent trend looks ${trendText}, with an average Brain Index of ${recentAvg}.`;
+    }
+
+    // -----------------------------------------
+    // CHART
+    // -----------------------------------------
+    function drawLineChart(canvasId, sessions) {
+      const canvas = document.getElementById(canvasId);
+      if (!canvas) return;
+
+      const rect = canvas.getBoundingClientRect();
+      const width = Math.max(300, Math.floor(rect.width));
+      const height = 170;
+      const dpr = window.devicePixelRatio || 1;
+
+      canvas.width = width * dpr;
+      canvas.height = height * dpr;
+
+      const ctx = canvas.getContext("2d");
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      ctx.clearRect(0, 0, width, height);
+
+      ctx.fillStyle = "rgba(255,255,255,0.04)";
+      ctx.fillRect(0, 0, width, height);
+
+      const padding = 28;
+      const chartW = width - padding * 2;
+      const chartH = height - padding * 2;
+
+      ctx.strokeStyle = "rgba(255,255,255,0.10)";
+      ctx.lineWidth = 1;
+
+      for (let i = 0; i <= 4; i++) {
+        const y = padding + (chartH / 4) * i;
+        ctx.beginPath();
+        ctx.moveTo(padding, y);
+        ctx.lineTo(width - padding, y);
+        ctx.stroke();
+      }
+
+      const recent = sessions.slice(-12);
+      if (!recent.length) {
+        ctx.fillStyle = "rgba(255,255,255,0.55)";
+        ctx.font = "12px system-ui";
+        ctx.fillText("No progress data yet", padding, height / 2);
+        return;
+      }
+
+      const points = recent.map((session, index) => {
+        const x = recent.length === 1
+          ? width / 2
+          : padding + (chartW / (recent.length - 1)) * index;
+        const y = padding + chartH - ((session.brainIndex || 0) / 100) * chartH;
+        return { x, y, value: session.brainIndex || 0 };
+      });
+
+      ctx.strokeStyle = "#38bdf8";
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      points.forEach((p, i) => {
+        if (i === 0) ctx.moveTo(p.x, p.y);
+        else ctx.lineTo(p.x, p.y);
+      });
+      ctx.stroke();
+
+      points.forEach(p => {
+        ctx.fillStyle = "#38bdf8";
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, 4, 0, Math.PI * 2);
+        ctx.fill();
+      });
+
+      ctx.fillStyle = "rgba(255,255,255,0.65)";
+      ctx.font = "12px system-ui";
+      ctx.fillText("0", 8, height - padding + 4);
+      ctx.fillText("100", 2, padding + 4);
+    }
+
+    // -----------------------------------------
+    // RENDERING
+    // -----------------------------------------
+    function renderHome() {
+      const agg = getAggregateStats();
+
+      document.getElementById("homeTotalScore").textContent = state.totalScore;
+      document.getElementById("homeDayStreak").textContent = state.streak.current;
+      document.getElementById("homePlays").textContent = state.plays;
+
+      document.getElementById("homeBrainIndex").textContent = agg.brainIndex;
+      document.getElementById("homeAccuracy").textContent = agg.accuracy + "%";
+      document.getElementById("homeAvgSpeed").textContent = agg.avgMs ? formatMs(agg.avgMs) : "—";
+      document.getElementById("homeInsight").textContent = buildInsight();
+
+      document.getElementById("bestMemory").textContent = state.bestScores.Memory || 0;
+      document.getElementById("bestFocus").textContent = state.bestScores.Focus || 0;
+      document.getElementById("bestMath").textContent = state.bestScores.Math || 0;
+      document.getElementById("bestReaction").textContent =
+        state.bestReactionMs !== null ? state.bestReactionMs + "ms" : "0";
+      document.getElementById("bestRecall").textContent = state.bestScores.Recall || 0;
+
+      drawLineChart("homeChart", state.sessions);
+    }
+
+    function renderStats() {
+      const agg = getAggregateStats();
+      document.getElementById("statsTotalScore").textContent = state.totalScore;
+      document.getElementById("statsBrain").textContent = agg.brainIndex;
+      document.getElementById("statsBestStreak").textContent = state.streak.longest;
+      document.getElementById("statsAccuracy").textContent = agg.accuracy + "%";
+      document.getElementById("statsAvgSpeed").textContent = agg.avgMs ? formatMs(agg.avgMs) : "—";
+      document.getElementById("statsSessions").textContent = state.sessions.length;
+      document.getElementById("statsInsight").textContent = buildInsight();
+
+      drawLineChart("statsChart", state.sessions);
+
+      const list = document.getElementById("recentSessions");
+      list.innerHTML = "";
+
+      const recent = state.sessions.slice(-8).reverse();
+      if (!recent.length) {
+        list.innerHTML = `<div class="empty-note">No sessions yet. Play a game to start building your history.</div>`;
+        return;
+      }
+
+      recent.forEach(session => {
+        const item = document.createElement("div");
+        item.className = "session-item";
+        item.innerHTML = `
+          <div class="left">
+            <div class="name">${session.gameLabel}</div>
+            <div class="meta">
+              ${session.dateLabel}<br>
+              Accuracy ${session.accuracy}% · Avg ${formatMs(session.avgMs)} · Brain ${session.brainIndex}
+            </div>
+          </div>
+          <div class="right">
+            <div class="score">${session.score}</div>
+            <div class="label">Score</div>
+          </div>
+        `;
+        list.appendChild(item);
+      });
+    }
+
+    function applySettingsUI() {
+      document.getElementById("soundToggle").classList.toggle("on", !!state.settings.sound);
+      document.getElementById("hapticsToggle").classList.toggle("on", !!state.settings.haptics);
+    }
+
+    function renderAll() {
+      populatePlayerProfile();
+      renderHome();
+      renderStats();
+      applySettingsUI();
+    }
+
+    // -----------------------------------------
     // NAVIGATION
-    // ---------------------------
-
+    // -----------------------------------------
     function showScreen(id) {
-      document.querySelectorAll('.screen').forEach(screen => screen.classList.remove('active'));
-      document.getElementById(id).classList.add('active');
+      document.querySelectorAll(".screen").forEach(screen => screen.classList.remove("active"));
+      document.getElementById(id).classList.add("active");
       initializeAudio();
 
-      if (id === 'home') renderHome();
-      if (id === 'stats') renderStats();
-      if (id === 'settings') applySettingsUI();
+      if (id === "home") renderHome();
+      if (id === "stats") renderStats();
+      if (id === "settings") applySettingsUI();
     }
 
     function returnHome() {
       stopFocus();
       stopMath();
       stopReaction();
-      memory.gameStarted = false;
-      memory.acceptingInput = false;
-      recall.gameStarted = false;
-      recall.acceptingInput = false;
-      showScreen('home');
+      stopMemory();
+      stopRecall();
+      showScreen("home");
     }
 
-    // ---------------------------
-    // HOME / STATS RENDERING
-    // ---------------------------
-
-    function renderHome() {
-      document.getElementById('totalScore').textContent = profile.totalScore;
-      document.getElementById('plays').textContent = profile.plays;
-      document.getElementById('streakValue').textContent = profile.streak.current;
-
-      Object.keys(gameLabels).forEach(key => {
-        const el = document.getElementById('homeBest' + key);
-        if (el) el.textContent = profile.bestScores[key] || 0;
-      });
-    }
-
-    function renderStats() {
-      document.getElementById('statsTotalScore').textContent = profile.totalScore;
-      document.getElementById('statsStreak').textContent = profile.streak.current;
-      document.getElementById('statsBestStreak').textContent = profile.streak.longest;
-
-      const bestGrid = document.getElementById('bestGrid');
-      bestGrid.innerHTML = '';
-      Object.keys(gameLabels).forEach(key => {
-        const card = document.createElement('div');
-        card.className = 'best-card';
-        card.style.setProperty('--card-accent', gameColors[key]);
-        card.innerHTML =
-          '<div class="best-icon">' + gameIcons[key] + '</div>' +
-          '<div class="best-name">' + gameLabels[key] + '</div>' +
-          '<div class="best-score">' + (profile.bestScores[key] || 0) + '</div>';
-        bestGrid.appendChild(card);
-      });
-
-      renderActivityChart();
-      renderAchievements();
-    }
-
-    function renderActivityChart() {
-      const container = document.getElementById('activityChart');
-      container.innerHTML = '';
-
-      if (!history.length) {
-        container.innerHTML = '<p class="muted-note">Play a game to start tracking your activity.</p>';
-        return;
+    // -----------------------------------------
+    // SETTINGS
+    // -----------------------------------------
+    function toggleSound() {
+      state.settings.sound = !state.settings.sound;
+      saveState();
+      applySettingsUI();
+      if (state.settings.sound) {
+        initializeAudio();
+        playTone(660, 0.07, "sine", 0.06);
       }
-
-      const recent = history.slice(-10);
-      const max = Math.max(...recent.map(h => h.score), 1);
-
-      recent.forEach(h => {
-        const bar = document.createElement('div');
-        bar.className = 'chart-bar';
-        bar.style.height = Math.max(6, Math.round((h.score / max) * 100)) + '%';
-        bar.style.background = gameColors[h.game] || 'var(--accent)';
-        bar.title = (gameLabels[h.game] || h.game) + ': ' + h.score;
-        container.appendChild(bar);
-      });
     }
 
-    function renderAchievements() {
-      const grid = document.getElementById('achievementsGrid');
-      grid.innerHTML = '';
-
-      achievementDefs.forEach(def => {
-        const unlocked = profile.achievements.includes(def.id);
-        const el = document.createElement('div');
-        el.className = 'achievement' + (unlocked ? ' unlocked' : '');
-        el.innerHTML =
-          '<div class="achievement-icon">' + def.icon + '</div>' +
-          '<div class="achievement-name">' + def.name + '</div>' +
-          '<div class="achievement-desc">' + def.desc + '</div>';
-        grid.appendChild(el);
-      });
+    function toggleHaptics() {
+      state.settings.haptics = !state.settings.haptics;
+      saveState();
+      applySettingsUI();
+      if (state.settings.haptics) vibrate(20);
     }
 
-    // ---------------------------
-    // STREAK
-    // ---------------------------
-
-    function localDateStr(d) {
-      return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+    function openConfirmReset() {
+      document.getElementById("confirmModal").classList.add("active");
     }
 
-    function updateStreak() {
-      const today = new Date();
-      const todayStr = localDateStr(today);
-
-      if (profile.streak.lastDate === todayStr) {
-        return { changed: false, current: profile.streak.current };
-      }
-
-      const yesterday = new Date(today);
-      yesterday.setDate(yesterday.getDate() - 1);
-      const yesterdayStr = localDateStr(yesterday);
-
-      profile.streak.current = (profile.streak.lastDate === yesterdayStr) ? profile.streak.current + 1 : 1;
-      profile.streak.lastDate = todayStr;
-      profile.streak.longest = Math.max(profile.streak.longest, profile.streak.current);
-
-      return { changed: true, current: profile.streak.current };
+    function closeConfirmReset() {
+      document.getElementById("confirmModal").classList.remove("active");
     }
 
-    // ---------------------------
-    // ACHIEVEMENTS
-    // ---------------------------
+    function doResetStats() {
+      state = structuredClone(defaultState);
+      saveState();
+      closeConfirmReset();
+      renderAll();
+      showScreen("home");
+    }
 
-    const achievementDefs = [
-      { id: 'first_play',     icon: 'ð®', name: 'First Steps',       desc: 'Play your first game',                    check: p => p.plays >= 1 },
-      { id: 'score_500',      icon: 'â­', name: 'Rising Star',        desc: 'Reach 500 total score',                   check: p => p.totalScore >= 500 },
-      { id: 'score_2000',     icon: 'ð', name: 'Brain Champion',     desc: 'Reach 2,000 total score',                 check: p => p.totalScore >= 2000 },
-      { id: 'score_5000',     icon: 'ð', name: 'Grand Master',       desc: 'Reach 5,000 total score',                 check: p => p.totalScore >= 5000 },
-      { id: 'memory_lvl6',    icon: 'ð§ ', name: 'Pattern Master',     desc: 'Reach level 6 in Memory Grid',            check: p => p.bestLevels.Memory >= 6 },
-      { id: 'recall_lvl6',    icon: 'ð¢', name: 'Sequence Sage',      desc: 'Reach level 6 in Number Recall',          check: p => p.bestLevels.Recall >= 6 },
-      { id: 'focus_streak10', icon: 'ð¯', name: 'Sharp Focus',        desc: 'Hit a streak of 10 in Focus Colors',      check: p => p.bestStreaks.Focus >= 10 },
-      { id: 'math_streak10',  icon: 'â', name: 'Math Whiz',          desc: 'Hit a streak of 10 in Speed Math',        check: p => p.bestStreaks.Math >= 10 },
-      { id: 'reaction_300',   icon: 'â¡', name: 'Quick Draw',         desc: 'Average under 300ms in Reaction Time',    check: p => p.bestReactionMs !== null && p.bestReactionMs < 300 },
-      { id: 'reaction_220',   icon: 'ð', name: 'Lightning Reflexes', desc: 'Average under 220ms in Reaction Time',    check: p => p.bestReactionMs !== null && p.bestReactionMs < 220 },
-      { id: 'streak_3',       icon: 'ð¥', name: 'On a Roll',          desc: 'Reach a 3-day streak',                    check: p => p.streak.longest >= 3 },
-      { id: 'streak_7',       icon: 'ð', name: 'Dedicated',          desc: 'Reach a 7-day streak',                    check: p => p.streak.longest >= 7 },
-      { id: 'plays_30',       icon: 'ð', name: 'Marathoner',         desc: 'Play 30 games total',                     check: p => p.plays >= 30 },
-      { id: 'all_games',      icon: 'ð°', name: 'Well Rounded',       desc: 'Set a best score in every game',          check: p => Object.values(p.bestScores).every(v => v > 0) }
+    // -----------------------------------------
+    // AUDIO
+    // -----------------------------------------
+    function initializeAudio() {
+      const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+      if (!AudioContextClass) return null;
+
+      if (!audioContext) audioContext = new AudioContextClass();
+      if (audioContext.state === "suspended") audioContext.resume();
+
+      return audioContext;
+    }
+
+    function playTone(frequency, duration, type = "sine", volume = 0.08) {
+      if (!state.settings.sound) return;
+      const ctx = initializeAudio();
+      if (!ctx) return;
+
+      const oscillator = ctx.createOscillator();
+      const gain = ctx.createGain();
+
+      oscillator.type = type;
+      oscillator.frequency.value = frequency;
+
+      gain.gain.setValueAtTime(volume, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
+
+      oscillator.connect(gain);
+      gain.connect(ctx.destination);
+
+      oscillator.start();
+      oscillator.stop(ctx.currentTime + duration);
+    }
+
+    function playCorrectSignal() {
+      playTone(880, 0.08, "sine", 0.08);
+      setTimeout(() => playTone(1175, 0.09, "sine", 0.07), 75);
+      vibrate(20);
+    }
+
+    function playWrongSignal() {
+      playTone(160, 0.16, "sawtooth", 0.09);
+      setTimeout(() => playTone(110, 0.18, "sawtooth", 0.08), 110);
+      vibrate([60, 30, 60]);
+    }
+
+    const memoryFrequencies = [
+      261.63, 293.66, 329.63, 392.00,
+      440.00, 493.88, 523.25, 587.33,
+      659.25, 783.99, 880.00, 987.77,
+      1046.50, 1174.66, 1318.51, 1567.98
     ];
 
-    function checkAchievements() {
-      const unlocked = [];
-      achievementDefs.forEach(def => {
-        if (!profile.achievements.includes(def.id) && def.check(profile)) {
-          profile.achievements.push(def.id);
-          unlocked.push(def);
+    function playMemoryTileSound(index) {
+      if (!state.settings.sound) return;
+      const frequency = memoryFrequencies[index % memoryFrequencies.length];
+      playTone(frequency, 0.18, "sine", 0.09);
+      vibrate(12);
+    }
+
+    // -----------------------------------------
+    // COUNTDOWN
+    // -----------------------------------------
+    function runCountdown(onComplete) {
+      const overlay = document.getElementById("countdownOverlay");
+      const numberEl = document.getElementById("countdownNumber");
+      let count = 3;
+
+      const pulse = () => {
+        numberEl.style.animation = "none";
+        requestAnimationFrame(() => {
+          numberEl.style.animation = "";
+        });
+      };
+
+      overlay.classList.add("active");
+      numberEl.textContent = count;
+      pulse();
+      playTone(440, 0.1, "sine", 0.05);
+
+      const interval = setInterval(() => {
+        count -= 1;
+
+        if (count > 0) {
+          numberEl.textContent = count;
+          pulse();
+          playTone(440, 0.1, "sine", 0.05);
+        } else {
+          numberEl.textContent = "GO!";
+          pulse();
+          playTone(660, 0.16, "sine", 0.08);
+          clearInterval(interval);
+
+          setTimeout(() => {
+            overlay.classList.remove("active");
+            onComplete();
+          }, 450);
         }
-      });
-      return unlocked;
+      }, 600);
     }
 
-    // ---------------------------
-    // RESULTS MODAL & CONFETTI
-    // ---------------------------
+    // -----------------------------------------
+    // SESSION / RESULTS
+    // -----------------------------------------
+    function computeBrainIndex({ game, score, correct, wrong, avgMs, level = 0, streak = 0, bestMs = 0 }) {
+      const attempts = correct + wrong;
+      const accuracy = attempts ? Math.round((correct / attempts) * 100) : 0;
 
-    function pushHistory(gameKey, score) {
-      history.push({ game: gameKey, score, date: localDateStr(new Date()) });
-      if (history.length > 30) history = history.slice(-30);
-    }
-
-    function finishGame(gameKey, score, extraStats) {
-      const previousBest = profile.bestScores[gameKey] || 0;
-      const isNewBest = score > previousBest;
-
-      profile.totalScore += score;
-      profile.plays += 1;
-      if (isNewBest) profile.bestScores[gameKey] = score;
-
-      const streakInfo = updateStreak();
-      pushHistory(gameKey, score);
-      const unlocked = checkAchievements();
-
-      saveData();
-
-      showResultsModal(gameKey, score, extraStats, isNewBest, previousBest, streakInfo, unlocked);
-    }
-
-    function showResultsModal(gameKey, score, extraStats, isNewBest, previousBest, streakInfo, unlocked) {
-      activeGameKey = gameKey;
-
-      document.getElementById('resultsGameName').textContent = gameLabels[gameKey];
-      document.getElementById('resultsScore').textContent = score;
-
-      const bestRow = document.getElementById('resultsBestRow');
-      if (isNewBest) {
-        bestRow.textContent = previousBest > 0 ? 'New personal best!' : 'First score recorded!';
-        bestRow.className = 'results-best new';
+      let speedScore = 0;
+      if (game === "Reaction") {
+        speedScore = bestMs ? clamp(Math.round(140 - (bestMs / 4)), 0, 100) : 0;
       } else {
-        bestRow.textContent = 'Personal best: ' + previousBest;
-        bestRow.className = 'results-best';
+        speedScore = avgMs ? clamp(Math.round(100 - (avgMs / 18)), 0, 100) : 0;
       }
 
-      const toasts = document.getElementById('resultsToasts');
-      toasts.innerHTML = '';
+      const scoreScore = clamp(Math.round(score / 5), 0, 100);
+      const depthScore = clamp(level * 10 + streak * 3, 0, 100);
 
-      if (streakInfo.changed && streakInfo.current > 1) {
-        const t = document.createElement('div');
-        t.className = 'toast streak';
-        t.textContent = 'ð¥ ' + streakInfo.current + '-day streak!';
-        toasts.appendChild(t);
+      return clamp(Math.round(
+        (accuracy * 0.35) +
+        (speedScore * 0.35) +
+        (scoreScore * 0.15) +
+        (depthScore * 0.15)
+      ), 0, 100);
+    }
+
+    function buildExplainer(session) {
+      if (session.game === "Reaction") {
+        if (session.bestMs && session.bestMs < 220) {
+          return "Very fast reactions. You’re showing excellent response speed and strong sensorimotor timing.";
+        }
+        if (session.bestMs && session.bestMs < 300) {
+          return "Good reaction speed. You’re responding quickly, with room to sharpen consistency even further.";
+        }
+        return "Your reaction speed is building. Focus on staying relaxed and tapping only when the signal turns green.";
       }
 
-      unlocked.forEach(def => {
-        const t = document.createElement('div');
-        t.className = 'toast achievement';
-        t.textContent = def.icon + ' Achievement unlocked: ' + def.name;
-        toasts.appendChild(t);
+      if (session.game === "Memory") {
+        if (session.level >= 6) {
+          return "Strong pattern memory. You’re holding longer sequences well and responding with solid consistency.";
+        }
+        return "You’re building working memory. Try to prioritize pattern recognition first, then speed.";
+      }
+
+      if (session.game === "Recall") {
+        if (session.level >= 6) {
+          return "Nice recall performance. Your short-term sequence retention is trending strong.";
+        }
+        return "Your number recall is developing. Slowing down slightly can improve accuracy and boost your overall index.";
+      }
+
+      if (session.game === "Focus") {
+        if (session.accuracy >= 85) {
+          return "Strong selective attention. You’re filtering the distracting word and choosing the correct color efficiently.";
+        }
+        return "Focus is improving. Try to slow your first impulse and aim for slightly higher accuracy.";
+      }
+
+      if (session.game === "Math") {
+        if (session.accuracy >= 85) {
+          return "Good speed and mental arithmetic control. You’re balancing quick solving with solid accuracy.";
+        }
+        return "Math speed is coming along. Improving accuracy first will raise your overall performance faster.";
+      }
+
+      return "Good work. Keep playing consistently to improve your Brain Activity Index over time.";
+    }
+
+    function finalizeSession({
+      game,
+      gameLabel,
+      score,
+      correct = 0,
+      wrong = 0,
+      avgMs = 0,
+      level = 0,
+      streak = 0,
+      bestMs = 0,
+      extraRows = []
+    }) {
+      const accuracy = (correct + wrong) ? Math.round((correct / (correct + wrong)) * 100) : 0;
+      const brainIndex = computeBrainIndex({ game, score, correct, wrong, avgMs, level, streak, bestMs });
+
+      const session = {
+        id: Date.now(),
+        game,
+        gameLabel,
+        score,
+        correct,
+        wrong,
+        accuracy,
+        avgMs: avgMs || 0,
+        level,
+        streak,
+        bestMs,
+        brainIndex,
+        dateLabel: new Date().toLocaleString()
+      };
+
+      state.totalScore += score;
+      state.plays += 1;
+
+      const previousBest = state.bestScores[game] || 0;
+      const isNewBest = score > previousBest;
+      if (isNewBest) state.bestScores[game] = score;
+
+      if (game === "Memory") {
+        state.bestLevels.Memory = Math.max(state.bestLevels.Memory || 0, level || 0);
+      }
+      if (game === "Recall") {
+        state.bestLevels.Recall = Math.max(state.bestLevels.Recall || 0, level || 0);
+      }
+      if (game === "Focus") {
+        state.bestStreaks.Focus = Math.max(state.bestStreaks.Focus || 0, streak || 0);
+      }
+      if (game === "Math") {
+        state.bestStreaks.Math = Math.max(state.bestStreaks.Math || 0, streak || 0);
+      }
+      if (game === "Reaction" && bestMs) {
+        state.bestReactionMs = state.bestReactionMs === null ? bestMs : Math.min(state.bestReactionMs, bestMs);
+      }
+
+      updateStreak();
+      state.sessions.push(session);
+      state.sessions = state.sessions.slice(-60);
+      saveState();
+
+      lastSession = session;
+      renderAll();
+
+      const rows = [
+        { label: "Correct", value: correct },
+        { label: "Wrong", value: wrong },
+        { label: "Accuracy", value: accuracy + "%" },
+        { label: "Avg speed", value: formatMs(avgMs) },
+        { label: "Brain Index", value: brainIndex }
+      ];
+
+      if (level) rows.unshift({ label: "Level", value: level });
+      if (streak) rows.push({ label: "Best streak", value: streak });
+      if (bestMs) rows.push({ label: "Best time", value: bestMs + "ms" });
+
+      extraRows.forEach(r => rows.push(r));
+
+      showResultsModal({
+        game,
+        gameLabel,
+        score,
+        rows,
+        isNewBest,
+        previousBest,
+        explainer: buildExplainer(session)
+      });
+    }
+
+    function showResultsModal({ game, gameLabel, score, rows, isNewBest, previousBest, explainer }) {
+      activeGameKey = game;
+      document.getElementById("resultsGameName").textContent = gameLabel;
+      document.getElementById("resultsScore").textContent = score;
+
+      const bestRow = document.getElementById("resultsBestRow");
+      if (isNewBest) {
+        bestRow.textContent = previousBest > 0 ? "New personal best" : "First score recorded";
+        bestRow.className = "results-best new";
+      } else {
+        bestRow.textContent = "Personal best: " + previousBest;
+        bestRow.className = "results-best";
+      }
+
+      const stats = document.getElementById("resultsStats");
+      stats.innerHTML = "";
+      rows.forEach(row => {
+        const el = document.createElement("div");
+        el.className = "results-stat-row";
+        el.innerHTML = `<span>${row.label}</span><strong>${row.value}</strong>`;
+        stats.appendChild(el);
       });
 
-      const statsBox = document.getElementById('resultsStats');
-      statsBox.innerHTML = '';
-      extraStats.forEach(s => {
-        const row = document.createElement('div');
-        row.className = 'results-stat-row';
-        row.innerHTML = '<span>' + s.label + '</span><strong>' + s.value + '</strong>';
-        statsBox.appendChild(row);
-      });
-
-      document.getElementById('resultsModal').classList.add('active');
-
-      if (isNewBest && previousBest > 0) launchConfetti();
+      document.getElementById("resultsExplainer").textContent = explainer;
+      document.getElementById("resultsModal").classList.add("active");
     }
 
     function closeResults() {
-      document.getElementById('resultsModal').classList.remove('active');
+      document.getElementById("resultsModal").classList.remove("active");
     }
 
     function resultsHome() {
@@ -1431,105 +1938,91 @@
 
     function playAgainFromResults() {
       closeResults();
-      const starter = gameStarters[activeGameKey];
-      if (starter) starter();
-    }
-
-    function launchConfetti() {
-      if (reduceMotion) return;
-      const colors = [gameColors.Memory, gameColors.Focus, gameColors.Math, gameColors.Reaction, gameColors.Recall, '#f9fafb'];
-
-      for (let i = 0; i < 26; i++) {
-        const piece = document.createElement('div');
-        piece.className = 'confetti-piece';
-        piece.style.left = Math.random() * 100 + 'vw';
-        piece.style.background = colors[Math.floor(Math.random() * colors.length)];
-        piece.style.animationDuration = (1.5 + Math.random() * 1.3) + 's';
-        piece.style.transform = 'rotate(' + Math.round(Math.random() * 360) + 'deg)';
-        document.body.appendChild(piece);
-        setTimeout(() => piece.remove(), 3200);
-      }
-    }
-
-    // ---------------------------
-    // RESET CONFIRMATION
-    // ---------------------------
-
-    function openConfirmReset() {
-      document.getElementById('confirmModal').classList.add('active');
-    }
-
-    function closeConfirmReset() {
-      document.getElementById('confirmModal').classList.remove('active');
-    }
-
-    function doResetStats() {
-      profile = clone(defaultProfile);
-      history = [];
-      saveData();
-      applySettingsUI();
-      renderHome();
-      renderStats();
-      closeConfirmReset();
-    }
-
-    // ---------------------------
-    // COUNTDOWN
-    // ---------------------------
-
-    function runCountdown(onComplete) {
-      const overlay = document.getElementById('countdownOverlay');
-      const numberEl = document.getElementById('countdownNumber');
-      let count = 3;
-
-      const pulse = () => {
-        numberEl.style.animation = 'none';
-        requestAnimationFrame(() => { numberEl.style.animation = ''; });
+      const starters = {
+        Memory: startMemory,
+        Focus: startFocus,
+        Math: startMath,
+        Reaction: startReaction,
+        Recall: startRecall
       };
-
-      overlay.classList.add('active');
-      numberEl.textContent = count;
-      pulse();
-      playTone(440, 0.1, 'sine', 0.05);
-
-      const interval = setInterval(() => {
-        count -= 1;
-        if (count > 0) {
-          numberEl.textContent = count;
-          pulse();
-          playTone(440, 0.1, 'sine', 0.05);
-        } else {
-          numberEl.textContent = 'GO!';
-          pulse();
-          playTone(660, 0.16, 'sine', 0.08);
-          clearInterval(interval);
-          setTimeout(() => {
-            overlay.classList.remove('active');
-            onComplete();
-          }, 450);
-        }
-      }, 600);
+      if (starters[activeGameKey]) starters[activeGameKey]();
     }
 
-    // ---------------------------
-    // MEMORY GRID
-    // ---------------------------
+    // -----------------------------------------
+    // EMAIL RESULTS
+    // -----------------------------------------
+    function emailResults() {
+      savePlayerProfile();
 
+      const email = state.player.email;
+      if (!email) {
+        alert("Enter an email address first.");
+        return;
+      }
+
+      const agg = getAggregateStats();
+      const recent = state.sessions.slice(-10).reverse();
+
+      const lines = [
+        "MindSprint Results",
+        "",
+        `Name: ${state.player.name || "Not entered"}`,
+        `Email: ${state.player.email}`,
+        `Total Score: ${state.totalScore}`,
+        `Day Streak: ${state.streak.current}`,
+        `Longest Streak: ${state.streak.longest}`,
+        `Plays: ${state.plays}`,
+        `Brain Activity Index: ${agg.brainIndex}`,
+        `Overall Accuracy: ${agg.accuracy}%`,
+        `Overall Avg Speed: ${agg.avgMs ? formatMs(agg.avgMs) : "N/A"}`,
+        ""
+      ];
+
+      if (lastSession) {
+        lines.push("Latest Session:");
+        lines.push(`${lastSession.gameLabel} | Score ${lastSession.score} | Accuracy ${lastSession.accuracy}% | Avg ${formatMs(lastSession.avgMs)} | Brain ${lastSession.brainIndex}`);
+        lines.push("");
+      }
+
+      lines.push("Recent Sessions:");
+      if (!recent.length) {
+        lines.push("No sessions recorded yet.");
+      } else {
+        recent.forEach((s, i) => {
+          lines.push(
+            `${i + 1}. ${s.dateLabel} | ${s.gameLabel} | Score ${s.score} | Accuracy ${s.accuracy}% | Avg ${formatMs(s.avgMs)} | Brain ${s.brainIndex}`
+          );
+        });
+      }
+
+      const subject = encodeURIComponent("MindSprint Results");
+      const body = encodeURIComponent(lines.join("\n"));
+      window.location.href = `mailto:${email}?subject=${subject}&body=${body}`;
+    }
+
+    // -----------------------------------------
+    // MEMORY GRID
+    // -----------------------------------------
     const memory = {
       sequence: [],
       inputIndex: 0,
       level: 1,
       score: 0,
       lives: 3,
+      correct: 0,
+      wrong: 0,
+      responseTimes: [],
+      turnStartedAt: 0,
       acceptingInput: false,
-      gameStarted: false
+      gameStarted: false,
+      runId: 0
     };
 
-    const memoryGrid = document.getElementById('memoryGrid');
+    const memoryGrid = document.getElementById("memoryGrid");
 
     for (let i = 0; i < 16; i++) {
-      const tile = document.createElement('div');
-      tile.className = 'tile';
+      const tile = document.createElement("div");
+      tile.className = "tile";
       tile.onclick = () => handleMemoryTap(i);
       memoryGrid.appendChild(tile);
     }
@@ -1542,18 +2035,31 @@
       memory.level = 1;
       memory.score = 0;
       memory.lives = 3;
+      memory.correct = 0;
+      memory.wrong = 0;
+      memory.responseTimes = [];
+      memory.turnStartedAt = 0;
       memory.acceptingInput = false;
       memory.gameStarted = true;
+      memory.runId += 1;
 
       updateMemoryHud();
-      setFeedback('memoryFeedback', 'Watch the pattern.', '');
+      setFeedback("memoryFeedback", "Watch and listen to the pattern.", "");
       nextMemoryRound();
     }
 
+    function stopMemory() {
+      memory.acceptingInput = false;
+      memory.gameStarted = false;
+      memory.runId += 1;
+    }
+
     function updateMemoryHud() {
-      document.getElementById('memoryLevel').textContent = memory.level;
-      document.getElementById('memoryScore').textContent = memory.score;
-      document.getElementById('memoryLives').textContent = memory.lives;
+      document.getElementById("memoryLevel").textContent = memory.level;
+      document.getElementById("memoryScore").textContent = memory.score;
+      document.getElementById("memoryLives").textContent = memory.lives;
+      document.getElementById("memoryAvg").textContent =
+        memory.responseTimes.length ? formatMs(average(memory.responseTimes)) : "—";
     }
 
     function nextMemoryRound() {
@@ -1561,90 +2067,104 @@
       memory.inputIndex = 0;
       memory.sequence.push(Math.floor(Math.random() * 16));
       updateMemoryHud();
-      playMemorySequence();
+      playMemorySequence(memory.runId);
     }
 
-    async function playMemorySequence() {
-      const tiles = [...document.querySelectorAll('#memoryGrid .tile')];
-
+    async function playMemorySequence(runId) {
+      const tiles = [...document.querySelectorAll("#memoryGrid .tile")];
       memory.acceptingInput = false;
       memory.inputIndex = 0;
 
       for (const index of memory.sequence) {
-        await wait(350);
-        tiles[index].classList.add('active');
-        await wait(450);
-        tiles[index].classList.remove('active');
+        if (runId !== memory.runId || !memory.gameStarted) return;
+
+        await wait(320);
+        if (runId !== memory.runId || !memory.gameStarted) return;
+
+        tiles[index].classList.add("active");
+        playMemoryTileSound(index);
+        await wait(420);
+        tiles[index].classList.remove("active");
       }
 
-      setFeedback('memoryFeedback', 'Your turn.', '');
+      if (runId !== memory.runId || !memory.gameStarted) return;
+      setFeedback("memoryFeedback", "Your turn.", "");
+      memory.turnStartedAt = performance.now();
       memory.acceptingInput = true;
     }
 
     function handleMemoryTap(index) {
       if (!memory.acceptingInput || !memory.gameStarted) return;
 
-      initializeAudio();
+      const now = performance.now();
+      if (memory.turnStartedAt) {
+        memory.responseTimes.push(now - memory.turnStartedAt);
+      }
 
-      const tiles = [...document.querySelectorAll('#memoryGrid .tile')];
+      const tiles = [...document.querySelectorAll("#memoryGrid .tile")];
       const expected = memory.sequence[memory.inputIndex];
 
       if (index === expected) {
-        playCorrectSignal();
+        memory.correct += 1;
+        playMemoryTileSound(index);
 
-        tiles[index].classList.add('correct');
-        setTimeout(() => tiles[index].classList.remove('correct'), 180);
+        tiles[index].classList.add("correct");
+        setTimeout(() => tiles[index].classList.remove("correct"), 180);
 
         memory.inputIndex += 1;
         memory.score += 10;
+        memory.turnStartedAt = performance.now();
 
         if (memory.inputIndex === memory.sequence.length) {
           memory.level += 1;
           memory.score += 25;
           memory.acceptingInput = false;
-          setFeedback('memoryFeedback', 'Correct. Next round.', 'good');
+          setFeedback("memoryFeedback", "Correct. Next round.", "good");
           updateMemoryHud();
           setTimeout(nextMemoryRound, 800);
         }
       } else {
+        memory.wrong += 1;
         playWrongSignal();
 
-        tiles[index].classList.add('wrong');
-        setTimeout(() => tiles[index].classList.remove('wrong'), 220);
+        tiles[index].classList.add("wrong");
+        setTimeout(() => tiles[index].classList.remove("wrong"), 220);
 
         memory.lives -= 1;
         memory.acceptingInput = false;
         memory.inputIndex = 0;
-
         updateMemoryHud();
 
         if (memory.lives <= 0) {
           memory.gameStarted = false;
-          setFeedback('memoryFeedback', 'Game over.', 'bad');
+          setFeedback("memoryFeedback", "Game over.", "bad");
 
-          if (memory.level > profile.bestLevels.Memory) profile.bestLevels.Memory = memory.level;
-
-          finishGame('Memory', memory.score, [
-            { label: 'Level reached', value: memory.level }
-          ]);
+          finalizeSession({
+            game: "Memory",
+            gameLabel: "Memory Grid",
+            score: memory.score,
+            correct: memory.correct,
+            wrong: memory.wrong,
+            avgMs: Math.round(average(memory.responseTimes)),
+            level: memory.level
+          });
         } else {
-          setFeedback('memoryFeedback', 'Wrong tile. Watch the pattern again.', 'bad');
-          setTimeout(playMemorySequence, 900);
+          setFeedback("memoryFeedback", "Wrong tile. Watch the pattern again.", "bad");
+          setTimeout(() => playMemorySequence(memory.runId), 900);
         }
       }
 
       updateMemoryHud();
     }
 
-    // ---------------------------
+    // -----------------------------------------
     // FOCUS COLORS
-    // ---------------------------
-
+    // -----------------------------------------
     const focusColors = [
-      { name: 'red',    label: 'RED',    css: '#ef4444' },
-      { name: 'blue',   label: 'BLUE',   css: '#3b82f6' },
-      { name: 'green',  label: 'GREEN',  css: '#22c55e' },
-      { name: 'yellow', label: 'YELLOW', css: '#facc15' }
+      { name: "red", label: "RED", css: "#ef4444" },
+      { name: "blue", label: "BLUE", css: "#3b82f6" },
+      { name: "green", label: "GREEN", css: "#22c55e" },
+      { name: "yellow", label: "YELLOW", css: "#facc15" }
     ];
 
     const focus = {
@@ -1652,12 +2172,14 @@
       locked: false,
       time: 30,
       score: 0,
+      correct: 0,
+      wrong: 0,
       streak: 0,
       maxStreak: 0,
-      correct: 0,
-      attempts: 0,
       answer: null,
-      timer: null
+      timer: null,
+      promptStartedAt: 0,
+      responseTimes: []
     };
 
     function startFocus() {
@@ -1667,15 +2189,17 @@
       focus.locked = true;
       focus.time = 30;
       focus.score = 0;
+      focus.correct = 0;
+      focus.wrong = 0;
       focus.streak = 0;
       focus.maxStreak = 0;
-      focus.correct = 0;
-      focus.attempts = 0;
+      focus.answer = null;
+      focus.responseTimes = [];
 
       updateFocusHud();
-      setFeedback('focusFeedback', '', '');
-      document.getElementById('focusPrompt').textContent = 'READY';
-      document.getElementById('focusPrompt').style.color = '';
+      setFeedback("focusFeedback", "", "");
+      document.getElementById("focusPrompt").textContent = "READY";
+      document.getElementById("focusPrompt").style.color = "";
 
       runCountdown(() => {
         focus.active = true;
@@ -1687,15 +2211,7 @@
           updateFocusHud();
 
           if (focus.time <= 0) {
-            stopFocus();
-            const accuracy = focus.attempts ? Math.round((focus.correct / focus.attempts) * 100) : 0;
-
-            if (focus.maxStreak > profile.bestStreaks.Focus) profile.bestStreaks.Focus = focus.maxStreak;
-
-            finishGame('Focus', focus.score, [
-              { label: 'Accuracy', value: accuracy + '%' },
-              { label: 'Best streak', value: focus.maxStreak }
-            ]);
+            endFocusGame();
           }
         }, 1000);
       });
@@ -1708,10 +2224,28 @@
       focus.locked = false;
     }
 
+    function endFocusGame() {
+      if (!focus.active) return;
+      stopFocus();
+
+      finalizeSession({
+        game: "Focus",
+        gameLabel: "Focus Colors",
+        score: focus.score,
+        correct: focus.correct,
+        wrong: focus.wrong,
+        avgMs: Math.round(average(focus.responseTimes)),
+        streak: focus.maxStreak
+      });
+    }
+
     function updateFocusHud() {
-      document.getElementById('focusTime').textContent = focus.time;
-      document.getElementById('focusScore').textContent = focus.score;
-      document.getElementById('focusStreak').textContent = focus.streak;
+      const attempts = focus.correct + focus.wrong;
+      const accuracy = attempts ? Math.round((focus.correct / attempts) * 100) : 0;
+      document.getElementById("focusTime").textContent = focus.time;
+      document.getElementById("focusScore").textContent = focus.score;
+      document.getElementById("focusCorrect").textContent = focus.correct;
+      document.getElementById("focusAccuracy").textContent = accuracy + "%";
     }
 
     function nextFocusPrompt() {
@@ -1722,8 +2256,9 @@
 
       focus.answer = color.name;
       focus.locked = false;
+      focus.promptStartedAt = performance.now();
 
-      const prompt = document.getElementById('focusPrompt');
+      const prompt = document.getElementById("focusPrompt");
       prompt.textContent = word.label;
       prompt.style.color = color.css;
     }
@@ -1731,51 +2266,50 @@
     function answerFocus(color) {
       if (!focus.active || focus.locked) return;
 
-      initializeAudio();
       focus.locked = true;
-      focus.attempts += 1;
+      focus.responseTimes.push(performance.now() - focus.promptStartedAt);
 
       if (color === focus.answer) {
         playCorrectSignal();
-
-        focus.streak += 1;
         focus.correct += 1;
-        if (focus.streak > focus.maxStreak) focus.maxStreak = focus.streak;
+        focus.streak += 1;
+        focus.maxStreak = Math.max(focus.maxStreak, focus.streak);
         focus.score += 10 + Math.min(focus.streak * 2, 20);
-        setFeedback('focusFeedback', 'Correct', 'good');
+        setFeedback("focusFeedback", "Correct", "good");
       } else {
         playWrongSignal();
-
+        focus.wrong += 1;
         focus.streak = 0;
         focus.score = Math.max(0, focus.score - 5);
-        setFeedback('focusFeedback', 'Wrong', 'bad');
+        setFeedback("focusFeedback", "Wrong", "bad");
       }
 
       updateFocusHud();
 
       setTimeout(() => {
         if (focus.active) {
-          setFeedback('focusFeedback', '', '');
+          setFeedback("focusFeedback", "", "");
           nextFocusPrompt();
         }
       }, 180);
     }
 
-    // ---------------------------
+    // -----------------------------------------
     // SPEED MATH
-    // ---------------------------
-
+    // -----------------------------------------
     const math = {
       active: false,
       locked: false,
       time: 30,
       score: 0,
+      correct: 0,
+      wrong: 0,
       streak: 0,
       maxStreak: 0,
-      correct: 0,
-      attempts: 0,
       answer: null,
-      timer: null
+      timer: null,
+      promptStartedAt: 0,
+      responseTimes: []
     };
 
     function startMath() {
@@ -1785,15 +2319,17 @@
       math.locked = true;
       math.time = 30;
       math.score = 0;
+      math.correct = 0;
+      math.wrong = 0;
       math.streak = 0;
       math.maxStreak = 0;
-      math.correct = 0;
-      math.attempts = 0;
+      math.answer = null;
+      math.responseTimes = [];
 
       updateMathHud();
-      setFeedback('mathFeedback', '', '');
-      document.getElementById('mathPrompt').textContent = 'READY';
-      document.getElementById('mathChoices').innerHTML = '';
+      setFeedback("mathFeedback", "", "");
+      document.getElementById("mathPrompt").textContent = "READY";
+      document.getElementById("mathChoices").innerHTML = "";
 
       runCountdown(() => {
         math.active = true;
@@ -1805,18 +2341,7 @@
           updateMathHud();
 
           if (math.time <= 0) {
-            stopMath();
-            const accuracy = math.attempts ? Math.round((math.correct / math.attempts) * 100) : 0;
-
-            if (math.maxStreak > profile.bestStreaks.Math) profile.bestStreaks.Math = math.maxStreak;
-
-            document.getElementById('mathPrompt').textContent = 'DONE';
-            document.getElementById('mathChoices').innerHTML = '';
-
-            finishGame('Math', math.score, [
-              { label: 'Accuracy', value: accuracy + '%' },
-              { label: 'Best streak', value: math.maxStreak }
-            ]);
+            endMathGame();
           }
         }, 1000);
       });
@@ -1829,10 +2354,30 @@
       math.locked = false;
     }
 
+    function endMathGame() {
+      if (!math.active) return;
+      stopMath();
+      document.getElementById("mathPrompt").textContent = "DONE";
+      document.getElementById("mathChoices").innerHTML = "";
+
+      finalizeSession({
+        game: "Math",
+        gameLabel: "Speed Math",
+        score: math.score,
+        correct: math.correct,
+        wrong: math.wrong,
+        avgMs: Math.round(average(math.responseTimes)),
+        streak: math.maxStreak
+      });
+    }
+
     function updateMathHud() {
-      document.getElementById('mathTime').textContent = math.time;
-      document.getElementById('mathScore').textContent = math.score;
-      document.getElementById('mathStreak').textContent = math.streak;
+      const attempts = math.correct + math.wrong;
+      const accuracy = attempts ? Math.round((math.correct / attempts) * 100) : 0;
+      document.getElementById("mathTime").textContent = math.time;
+      document.getElementById("mathScore").textContent = math.score;
+      document.getElementById("mathCorrect").textContent = math.correct;
+      document.getElementById("mathAccuracy").textContent = accuracy + "%";
     }
 
     function nextMathProblem() {
@@ -1840,99 +2385,92 @@
 
       const a = rand(2, 20);
       const b = rand(2, 20);
-      const operations = ['+', '-', 'Ã'];
-      const op = randomItem(operations);
+      const ops = ["+", "-", "×"];
+      const op = randomItem(ops);
 
       let answer;
       let prompt;
 
-      if (op === '+') {
+      if (op === "+") {
         answer = a + b;
-        prompt = a + ' + ' + b;
-      } else if (op === '-') {
+        prompt = `${a} + ${b}`;
+      } else if (op === "-") {
         answer = Math.max(a, b) - Math.min(a, b);
-        prompt = Math.max(a, b) + ' - ' + Math.min(a, b);
+        prompt = `${Math.max(a, b)} - ${Math.min(a, b)}`;
       } else {
         answer = a * b;
-        prompt = a + ' Ã ' + b;
+        prompt = `${a} × ${b}`;
       }
 
       math.answer = answer;
       math.locked = false;
-
-      document.getElementById('mathPrompt').textContent = prompt;
+      math.promptStartedAt = performance.now();
+      document.getElementById("mathPrompt").textContent = prompt;
 
       const choices = makeMathChoices(answer);
-      const box = document.getElementById('mathChoices');
-      box.innerHTML = '';
+      const box = document.getElementById("mathChoices");
+      box.innerHTML = "";
 
       choices.forEach(choice => {
-        const button = document.createElement('button');
-        button.className = 'secondary';
-        button.textContent = choice;
-        button.onclick = () => answerMath(choice);
-        box.appendChild(button);
+        const btn = document.createElement("button");
+        btn.className = "secondary";
+        btn.textContent = choice;
+        btn.onclick = () => answerMath(choice);
+        box.appendChild(btn);
       });
     }
 
     function makeMathChoices(answer) {
       const set = new Set([answer]);
-
       while (set.size < 4) {
         const offset = rand(-12, 12);
         const fake = answer + offset;
-
-        if (fake >= 0 && fake !== answer) {
-          set.add(fake);
-        }
+        if (fake >= 0 && fake !== answer) set.add(fake);
       }
-
       return [...set].sort(() => Math.random() - 0.5);
     }
 
     function answerMath(choice) {
       if (!math.active || math.locked) return;
 
-      initializeAudio();
       math.locked = true;
-      math.attempts += 1;
+      math.responseTimes.push(performance.now() - math.promptStartedAt);
 
       if (choice === math.answer) {
         playCorrectSignal();
-
-        math.streak += 1;
         math.correct += 1;
-        if (math.streak > math.maxStreak) math.maxStreak = math.streak;
+        math.streak += 1;
+        math.maxStreak = Math.max(math.maxStreak, math.streak);
         math.score += 10 + Math.min(math.streak * 2, 20);
-        setFeedback('mathFeedback', 'Correct', 'good');
+        setFeedback("mathFeedback", "Correct", "good");
       } else {
         playWrongSignal();
-
+        math.wrong += 1;
         math.streak = 0;
         math.score = Math.max(0, math.score - 5);
-        setFeedback('mathFeedback', 'Wrong', 'bad');
+        setFeedback("mathFeedback", "Wrong", "bad");
       }
 
       updateMathHud();
 
       setTimeout(() => {
         if (math.active) {
-          setFeedback('mathFeedback', '', '');
+          setFeedback("mathFeedback", "", "");
           nextMathProblem();
         }
       }, 180);
     }
 
-    // ---------------------------
+    // -----------------------------------------
     // REACTION TIME
-    // ---------------------------
-
+    // -----------------------------------------
     const reaction = {
       active: false,
-      state: 'idle', // idle | waiting | go | early
+      state: "idle",
       round: 0,
       totalRounds: 5,
       times: [],
+      falseStarts: 0,
       startTime: 0,
       timeoutId: null
     };
@@ -1942,130 +2480,154 @@
       stopReaction();
 
       reaction.active = true;
+      reaction.state = "idle";
       reaction.round = 0;
       reaction.times = [];
+      reaction.falseStarts = 0;
+      reaction.startTime = 0;
 
-      setFeedback('reactionFeedback', '', '');
-      document.getElementById('reactionLast').textContent = 'â';
-      updateReactionHud();
-      nextReactionRound();
+      document.getElementById("reactionLast").textContent = "—";
+      document.getElementById("reactionBest").textContent =
+        state.bestReactionMs !== null ? state.bestReactionMs + "ms" : "—";
+      document.getElementById("reactionAvg").textContent = "—";
+      setFeedback("reactionFeedback", "", "");
+      setReactionState("idle");
+
+      runCountdown(() => {
+        nextReactionRound();
+      });
     }
 
     function stopReaction() {
       if (reaction.timeoutId) clearTimeout(reaction.timeoutId);
       reaction.timeoutId = null;
       reaction.active = false;
-      setReactionState('idle');
+      reaction.state = "idle";
     }
 
     function updateReactionHud() {
-      document.getElementById('reactionRound').textContent = reaction.round + ' / ' + reaction.totalRounds;
-      document.getElementById('reactionBest').textContent = (profile.bestReactionMs !== null) ? profile.bestReactionMs : 'â';
+      document.getElementById("reactionRound").textContent = `${reaction.round} / ${reaction.totalRounds}`;
+      document.getElementById("reactionBest").textContent =
+        state.bestReactionMs !== null ? state.bestReactionMs + "ms" : "—";
+      document.getElementById("reactionAvg").textContent =
+        reaction.times.length ? Math.round(average(reaction.times)) + "ms" : "—";
+    }
+
+    function setReactionState(stateName) {
+      reaction.state = stateName;
+      const box = document.getElementById("reactionBox");
+      const text = document.getElementById("reactionText");
+
+      box.className = "reaction-box" +
+        (stateName === "waiting" ? " wait" : "") +
+        (stateName === "go" ? " go" : "") +
+        (stateName === "early" ? " early" : "");
+
+      if (stateName === "idle") text.textContent = "Tap Start to begin";
+      if (stateName === "waiting") text.textContent = "Wait for green...";
+      if (stateName === "go") text.textContent = "TAP NOW!";
+      if (stateName === "early") text.textContent = "Too soon! Get ready again...";
     }
 
     function nextReactionRound() {
+      if (!reaction.active) return;
+
       reaction.round += 1;
       updateReactionHud();
-      setReactionState('waiting');
+      setReactionState("waiting");
 
       const delay = rand(1000, 3000);
       reaction.timeoutId = setTimeout(() => {
         reaction.startTime = performance.now();
-        setReactionState('go');
+        setReactionState("go");
       }, delay);
-    }
-
-    function setReactionState(state) {
-      reaction.state = state;
-      const box = document.getElementById('reactionBox');
-      const text = document.getElementById('reactionText');
-
-      box.className = 'reaction-box' + (state === 'waiting' ? ' wait' : state === 'go' ? ' go' : state === 'early' ? ' early' : '');
-
-      if (state === 'waiting') text.textContent = 'Wait for green...';
-      else if (state === 'go') text.textContent = 'TAP NOW!';
-      else if (state === 'early') text.textContent = 'Too soon! Get ready again...';
-      else text.textContent = 'Tap Start to begin';
     }
 
     function handleReactionTap() {
       if (!reaction.active) return;
-      initializeAudio();
 
-      if (reaction.state === 'waiting') {
-        clearTimeout(reaction.timeoutId);
+      if (reaction.state === "waiting") {
+        if (reaction.timeoutId) clearTimeout(reaction.timeoutId);
         reaction.timeoutId = null;
-        setReactionState('early');
+        reaction.falseStarts += 1;
         playWrongSignal();
-        setFeedback('reactionFeedback', 'Jumped the gun - try again.', 'bad');
+        setReactionState("early");
+        setFeedback("reactionFeedback", "Too early. Round restarting.", "bad");
 
         setTimeout(() => {
-          if (reaction.active) {
-            reaction.round -= 1;
-            setFeedback('reactionFeedback', '', '');
-            nextReactionRound();
-          }
+          if (!reaction.active) return;
+          reaction.round -= 1;
+          setFeedback("reactionFeedback", "", "");
+          nextReactionRound();
         }, 700);
         return;
       }
 
-      if (reaction.state === 'go') {
+      if (reaction.state === "go") {
         const elapsed = Math.round(performance.now() - reaction.startTime);
         reaction.times.push(elapsed);
 
-        document.getElementById('reactionLast').textContent = elapsed;
-        document.getElementById('reactionText').textContent = elapsed + ' ms';
-        document.getElementById('reactionBox').className = 'reaction-box';
-
         playCorrectSignal();
+
+        document.getElementById("reactionLast").textContent = elapsed + "ms";
+        document.getElementById("reactionAvg").textContent = Math.round(average(reaction.times)) + "ms";
+        document.getElementById("reactionText").textContent = elapsed + "ms";
+        document.getElementById("reactionBox").className = "reaction-box";
 
         if (reaction.round >= reaction.totalRounds) {
           finishReaction();
         } else {
-          setTimeout(() => { if (reaction.active) nextReactionRound(); }, 900);
+          setTimeout(() => {
+            if (reaction.active) nextReactionRound();
+          }, 900);
         }
       }
     }
 
     function finishReaction() {
       reaction.active = false;
-
-      const avg = Math.round(reaction.times.reduce((a, b) => a + b, 0) / reaction.times.length);
+      const avg = Math.round(average(reaction.times));
       const fastest = Math.min(...reaction.times);
-      const score = Math.max(0, Math.round((600 - avg) * 1.5));
+      const score = Math.max(0, Math.round((650 - avg) * 1.4));
 
-      if (profile.bestReactionMs === null || avg < profile.bestReactionMs) {
-        profile.bestReactionMs = avg;
-      }
-      updateReactionHud();
-
-      setFeedback('reactionFeedback', 'Done.', 'good');
-
-      finishGame('Reaction', score, [
-        { label: 'Average reaction', value: avg + ' ms' },
-        { label: 'Fastest', value: fastest + ' ms' }
-      ]);
+      finalizeSession({
+        game: "Reaction",
+        gameLabel: "Reaction Time",
+        score,
+        correct: reaction.times.length,
+        wrong: reaction.falseStarts,
+        avgMs: avg,
+        bestMs: fastest,
+        extraRows: [
+          { label: "Fastest", value: fastest + "ms" },
+          { label: "False starts", value: reaction.falseStarts }
+        ]
+      });
     }
 
-    // ---------------------------
+    // -----------------------------------------
     // NUMBER RECALL
-    // ---------------------------
-
+    // -----------------------------------------
     const recall = {
       sequence: [],
       inputIndex: 0,
       level: 1,
       score: 0,
       lives: 3,
+      correct: 0,
+      wrong: 0,
+      responseTimes: [],
+      turnStartedAt: 0,
       acceptingInput: false,
-      gameStarted: false
+      gameStarted: false,
+      runId: 0
     };
 
-    const recallPad = document.getElementById('recallPad');
+    const recallPad = document.getElementById("recallPad");
 
     for (let i = 0; i <= 9; i++) {
-      const tile = document.createElement('div');
-      tile.className = 'tile';
+      const tile = document.createElement("div");
+      tile.className = "tile";
       tile.textContent = i;
       tile.onclick = () => handleRecallTap(i);
       recallPad.appendChild(tile);
@@ -2079,19 +2641,32 @@
       recall.level = 1;
       recall.score = 0;
       recall.lives = 3;
+      recall.correct = 0;
+      recall.wrong = 0;
+      recall.responseTimes = [];
+      recall.turnStartedAt = 0;
       recall.acceptingInput = false;
       recall.gameStarted = true;
+      recall.runId += 1;
 
       updateRecallHud();
-      setFeedback('recallFeedback', 'Watch the numbers.', '');
-      document.getElementById('recallPrompt').textContent = '';
+      setFeedback("recallFeedback", "Watch the numbers.", "");
+      document.getElementById("recallPrompt").textContent = "Ready";
       nextRecallRound();
     }
 
+    function stopRecall() {
+      recall.acceptingInput = false;
+      recall.gameStarted = false;
+      recall.runId += 1;
+    }
+
     function updateRecallHud() {
-      document.getElementById('recallLevel').textContent = recall.level;
-      document.getElementById('recallScore').textContent = recall.score;
-      document.getElementById('recallLives').textContent = recall.lives;
+      document.getElementById("recallLevel").textContent = recall.level;
+      document.getElementById("recallScore").textContent = recall.score;
+      document.getElementById("recallLives").textContent = recall.lives;
+      document.getElementById("recallAvg").textContent =
+        recall.responseTimes.length ? formatMs(average(recall.responseTimes)) : "—";
     }
 
     function nextRecallRound() {
@@ -2099,235 +2674,111 @@
       recall.inputIndex = 0;
       recall.sequence.push(rand(0, 9));
       updateRecallHud();
-      playRecallSequence();
+      playRecallSequence(recall.runId);
     }
 
-    async function playRecallSequence() {
-      const prompt = document.getElementById('recallPrompt');
-
+    async function playRecallSequence(runId) {
+      const prompt = document.getElementById("recallPrompt");
       recall.acceptingInput = false;
       recall.inputIndex = 0;
 
-      prompt.textContent = '';
-      prompt.classList.remove('pulse');
-      await wait(400);
+      prompt.textContent = "";
+      await wait(350);
 
       for (const digit of recall.sequence) {
+        if (runId !== recall.runId || !recall.gameStarted) return;
+
         prompt.textContent = digit;
-        prompt.classList.remove('pulse');
-        // eslint-disable-next-line no-unused-expressions
-        prompt.offsetWidth; // restart animation
-        prompt.classList.add('pulse');
-        await wait(650);
-        prompt.textContent = '';
-        await wait(250);
+        prompt.classList.remove("pulse");
+        void prompt.offsetWidth;
+        prompt.classList.add("pulse");
+        playTone(420 + digit * 30, 0.14, "sine", 0.05);
+
+        await wait(620);
+        prompt.textContent = "";
+        await wait(240);
       }
 
-      prompt.textContent = '?';
-      setFeedback('recallFeedback', 'Your turn. Tap the numbers in order.', '');
+      if (runId !== recall.runId || !recall.gameStarted) return;
+      prompt.textContent = "?";
+      setFeedback("recallFeedback", "Your turn. Tap the digits in order.", "");
+      recall.turnStartedAt = performance.now();
       recall.acceptingInput = true;
     }
 
     function handleRecallTap(digit) {
       if (!recall.acceptingInput || !recall.gameStarted) return;
 
-      initializeAudio();
-
-      const tiles = [...document.querySelectorAll('#recallPad .tile')];
+      const tiles = [...document.querySelectorAll("#recallPad .tile")];
       const expected = recall.sequence[recall.inputIndex];
+      const now = performance.now();
+
+      if (recall.turnStartedAt) {
+        recall.responseTimes.push(now - recall.turnStartedAt);
+      }
 
       if (digit === expected) {
+        recall.correct += 1;
         playCorrectSignal();
 
-        tiles[digit].classList.add('correct');
-        setTimeout(() => tiles[digit].classList.remove('correct'), 180);
+        tiles[digit].classList.add("correct");
+        setTimeout(() => tiles[digit].classList.remove("correct"), 180);
 
         recall.inputIndex += 1;
         recall.score += 10;
+        recall.turnStartedAt = performance.now();
 
         if (recall.inputIndex === recall.sequence.length) {
           recall.level += 1;
           recall.score += 25;
           recall.acceptingInput = false;
-          setFeedback('recallFeedback', 'Correct. Next round.', 'good');
+          setFeedback("recallFeedback", "Correct. Next round.", "good");
           updateRecallHud();
           setTimeout(nextRecallRound, 800);
         }
       } else {
+        recall.wrong += 1;
         playWrongSignal();
 
-        tiles[digit].classList.add('wrong');
-        setTimeout(() => tiles[digit].classList.remove('wrong'), 220);
+        tiles[digit].classList.add("wrong");
+        setTimeout(() => tiles[digit].classList.remove("wrong"), 220);
 
         recall.lives -= 1;
         recall.acceptingInput = false;
         recall.inputIndex = 0;
-
         updateRecallHud();
 
         if (recall.lives <= 0) {
           recall.gameStarted = false;
-          setFeedback('recallFeedback', 'Game over.', 'bad');
-          document.getElementById('recallPrompt').textContent = '';
+          setFeedback("recallFeedback", "Game over.", "bad");
 
-          if (recall.level > profile.bestLevels.Recall) profile.bestLevels.Recall = recall.level;
-
-          finishGame('Recall', recall.score, [
-            { label: 'Level reached', value: recall.level }
-          ]);
+          finalizeSession({
+            game: "Recall",
+            gameLabel: "Number Recall",
+            score: recall.score,
+            correct: recall.correct,
+            wrong: recall.wrong,
+            avgMs: Math.round(average(recall.responseTimes)),
+            level: recall.level
+          });
         } else {
-          setFeedback('recallFeedback', 'Wrong number. Watch again.', 'bad');
-          setTimeout(playRecallSequence, 900);
+          setFeedback("recallFeedback", "Wrong digit. Watch the sequence again.", "bad");
+          setTimeout(() => playRecallSequence(recall.runId), 900);
         }
       }
 
       updateRecallHud();
     }
 
-    // ---------------------------
-    // SOUND + HAPTIC FEEDBACK
-    // ---------------------------
+    // -----------------------------------------
+    // INITIALIZE
+    // -----------------------------------------
+    renderAll();
 
-    let audioContext = null;
-
-    function initializeAudio() {
-      const AudioContext = window.AudioContext || window.webkitAudioContext;
-      if (!AudioContext) return null;
-
-      if (!audioContext) {
-        audioContext = new AudioContext();
-      }
-
-      if (audioContext.state === 'suspended') {
-        audioContext.resume();
-      }
-
-      return audioContext;
-    }
-
-    function vibrate(pattern) {
-      if (profile.settings.haptics && navigator.vibrate) {
-        navigator.vibrate(pattern);
-      }
-    }
-
-    function playCorrectSignal() {
-      if (!profile.settings.sound) return;
-
-      playTone(880, 0.08, 'sine', 0.08);
-      setTimeout(() => playTone(1175, 0.09, 'sine', 0.07), 75);
-      vibrate(20);
-    }
-
-    function playWrongSignal() {
-      if (!profile.settings.sound) return;
-
-      playTone(160, 0.16, 'sawtooth', 0.09);
-      setTimeout(() => playTone(110, 0.18, 'sawtooth', 0.08), 110);
-      vibrate([60, 30, 60]);
-    }
-
-    function playTone(frequency, duration, type = 'sine', volume = 0.08) {
-      if (!profile.settings.sound) return;
-
-      const context = initializeAudio();
-      if (!context) return;
-
-      const oscillator = context.createOscillator();
-      const gain = context.createGain();
-
-      oscillator.type = type;
-      oscillator.frequency.value = frequency;
-
-      gain.gain.setValueAtTime(volume, context.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.001, context.currentTime + duration);
-
-      oscillator.connect(gain);
-      gain.connect(context.destination);
-
-      oscillator.start();
-      oscillator.stop(context.currentTime + duration);
-    }
-
-    // ---------------------------
-    // SETTINGS
-    // ---------------------------
-
-    function applySettingsUI() {
-      document.getElementById('soundToggle').classList.toggle('on', profile.settings.sound);
-      document.getElementById('hapticsToggle').classList.toggle('on', profile.settings.haptics);
-    }
-
-    function toggleSound() {
-      profile.settings.sound = !profile.settings.sound;
-      applySettingsUI();
-      saveData();
-      if (profile.settings.sound) {
-        initializeAudio();
-        playTone(660, 0.07, 'sine', 0.06);
-      }
-    }
-
-    function toggleHaptics() {
-      profile.settings.haptics = !profile.settings.haptics;
-      applySettingsUI();
-      saveData();
-      if (profile.settings.haptics) vibrate(15);
-    }
-
-    // ---------------------------
-    // HELPERS
-    // ---------------------------
-
-    function wait(ms) {
-      return new Promise(resolve => setTimeout(resolve, ms));
-    }
-
-    function rand(min, max) {
-      return Math.floor(Math.random() * (max - min + 1)) + min;
-    }
-
-    function randomItem(arr) {
-      return arr[Math.floor(Math.random() * arr.length)];
-    }
-
-    function setFeedback(id, text, type) {
-      const el = document.getElementById(id);
-      el.textContent = text;
-      el.className = 'feedback ' + (type || '');
-    }
-
-    // ---------------------------
-    // INIT
-    // ---------------------------
-
-    const gameStarters = {
-      Memory: startMemory,
-      Focus: startFocus,
-      Math: startMath,
-      Reaction: startReaction,
-      Recall: startRecall
-    };
-
-    // Keyboard accessibility for tile/card style controls
-    document.querySelectorAll('.game-card, .tile').forEach(el => {
-      el.setAttribute('tabindex', '0');
-      el.setAttribute('role', 'button');
-      el.addEventListener('keydown', e => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
-          el.click();
-        }
-      });
+    window.addEventListener("resize", () => {
+      drawLineChart("homeChart", state.sessions);
+      drawLineChart("statsChart", state.sessions);
     });
-
-    async function init() {
-      await loadData();
-      applySettingsUI();
-      renderHome();
-    }
-
-    init();
   </script>
 </body>
 </html>
