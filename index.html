@@ -6,21 +6,18 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-title" content="MindSprint" />
   <meta name="theme-color" content="#111827" />
-  <title>MindSprint Brain Games</title>
+  <title>MindSprint</title>
 
   <style>
     :root {
       --bg: #0f172a;
       --panel: #111827;
-      --panel-light: #1f2937;
       --text: #f9fafb;
       --muted: #9ca3af;
       --accent: #38bdf8;
       --good: #22c55e;
       --bad: #ef4444;
-      --yellow: #facc15;
-      --purple: #a855f7;
-      --orange: #fb923c;
+      --line: rgba(255,255,255,0.12);
     }
 
     * {
@@ -33,7 +30,7 @@
       min-height: 100vh;
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       background:
-        radial-gradient(circle at top, #1e3a8a 0%, transparent 32%),
+        radial-gradient(circle at top, #1e3a8a 0%, transparent 34%),
         linear-gradient(180deg, #020617 0%, var(--bg) 100%);
       color: var(--text);
       display: flex;
@@ -52,39 +49,19 @@
     }
 
     header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 18px;
-      gap: 12px;
-    }
-
-    .brand {
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
+      margin-bottom: 16px;
     }
 
     .brand h1 {
-      font-size: 28px;
+      font-size: 34px;
       line-height: 1;
       margin: 0;
-      letter-spacing: -0.04em;
+      letter-spacing: -0.05em;
     }
 
     .brand span {
       color: var(--muted);
-      font-size: 13px;
-    }
-
-    .pill {
-      border: 1px solid rgba(255,255,255,0.12);
-      background: rgba(255,255,255,0.06);
-      padding: 8px 12px;
-      border-radius: 999px;
-      font-size: 13px;
-      color: var(--muted);
-      white-space: nowrap;
+      font-size: 14px;
     }
 
     .screen {
@@ -108,26 +85,27 @@
       padding: 18px;
       box-shadow: 0 20px 60px rgba(0,0,0,0.28);
       backdrop-filter: blur(12px);
+      margin-bottom: 14px;
     }
 
     .game-card {
       display: flex;
       flex-direction: column;
       gap: 10px;
-      margin-bottom: 14px;
       cursor: pointer;
     }
 
     .game-card h2 {
       margin: 0;
-      font-size: 21px;
-      letter-spacing: -0.02em;
+      font-size: 23px;
+      letter-spacing: -0.03em;
     }
 
-    .game-card p {
+    .game-card p,
+    .small-text {
       margin: 0;
       color: var(--muted);
-      line-height: 1.4;
+      line-height: 1.45;
       font-size: 14px;
     }
 
@@ -156,12 +134,19 @@
       font-size: 12px;
     }
 
+    .metric-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      margin-top: 12px;
+    }
+
     button {
       border: none;
       border-radius: 18px;
       padding: 15px 18px;
       font-size: 16px;
-      font-weight: 700;
+      font-weight: 800;
       color: #020617;
       background: var(--accent);
       cursor: pointer;
@@ -174,20 +159,35 @@
       border: 1px solid rgba(255,255,255,0.10);
     }
 
-    button.danger {
-      background: var(--bad);
-      color: white;
-    }
-
     button:active {
       transform: scale(0.98);
     }
 
-    .settings-row {
+    input {
+      width: 100%;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.08);
+      color: var(--text);
+      border-radius: 16px;
+      padding: 14px;
+      font-size: 16px;
+      outline: none;
+    }
+
+    input::placeholder {
+      color: var(--muted);
+    }
+
+    .settings-row,
+    .profile-row {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 10px;
       margin-bottom: 14px;
+    }
+
+    .profile-row {
+      margin-bottom: 10px;
     }
 
     .topbar {
@@ -204,7 +204,7 @@
     }
 
     .game-title {
-      font-size: 26px;
+      font-size: 28px;
       margin: 0 0 6px;
       letter-spacing: -0.04em;
     }
@@ -217,13 +217,21 @@
 
     .hud {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(4, 1fr);
       gap: 8px;
       margin-bottom: 16px;
     }
 
+    .hud .stat {
+      padding: 10px 6px;
+    }
+
     .hud .stat strong {
-      font-size: 19px;
+      font-size: 18px;
+    }
+
+    .hud .stat span {
+      font-size: 11px;
     }
 
     .grid {
@@ -242,7 +250,7 @@
       align-items: center;
       justify-content: center;
       font-size: 24px;
-      font-weight: 800;
+      font-weight: 900;
       user-select: none;
       transition: 0.15s;
     }
@@ -309,24 +317,51 @@
     .feedback.good { color: var(--good); }
     .feedback.bad { color: var(--bad); }
 
+    .summary-box {
+      display: none;
+      margin-top: 14px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.10);
+      border-radius: 18px;
+      padding: 14px;
+      color: var(--text);
+      line-height: 1.45;
+      font-size: 14px;
+    }
+
+    .summary-box.active {
+      display: block;
+    }
+
+    .summary-box strong {
+      color: var(--accent);
+    }
+
     .math-box {
       font-size: 52px;
       font-weight: 900;
       letter-spacing: -0.05em;
     }
 
-    .footer-note {
-      color: var(--muted);
-      font-size: 12px;
-      text-align: center;
-      line-height: 1.4;
-      margin-top: auto;
-      padding-top: 18px;
+    canvas {
+      width: 100%;
+      height: 170px;
+      display: block;
+      margin-top: 8px;
+      border-radius: 16px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .section-title {
+      font-size: 20px;
+      margin: 0 0 8px;
+      letter-spacing: -0.03em;
     }
 
     @media (max-width: 390px) {
       .brand h1 {
-        font-size: 25px;
+        font-size: 30px;
       }
 
       .big-prompt {
@@ -339,7 +374,15 @@
       }
 
       button {
-        padding: 14px 14px;
+        padding: 14px;
+      }
+
+      .hud .stat strong {
+        font-size: 16px;
+      }
+
+      .hud .stat span {
+        font-size: 10px;
       }
     }
   </style>
@@ -350,9 +393,8 @@
     <header>
       <div class="brand">
         <h1>MindSprint</h1>
-        <span>Fast brain-training mini games</span>
+        <span>Brain-training games with progress tracking</span>
       </div>
-      <div class="pill">Mobile Ready</div>
     </header>
 
     <!-- HOME -->
@@ -363,8 +405,8 @@
           <span>Total Score</span>
         </div>
         <div class="stat">
-          <strong id="bestGame">—</strong>
-          <span>Best Game</span>
+          <strong id="trainingScore">0</strong>
+          <span>Training Score</span>
         </div>
         <div class="stat">
           <strong id="plays">0</strong>
@@ -373,13 +415,40 @@
       </div>
 
       <div class="settings-row">
-        <button id="soundButton" class="secondary" onclick="toggleSound()">Sound: On</button>
+        <button data-sound-button class="secondary" onclick="toggleSound()">Sound: On</button>
         <button class="secondary" onclick="resetStats()">Reset Stats</button>
+      </div>
+
+      <div class="card">
+        <h2 class="section-title">Player</h2>
+        <div class="profile-row">
+          <input id="playerName" type="text" placeholder="Name" oninput="saveProfile()" />
+          <input id="playerEmail" type="email" placeholder="Email" oninput="saveProfile()" />
+        </div>
+        <button onclick="emailResults()">Email Results</button>
+      </div>
+
+      <div class="card">
+        <h2 class="section-title">Progress</h2>
+        <p id="progressInsight" class="small-text">Play a game to start tracking speed, accuracy, and progress.</p>
+
+        <div class="metric-grid">
+          <div class="stat">
+            <strong id="overallAccuracy">0%</strong>
+            <span>Accuracy</span>
+          </div>
+          <div class="stat">
+            <strong id="overallSpeed">—</strong>
+            <span>Avg Speed</span>
+          </div>
+        </div>
+
+        <canvas id="progressChart"></canvas>
       </div>
 
       <div class="card game-card" onclick="showScreen('memory')">
         <h2>Memory Grid</h2>
-        <p>Watch the pattern, then repeat it. Each tile has its own sound. You have three lives.</p>
+        <p>Watch the pattern, listen to the tones, then repeat it. Each tile has its own sound. You have three lives.</p>
         <button>Play Memory Grid</button>
       </div>
 
@@ -391,7 +460,7 @@
 
       <div class="card game-card" onclick="showScreen('math')">
         <h2>Speed Math</h2>
-        <p>Solve quick arithmetic problems under pressure.</p>
+        <p>Solve quick arithmetic problems under pressure. Speed and accuracy both matter.</p>
         <button>Play Speed Math</button>
       </div>
     </section>
@@ -400,13 +469,13 @@
     <section id="memory" class="screen">
       <div class="topbar">
         <button class="secondary" onclick="returnHome()">Home</button>
-        <button class="secondary" onclick="toggleSound()">Sound</button>
+        <button data-sound-button class="secondary" onclick="toggleSound()">Sound: On</button>
         <button onclick="startMemory()">Start</button>
       </div>
 
       <div class="card">
         <h2 class="game-title">Memory Grid</h2>
-        <p class="instructions">Watch the glowing tiles and listen to the sounds. Repeat the same pattern in order. A mistake costs one life and replays the same pattern.</p>
+        <p class="instructions">Watch and listen. Repeat the same pattern in order. A mistake costs one life and replays the same pattern.</p>
 
         <div class="hud">
           <div class="stat">
@@ -421,10 +490,15 @@
             <strong id="memoryLives">3</strong>
             <span>Lives</span>
           </div>
+          <div class="stat">
+            <strong id="memoryAvgSpeed">—</strong>
+            <span>Avg Tap</span>
+          </div>
         </div>
 
         <div class="grid" id="memoryGrid"></div>
         <div id="memoryFeedback" class="feedback"></div>
+        <div id="memorySummary" class="summary-box"></div>
       </div>
     </section>
 
@@ -432,7 +506,7 @@
     <section id="focus" class="screen">
       <div class="topbar">
         <button class="secondary" onclick="returnHome()">Home</button>
-        <button class="secondary" onclick="toggleSound()">Sound</button>
+        <button data-sound-button class="secondary" onclick="toggleSound()">Sound: On</button>
         <button onclick="startFocus()">Start</button>
       </div>
 
@@ -450,8 +524,12 @@
             <span>Score</span>
           </div>
           <div class="stat">
-            <strong id="focusStreak">0</strong>
-            <span>Streak</span>
+            <strong id="focusCorrect">0</strong>
+            <span>Correct</span>
+          </div>
+          <div class="stat">
+            <strong id="focusAvgSpeed">—</strong>
+            <span>Avg Tap</span>
           </div>
         </div>
 
@@ -465,6 +543,7 @@
         </div>
 
         <div id="focusFeedback" class="feedback"></div>
+        <div id="focusSummary" class="summary-box"></div>
       </div>
     </section>
 
@@ -472,7 +551,7 @@
     <section id="math" class="screen">
       <div class="topbar">
         <button class="secondary" onclick="returnHome()">Home</button>
-        <button class="secondary" onclick="toggleSound()">Sound</button>
+        <button data-sound-button class="secondary" onclick="toggleSound()">Sound: On</button>
         <button onclick="startMath()">Start</button>
       </div>
 
@@ -490,68 +569,189 @@
             <span>Score</span>
           </div>
           <div class="stat">
-            <strong id="mathStreak">0</strong>
-            <span>Streak</span>
+            <strong id="mathCorrect">0</strong>
+            <span>Correct</span>
+          </div>
+          <div class="stat">
+            <strong id="mathAvgSpeed">—</strong>
+            <span>Avg Tap</span>
           </div>
         </div>
 
         <div id="mathPrompt" class="big-prompt math-box">READY</div>
         <div id="mathChoices" class="choice-grid"></div>
         <div id="mathFeedback" class="feedback"></div>
+        <div id="mathSummary" class="summary-box"></div>
       </div>
     </section>
-
-    <div class="footer-note">
-      Original web game. No Lumosity branding, assets, or exact game copies included.
-    </div>
   </main>
 
   <script>
+    const STORAGE_KEYS = {
+      totalScore: "ms_totalScore",
+      plays: "ms_plays",
+      sound: "ms_soundEnabled",
+      sessions: "ms_sessions",
+      name: "ms_playerName",
+      email: "ms_playerEmail"
+    };
+
     const state = {
-      totalScore: Number(localStorage.getItem("ms_totalScore") || 0),
-      plays: Number(localStorage.getItem("ms_plays") || 0),
-      bestGame: localStorage.getItem("ms_bestGame") || "—",
-      soundEnabled: localStorage.getItem("ms_soundEnabled") !== "false"
+      totalScore: Number(localStorage.getItem(STORAGE_KEYS.totalScore) || 0),
+      plays: Number(localStorage.getItem(STORAGE_KEYS.plays) || 0),
+      soundEnabled: localStorage.getItem(STORAGE_KEYS.sound) !== "false",
+      playerName: localStorage.getItem(STORAGE_KEYS.name) || "",
+      playerEmail: localStorage.getItem(STORAGE_KEYS.email) || "",
+      sessions: loadSessions()
     };
 
     let audioContext = null;
 
-    function updateHomeStats() {
-      document.getElementById("totalScore").textContent = state.totalScore;
-      document.getElementById("plays").textContent = state.plays;
-      document.getElementById("bestGame").textContent = state.bestGame;
-      updateSoundButtons();
+    function loadSessions() {
+      try {
+        return JSON.parse(localStorage.getItem(STORAGE_KEYS.sessions) || "[]");
+      } catch {
+        return [];
+      }
     }
 
-    function saveScore(gameName, score) {
+    function saveSessions() {
+      localStorage.setItem(STORAGE_KEYS.sessions, JSON.stringify(state.sessions.slice(-100)));
+    }
+
+    function saveProfile() {
+      state.playerName = document.getElementById("playerName").value.trim();
+      state.playerEmail = document.getElementById("playerEmail").value.trim();
+
+      localStorage.setItem(STORAGE_KEYS.name, state.playerName);
+      localStorage.setItem(STORAGE_KEYS.email, state.playerEmail);
+    }
+
+    function loadProfileToInputs() {
+      document.getElementById("playerName").value = state.playerName;
+      document.getElementById("playerEmail").value = state.playerEmail;
+    }
+
+    function updateHomeStats() {
+      const aggregate = getAggregateStats();
+
+      document.getElementById("totalScore").textContent = state.totalScore;
+      document.getElementById("plays").textContent = state.plays;
+      document.getElementById("trainingScore").textContent = aggregate.latestTrainingScore;
+      document.getElementById("overallAccuracy").textContent = `${aggregate.accuracy}%`;
+      document.getElementById("overallSpeed").textContent = aggregate.avgMs ? formatMs(aggregate.avgMs) : "—";
+      document.getElementById("progressInsight").textContent = getProgressInsight();
+
+      updateSoundButtons();
+      drawProgressChart();
+    }
+
+    function getAggregateStats() {
+      const sessions = state.sessions;
+      const latest = sessions[sessions.length - 1];
+
+      let correct = 0;
+      let wrong = 0;
+      let totalMs = 0;
+      let speedCount = 0;
+
+      sessions.forEach(session => {
+        correct += session.correct || 0;
+        wrong += session.wrong || 0;
+
+        if (session.avgMs) {
+          totalMs += session.avgMs;
+          speedCount += 1;
+        }
+      });
+
+      const totalAnswers = correct + wrong;
+      const accuracy = totalAnswers ? Math.round((correct / totalAnswers) * 100) : 0;
+      const avgMs = speedCount ? Math.round(totalMs / speedCount) : null;
+
+      return {
+        latestTrainingScore: latest ? latest.trainingScore : 0,
+        accuracy,
+        avgMs
+      };
+    }
+
+    function getProgressInsight() {
+      const sessions = state.sessions;
+
+      if (!sessions.length) {
+        return "Play a game to start tracking speed, accuracy, and progress.";
+      }
+
+      const last = sessions[sessions.length - 1];
+      const lastText = `Last round: ${last.game} — ${last.accuracy}% accuracy, ${formatMs(last.avgMs)} average response, training score ${last.trainingScore}.`;
+
+      if (sessions.length < 4) {
+        return `${lastText} Keep playing to build a trend.`;
+      }
+
+      const recent = average(sessions.slice(-3).map(s => s.trainingScore));
+      const prior = average(sessions.slice(-6, -3).map(s => s.trainingScore));
+
+      if (!prior) {
+        return `${lastText} Keep playing to build a stronger trend.`;
+      }
+
+      const diff = Math.round(recent - prior);
+
+      if (diff > 3) {
+        return `${lastText} Recent performance is trending up by ${diff} points.`;
+      }
+
+      if (diff < -3) {
+        return `${lastText} Recent performance is down by ${Math.abs(diff)} points. Focus on accuracy before speed.`;
+      }
+
+      return `${lastText} Recent performance is stable.`;
+    }
+
+    function recordSession(game, score, correct, wrong, avgMs, extra = {}) {
+      const total = correct + wrong;
+      const accuracy = total ? Math.round((correct / total) * 100) : 0;
+      const speedScore = avgMs ? clamp(Math.round(100 - avgMs / 20), 0, 100) : 0;
+      const scoreScore = clamp(Math.round(score / 5), 0, 100);
+      const trainingScore = clamp(Math.round((accuracy * 0.45) + (speedScore * 0.35) + (scoreScore * 0.20)), 0, 100);
+
+      const session = {
+        id: Date.now(),
+        date: new Date().toLocaleString(),
+        game,
+        score,
+        correct,
+        wrong,
+        accuracy,
+        avgMs: avgMs || 0,
+        trainingScore,
+        ...extra
+      };
+
+      state.sessions.push(session);
+      saveSessions();
+
       state.totalScore += score;
       state.plays += 1;
 
-      const currentBest = Number(localStorage.getItem(`ms_best_${gameName}`) || 0);
-
-      if (score > currentBest) {
-        localStorage.setItem(`ms_best_${gameName}`, score);
-        state.bestGame = gameName;
-        localStorage.setItem("ms_bestGame", gameName);
-      }
-
-      localStorage.setItem("ms_totalScore", state.totalScore);
-      localStorage.setItem("ms_plays", state.plays);
+      localStorage.setItem(STORAGE_KEYS.totalScore, state.totalScore);
+      localStorage.setItem(STORAGE_KEYS.plays, state.plays);
 
       updateHomeStats();
+
+      return session;
     }
 
     function resetStats() {
-      localStorage.removeItem("ms_totalScore");
-      localStorage.removeItem("ms_plays");
-      localStorage.removeItem("ms_bestGame");
-      localStorage.removeItem("ms_best_Memory");
-      localStorage.removeItem("ms_best_Focus");
-      localStorage.removeItem("ms_best_Math");
+      localStorage.removeItem(STORAGE_KEYS.totalScore);
+      localStorage.removeItem(STORAGE_KEYS.plays);
+      localStorage.removeItem(STORAGE_KEYS.sessions);
 
       state.totalScore = 0;
       state.plays = 0;
-      state.bestGame = "—";
+      state.sessions = [];
 
       updateHomeStats();
     }
@@ -563,6 +763,7 @@
     }
 
     function returnHome() {
+      stopMemory();
       stopFocus();
       stopMath();
       showScreen("home");
@@ -571,7 +772,7 @@
 
     function toggleSound() {
       state.soundEnabled = !state.soundEnabled;
-      localStorage.setItem("ms_soundEnabled", String(state.soundEnabled));
+      localStorage.setItem(STORAGE_KEYS.sound, String(state.soundEnabled));
       updateSoundButtons();
 
       if (state.soundEnabled) {
@@ -583,18 +784,51 @@
     function updateSoundButtons() {
       const label = state.soundEnabled ? "Sound: On" : "Sound: Off";
 
-      document.querySelectorAll("button").forEach(button => {
-        if (
-          button.id === "soundButton" ||
-          button.textContent === "Sound" ||
-          button.textContent.startsWith("Sound:")
-        ) {
-          button.textContent = label;
-        }
+      document.querySelectorAll("[data-sound-button]").forEach(button => {
+        button.textContent = label;
       });
     }
 
-    updateHomeStats();
+    function emailResults() {
+      saveProfile();
+
+      if (!state.playerEmail) {
+        alert("Enter an email address first.");
+        return;
+      }
+
+      const aggregate = getAggregateStats();
+      const recent = state.sessions.slice(-10).reverse();
+
+      const lines = [
+        `MindSprint Results`,
+        ``,
+        `Name: ${state.playerName || "Not entered"}`,
+        `Email: ${state.playerEmail}`,
+        `Total Score: ${state.totalScore}`,
+        `Plays: ${state.plays}`,
+        `Current Training Score: ${aggregate.latestTrainingScore}`,
+        `Overall Accuracy: ${aggregate.accuracy}%`,
+        `Overall Avg Speed: ${aggregate.avgMs ? formatMs(aggregate.avgMs) : "N/A"}`,
+        ``,
+        `Recent Sessions:`
+      ];
+
+      if (!recent.length) {
+        lines.push(`No sessions recorded yet.`);
+      } else {
+        recent.forEach((s, index) => {
+          lines.push(
+            `${index + 1}. ${s.date} | ${s.game} | Score: ${s.score} | Accuracy: ${s.accuracy}% | Avg Speed: ${formatMs(s.avgMs)} | Training Score: ${s.trainingScore}`
+          );
+        });
+      }
+
+      const subject = encodeURIComponent("MindSprint Results");
+      const body = encodeURIComponent(lines.join("\n"));
+
+      window.location.href = `mailto:${state.playerEmail}?subject=${subject}&body=${body}`;
+    }
 
     // ---------------------------
     // MEMORY GRID
@@ -607,7 +841,12 @@
       score: 0,
       lives: 3,
       acceptingInput: false,
-      gameStarted: false
+      gameStarted: false,
+      correct: 0,
+      wrong: 0,
+      responseTimes: [],
+      turnStartedAt: 0,
+      runId: 0
     };
 
     const memoryFrequencies = [
@@ -637,16 +876,30 @@
       memory.lives = 3;
       memory.acceptingInput = false;
       memory.gameStarted = true;
+      memory.correct = 0;
+      memory.wrong = 0;
+      memory.responseTimes = [];
+      memory.turnStartedAt = 0;
+      memory.runId += 1;
+
+      document.getElementById("memorySummary").classList.remove("active");
 
       updateMemoryHud();
       setFeedback("memoryFeedback", "Watch and listen to the pattern.", "");
       nextMemoryRound();
     }
 
+    function stopMemory() {
+      memory.acceptingInput = false;
+      memory.gameStarted = false;
+      memory.runId += 1;
+    }
+
     function updateMemoryHud() {
       document.getElementById("memoryLevel").textContent = memory.level;
       document.getElementById("memoryScore").textContent = memory.score;
       document.getElementById("memoryLives").textContent = memory.lives;
+      document.getElementById("memoryAvgSpeed").textContent = memory.responseTimes.length ? formatMs(average(memory.responseTimes)) : "—";
     }
 
     function nextMemoryRound() {
@@ -654,17 +907,21 @@
       memory.inputIndex = 0;
       memory.sequence.push(Math.floor(Math.random() * 16));
       updateMemoryHud();
-      playMemorySequence();
+      playMemorySequence(memory.runId);
     }
 
-    async function playMemorySequence() {
+    async function playMemorySequence(runId) {
       const tiles = [...document.querySelectorAll("#memoryGrid .tile")];
 
       memory.acceptingInput = false;
       memory.inputIndex = 0;
 
       for (const index of memory.sequence) {
+        if (runId !== memory.runId || !memory.gameStarted) return;
+
         await wait(350);
+
+        if (runId !== memory.runId || !memory.gameStarted) return;
 
         tiles[index].classList.add("active");
         playMemoryTileSound(index);
@@ -674,7 +931,10 @@
         tiles[index].classList.remove("active");
       }
 
+      if (runId !== memory.runId || !memory.gameStarted) return;
+
       setFeedback("memoryFeedback", "Your turn.", "");
+      memory.turnStartedAt = performance.now();
       memory.acceptingInput = true;
     }
 
@@ -683,10 +943,16 @@
 
       initializeAudio();
 
+      const now = performance.now();
+      if (memory.turnStartedAt) {
+        memory.responseTimes.push(now - memory.turnStartedAt);
+      }
+
       const tiles = [...document.querySelectorAll("#memoryGrid .tile")];
       const expected = memory.sequence[memory.inputIndex];
 
       if (index === expected) {
+        memory.correct += 1;
         playMemoryTileSound(index);
 
         tiles[index].classList.add("correct");
@@ -694,6 +960,7 @@
 
         memory.inputIndex += 1;
         memory.score += 10;
+        memory.turnStartedAt = performance.now();
 
         if (memory.inputIndex === memory.sequence.length) {
           memory.level += 1;
@@ -704,6 +971,7 @@
           setTimeout(nextMemoryRound, 800);
         }
       } else {
+        memory.wrong += 1;
         playWrongSignal();
 
         tiles[index].classList.add("wrong");
@@ -717,11 +985,21 @@
 
         if (memory.lives <= 0) {
           memory.gameStarted = false;
+
+          const session = recordSession(
+            "Memory Grid",
+            memory.score,
+            memory.correct,
+            memory.wrong,
+            Math.round(average(memory.responseTimes)),
+            { level: memory.level }
+          );
+
           setFeedback("memoryFeedback", `Game over. Score: ${memory.score}`, "bad");
-          saveScore("Memory", memory.score);
+          showRoundSummary("memorySummary", session);
         } else {
           setFeedback("memoryFeedback", "Wrong tile. Watch the pattern again.", "bad");
-          setTimeout(playMemorySequence, 900);
+          setTimeout(() => playMemorySequence(memory.runId), 900);
         }
       }
 
@@ -756,9 +1034,13 @@
       locked: false,
       time: 30,
       score: 0,
+      correct: 0,
+      wrong: 0,
       streak: 0,
       answer: null,
-      timer: null
+      timer: null,
+      promptStartedAt: 0,
+      responseTimes: []
     };
 
     function startFocus() {
@@ -769,7 +1051,12 @@
       focus.locked = false;
       focus.time = 30;
       focus.score = 0;
+      focus.correct = 0;
+      focus.wrong = 0;
       focus.streak = 0;
+      focus.responseTimes = [];
+
+      document.getElementById("focusSummary").classList.remove("active");
 
       updateFocusHud();
       nextFocusPrompt();
@@ -779,11 +1066,7 @@
         updateFocusHud();
 
         if (focus.time <= 0) {
-          stopFocus();
-          setFeedback("focusFeedback", `Time. Score: ${focus.score}`, "good");
-          document.getElementById("focusPrompt").textContent = "DONE";
-          document.getElementById("focusPrompt").style.color = "white";
-          saveScore("Focus", focus.score);
+          endFocusGame();
         }
       }, 1000);
     }
@@ -795,10 +1078,32 @@
       focus.locked = false;
     }
 
+    function endFocusGame() {
+      if (!focus.active) return;
+
+      const score = focus.score;
+      const session = recordSession(
+        "Focus Colors",
+        score,
+        focus.correct,
+        focus.wrong,
+        Math.round(average(focus.responseTimes)),
+        { streak: focus.streak }
+      );
+
+      stopFocus();
+
+      setFeedback("focusFeedback", `Time. Score: ${score}`, "good");
+      document.getElementById("focusPrompt").textContent = "DONE";
+      document.getElementById("focusPrompt").style.color = "white";
+      showRoundSummary("focusSummary", session);
+    }
+
     function updateFocusHud() {
       document.getElementById("focusTime").textContent = focus.time;
       document.getElementById("focusScore").textContent = focus.score;
-      document.getElementById("focusStreak").textContent = focus.streak;
+      document.getElementById("focusCorrect").textContent = focus.correct;
+      document.getElementById("focusAvgSpeed").textContent = focus.responseTimes.length ? formatMs(average(focus.responseTimes)) : "—";
     }
 
     function nextFocusPrompt() {
@@ -809,6 +1114,7 @@
 
       focus.answer = color.name;
       focus.locked = false;
+      focus.promptStartedAt = performance.now();
 
       const prompt = document.getElementById("focusPrompt");
       prompt.textContent = word.label;
@@ -821,15 +1127,20 @@
       initializeAudio();
       focus.locked = true;
 
+      const responseMs = performance.now() - focus.promptStartedAt;
+      focus.responseTimes.push(responseMs);
+
       if (color === focus.answer) {
         playCorrectSignal();
 
+        focus.correct += 1;
         focus.streak += 1;
         focus.score += 10 + Math.min(focus.streak * 2, 20);
         setFeedback("focusFeedback", "Correct", "good");
       } else {
         playWrongSignal();
 
+        focus.wrong += 1;
         focus.streak = 0;
         focus.score = Math.max(0, focus.score - 5);
         setFeedback("focusFeedback", "Wrong", "bad");
@@ -854,9 +1165,13 @@
       locked: false,
       time: 30,
       score: 0,
+      correct: 0,
+      wrong: 0,
       streak: 0,
       answer: null,
-      timer: null
+      timer: null,
+      promptStartedAt: 0,
+      responseTimes: []
     };
 
     function startMath() {
@@ -867,7 +1182,12 @@
       math.locked = false;
       math.time = 30;
       math.score = 0;
+      math.correct = 0;
+      math.wrong = 0;
       math.streak = 0;
+      math.responseTimes = [];
+
+      document.getElementById("mathSummary").classList.remove("active");
 
       updateMathHud();
       nextMathProblem();
@@ -877,11 +1197,7 @@
         updateMathHud();
 
         if (math.time <= 0) {
-          stopMath();
-          setFeedback("mathFeedback", `Time. Score: ${math.score}`, "good");
-          document.getElementById("mathPrompt").textContent = "DONE";
-          document.getElementById("mathChoices").innerHTML = "";
-          saveScore("Math", math.score);
+          endMathGame();
         }
       }, 1000);
     }
@@ -893,10 +1209,32 @@
       math.locked = false;
     }
 
+    function endMathGame() {
+      if (!math.active) return;
+
+      const score = math.score;
+      const session = recordSession(
+        "Speed Math",
+        score,
+        math.correct,
+        math.wrong,
+        Math.round(average(math.responseTimes)),
+        { streak: math.streak }
+      );
+
+      stopMath();
+
+      setFeedback("mathFeedback", `Time. Score: ${score}`, "good");
+      document.getElementById("mathPrompt").textContent = "DONE";
+      document.getElementById("mathChoices").innerHTML = "";
+      showRoundSummary("mathSummary", session);
+    }
+
     function updateMathHud() {
       document.getElementById("mathTime").textContent = math.time;
       document.getElementById("mathScore").textContent = math.score;
-      document.getElementById("mathStreak").textContent = math.streak;
+      document.getElementById("mathCorrect").textContent = math.correct;
+      document.getElementById("mathAvgSpeed").textContent = math.responseTimes.length ? formatMs(average(math.responseTimes)) : "—";
     }
 
     function nextMathProblem() {
@@ -923,6 +1261,7 @@
 
       math.answer = answer;
       math.locked = false;
+      math.promptStartedAt = performance.now();
 
       document.getElementById("mathPrompt").textContent = prompt;
 
@@ -960,15 +1299,20 @@
       initializeAudio();
       math.locked = true;
 
+      const responseMs = performance.now() - math.promptStartedAt;
+      math.responseTimes.push(responseMs);
+
       if (choice === math.answer) {
         playCorrectSignal();
 
+        math.correct += 1;
         math.streak += 1;
         math.score += 10 + Math.min(math.streak * 2, 20);
         setFeedback("mathFeedback", "Correct", "good");
       } else {
         playWrongSignal();
 
+        math.wrong += 1;
         math.streak = 0;
         math.score = Math.max(0, math.score - 5);
         setFeedback("mathFeedback", "Wrong", "bad");
@@ -1048,6 +1392,117 @@
     }
 
     // ---------------------------
+    // CHART + SUMMARY
+    // ---------------------------
+
+    function drawProgressChart() {
+      const canvas = document.getElementById("progressChart");
+      if (!canvas) return;
+
+      const rect = canvas.getBoundingClientRect();
+      const dpr = window.devicePixelRatio || 1;
+      const width = Math.max(300, Math.floor(rect.width));
+      const height = 170;
+
+      canvas.width = width * dpr;
+      canvas.height = height * dpr;
+
+      const ctx = canvas.getContext("2d");
+      ctx.scale(dpr, dpr);
+      ctx.clearRect(0, 0, width, height);
+
+      ctx.fillStyle = "rgba(255,255,255,0.04)";
+      ctx.fillRect(0, 0, width, height);
+
+      const sessions = state.sessions.slice(-12);
+      const padding = 28;
+      const chartW = width - padding * 2;
+      const chartH = height - padding * 2;
+
+      ctx.strokeStyle = "rgba(255,255,255,0.12)";
+      ctx.lineWidth = 1;
+
+      for (let i = 0; i <= 4; i++) {
+        const y = padding + (chartH / 4) * i;
+        ctx.beginPath();
+        ctx.moveTo(padding, y);
+        ctx.lineTo(width - padding, y);
+        ctx.stroke();
+      }
+
+      ctx.fillStyle = "rgba(255,255,255,0.55)";
+      ctx.font = "12px system-ui";
+
+      if (!sessions.length) {
+        ctx.fillText("No progress data yet", padding, height / 2);
+        return;
+      }
+
+      if (sessions.length === 1) {
+        const x = width / 2;
+        const y = padding + chartH - (sessions[0].trainingScore / 100) * chartH;
+
+        ctx.fillStyle = "#38bdf8";
+        ctx.beginPath();
+        ctx.arc(x, y, 5, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.fillStyle = "rgba(255,255,255,0.75)";
+        ctx.fillText(`${sessions[0].trainingScore}`, x + 8, y - 8);
+        return;
+      }
+
+      const points = sessions.map((session, index) => {
+        const x = padding + (chartW / (sessions.length - 1)) * index;
+        const y = padding + chartH - (session.trainingScore / 100) * chartH;
+        return { x, y, score: session.trainingScore };
+      });
+
+      ctx.strokeStyle = "#38bdf8";
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+
+      points.forEach((point, index) => {
+        if (index === 0) {
+          ctx.moveTo(point.x, point.y);
+        } else {
+          ctx.lineTo(point.x, point.y);
+        }
+      });
+
+      ctx.stroke();
+
+      points.forEach(point => {
+        ctx.fillStyle = "#38bdf8";
+        ctx.beginPath();
+        ctx.arc(point.x, point.y, 4, 0, Math.PI * 2);
+        ctx.fill();
+      });
+
+      ctx.fillStyle = "rgba(255,255,255,0.6)";
+      ctx.fillText("0", 8, height - padding + 4);
+      ctx.fillText("100", 4, padding + 4);
+    }
+
+    function showRoundSummary(elementId, session) {
+      const el = document.getElementById(elementId);
+
+      el.innerHTML = `
+        <strong>Round Summary</strong><br>
+        Score: ${session.score}<br>
+        Correct: ${session.correct}<br>
+        Wrong: ${session.wrong}<br>
+        Accuracy: ${session.accuracy}%<br>
+        Average response: ${formatMs(session.avgMs)}<br>
+        Training score: ${session.trainingScore}<br>
+        ${session.level ? `Level reached: ${session.level}<br>` : ""}
+        ${session.streak ? `Final streak: ${session.streak}<br>` : ""}
+      `;
+
+      el.classList.add("active");
+    }
+
+    // ---------------------------
     // HELPERS
     // ---------------------------
 
@@ -1068,6 +1523,27 @@
       el.textContent = text;
       el.className = `feedback ${type || ""}`;
     }
+
+    function average(values) {
+      const clean = values.filter(value => Number.isFinite(value) && value > 0);
+      if (!clean.length) return 0;
+      return clean.reduce((sum, value) => sum + value, 0) / clean.length;
+    }
+
+    function formatMs(ms) {
+      if (!ms) return "—";
+      if (ms >= 1000) return `${(ms / 1000).toFixed(2)}s`;
+      return `${Math.round(ms)}ms`;
+    }
+
+    function clamp(value, min, max) {
+      return Math.max(min, Math.min(max, value));
+    }
+
+    window.addEventListener("resize", drawProgressChart);
+
+    loadProfileToInputs();
+    updateHomeStats();
   </script>
 </body>
 </html>
