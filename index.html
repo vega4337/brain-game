@@ -6,18 +6,25 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-title" content="MindSprint" />
   <meta name="theme-color" content="#111827" />
-  <title>MindSprint</title>
+  <title>MindSprint Brain Games</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700;800&display=swap" rel="stylesheet">
 
   <style>
     :root {
       --bg: #0f172a;
       --panel: #111827;
+      --panel-light: #1f2937;
       --text: #f9fafb;
       --muted: #9ca3af;
       --accent: #38bdf8;
       --good: #22c55e;
       --bad: #ef4444;
-      --line: rgba(255,255,255,0.12);
+      --yellow: #facc15;
+      --purple: #a855f7;
+      --orange: #fb923c;
+      --font-display: 'Space Grotesk', system-ui, sans-serif;
     }
 
     * {
@@ -30,7 +37,7 @@
       min-height: 100vh;
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       background:
-        radial-gradient(circle at top, #1e3a8a 0%, transparent 34%),
+        radial-gradient(circle at top, #1e3a8a 0%, transparent 32%),
         linear-gradient(180deg, #020617 0%, var(--bg) 100%);
       color: var(--text);
       display: flex;
@@ -49,19 +56,51 @@
     }
 
     header {
-      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 18px;
+      gap: 12px;
+    }
+
+    .brand {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
     }
 
     .brand h1 {
-      font-size: 34px;
+      font-family: var(--font-display);
+      font-size: 28px;
       line-height: 1;
       margin: 0;
-      letter-spacing: -0.05em;
+      letter-spacing: -0.02em;
     }
 
     .brand span {
       color: var(--muted);
-      font-size: 14px;
+      font-size: 13px;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-shrink: 0;
+    }
+
+    .icon-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.10);
+      color: var(--text);
+      font-size: 17px;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .screen {
@@ -85,28 +124,76 @@
       padding: 18px;
       box-shadow: 0 20px 60px rgba(0,0,0,0.28);
       backdrop-filter: blur(12px);
-      margin-bottom: 14px;
     }
 
     .game-card {
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 12px;
+      margin-bottom: 14px;
       cursor: pointer;
     }
 
-    .game-card h2 {
-      margin: 0;
-      font-size: 23px;
-      letter-spacing: -0.03em;
+    .game-card-head {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
     }
 
-    .game-card p,
-    .small-text {
+    .game-icon {
+      width: 46px;
+      height: 46px;
+      min-width: 46px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+    }
+
+    .game-card-text { flex: 1; min-width: 0; }
+
+    .game-card h2 {
       margin: 0;
+      font-family: var(--font-display);
+      font-size: 21px;
+      letter-spacing: -0.02em;
+    }
+
+    .game-card p {
+      margin: 4px 0 0;
       color: var(--muted);
-      line-height: 1.45;
+      line-height: 1.4;
+      font-size: 13.5px;
+    }
+
+    .game-card-foot {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .game-card-foot button {
+      width: auto;
+      flex: 1;
+      padding: 12px;
       font-size: 14px;
+    }
+
+    .best-pill {
+      font-size: 12px;
+      color: var(--muted);
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+      padding: 10px 12px;
+      border-radius: 12px;
+      white-space: nowrap;
+    }
+
+    .best-pill strong {
+      color: var(--text);
+      font-family: var(--font-display);
+      margin-left: 3px;
     }
 
     .stats-row {
@@ -126,6 +213,7 @@
 
     .stat strong {
       display: block;
+      font-family: var(--font-display);
       font-size: 22px;
     }
 
@@ -134,23 +222,17 @@
       font-size: 12px;
     }
 
-    .metric-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 10px;
-      margin-top: 12px;
-    }
-
     button {
       border: none;
       border-radius: 18px;
       padding: 15px 18px;
       font-size: 16px;
-      font-weight: 800;
+      font-weight: 700;
       color: #020617;
       background: var(--accent);
       cursor: pointer;
       width: 100%;
+      font-family: inherit;
     }
 
     button.secondary {
@@ -159,35 +241,21 @@
       border: 1px solid rgba(255,255,255,0.10);
     }
 
+    button.danger {
+      background: var(--bad);
+      color: white;
+    }
+
     button:active {
       transform: scale(0.98);
     }
 
-    input {
-      width: 100%;
-      border: 1px solid rgba(255,255,255,0.12);
-      background: rgba(255,255,255,0.08);
-      color: var(--text);
-      border-radius: 16px;
-      padding: 14px;
-      font-size: 16px;
-      outline: none;
-    }
-
-    input::placeholder {
-      color: var(--muted);
-    }
-
-    .settings-row,
-    .profile-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      margin-bottom: 14px;
-    }
-
-    .profile-row {
-      margin-bottom: 10px;
+    button:focus-visible,
+    .game-card:focus-visible,
+    .tile:focus-visible,
+    .reaction-box:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
     }
 
     .topbar {
@@ -204,9 +272,10 @@
     }
 
     .game-title {
-      font-size: 28px;
+      font-family: var(--font-display);
+      font-size: 26px;
       margin: 0 0 6px;
-      letter-spacing: -0.04em;
+      letter-spacing: -0.02em;
     }
 
     .instructions {
@@ -217,26 +286,25 @@
 
     .hud {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: repeat(3, 1fr);
       gap: 8px;
       margin-bottom: 16px;
     }
 
-    .hud .stat {
-      padding: 10px 6px;
-    }
-
     .hud .stat strong {
-      font-size: 18px;
-    }
-
-    .hud .stat span {
-      font-size: 11px;
+      font-size: 19px;
     }
 
     .grid {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      margin: 18px 0;
+    }
+
+    .numpad {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
       gap: 10px;
       margin: 18px 0;
     }
@@ -249,8 +317,9 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      font-family: var(--font-display);
       font-size: 24px;
-      font-weight: 900;
+      font-weight: 800;
       user-select: none;
       transition: 0.15s;
     }
@@ -259,21 +328,18 @@
       background: var(--accent);
       color: #020617;
       box-shadow: 0 0 24px rgba(56,189,248,0.65);
-      transform: scale(1.04);
     }
 
     .tile.correct {
       background: var(--good);
       color: white;
       box-shadow: 0 0 24px rgba(34,197,94,0.6);
-      transform: scale(1.04);
     }
 
     .tile.wrong {
       background: var(--bad);
       color: white;
       box-shadow: 0 0 24px rgba(239,68,68,0.6);
-      transform: scale(0.96);
     }
 
     .big-prompt {
@@ -287,9 +353,58 @@
       text-align: center;
       padding: 20px;
       margin-bottom: 16px;
+      font-family: var(--font-display);
       font-size: 54px;
-      font-weight: 900;
-      letter-spacing: -0.06em;
+      font-weight: 800;
+      letter-spacing: -0.04em;
+    }
+
+    .recall-prompt {
+      font-size: 72px;
+    }
+
+    .recall-prompt.pulse {
+      animation: digitPulse 0.45s ease-out;
+    }
+
+    @keyframes digitPulse {
+      from { transform: scale(0.6); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    .reaction-box {
+      min-height: 220px;
+      border-radius: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 20px;
+      margin-bottom: 16px;
+      font-size: 22px;
+      font-weight: 800;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.10);
+      transition: background-color 0.15s, border-color 0.15s, box-shadow 0.15s;
+      cursor: pointer;
+    }
+
+    .reaction-box.wait {
+      background: rgba(255,255,255,0.04);
+      color: var(--muted);
+    }
+
+    .reaction-box.early {
+      background: var(--bad);
+      color: #fff;
+      border-color: var(--bad);
+    }
+
+    .reaction-box.go {
+      background: var(--good);
+      color: #022c0f;
+      border-color: var(--good);
+      box-shadow: 0 0 32px rgba(34,197,94,0.45);
     }
 
     .choice-grid {
@@ -317,73 +432,316 @@
     .feedback.good { color: var(--good); }
     .feedback.bad { color: var(--bad); }
 
-    .summary-box {
-      display: none;
-      margin-top: 14px;
-      background: rgba(255,255,255,0.06);
-      border: 1px solid rgba(255,255,255,0.10);
-      border-radius: 18px;
-      padding: 14px;
-      color: var(--text);
-      line-height: 1.45;
-      font-size: 14px;
-    }
-
-    .summary-box.active {
-      display: block;
-    }
-
-    .summary-box strong {
-      color: var(--accent);
-    }
-
     .math-box {
       font-size: 52px;
-      font-weight: 900;
-      letter-spacing: -0.05em;
-    }
-
-    canvas {
-      width: 100%;
-      height: 170px;
-      display: block;
-      margin-top: 8px;
-      border-radius: 16px;
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,255,255,0.08);
     }
 
     .section-title {
-      font-size: 20px;
-      margin: 0 0 8px;
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      font-weight: 700;
+      margin: 22px 0 10px;
+    }
+
+    .section-title:first-of-type {
+      margin-top: 6px;
+    }
+
+    /* Modals */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(2,6,23,0.72);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 60;
+      padding: 20px;
+      backdrop-filter: blur(6px);
+    }
+
+    .modal-overlay.active { display: flex; }
+
+    .modal-card {
+      background: var(--panel);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 24px;
+      padding: 26px 22px;
+      width: 100%;
+      max-width: 380px;
+      text-align: center;
+      animation: modalIn 0.22s ease-out;
+    }
+
+    @keyframes modalIn {
+      from { opacity: 0; transform: translateY(18px) scale(0.97); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .results-score {
+      font-family: var(--font-display);
+      font-size: 58px;
+      font-weight: 800;
+      margin: 6px 0 4px;
       letter-spacing: -0.03em;
+      color: var(--accent);
+    }
+
+    .results-best {
+      color: var(--muted);
+      font-size: 14px;
+      margin-bottom: 6px;
+      min-height: 18px;
+    }
+
+    .results-best.new {
+      color: var(--yellow);
+      font-weight: 800;
+    }
+
+    .results-stats {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin: 10px 0 4px;
+    }
+
+    .results-stat-row {
+      display: flex;
+      justify-content: space-between;
+      background: rgba(255,255,255,0.05);
+      padding: 10px 14px;
+      border-radius: 12px;
+      font-size: 14px;
+    }
+
+    .results-stat-row strong { font-family: var(--font-display); }
+
+    .toast {
+      padding: 10px 12px;
+      border-radius: 12px;
+      font-size: 13px;
+      margin: 8px 0;
+      text-align: left;
+    }
+
+    .toast.achievement {
+      background: rgba(250,204,21,0.10);
+      border: 1px solid rgba(250,204,21,0.28);
+      color: var(--yellow);
+    }
+
+    .toast.streak {
+      background: rgba(251,146,60,0.10);
+      border: 1px solid rgba(251,146,60,0.28);
+      color: var(--orange);
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .modal-actions button { width: auto; flex: 1; }
+
+    /* Countdown */
+    .countdown-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(2,6,23,0.86);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 55;
+      backdrop-filter: blur(4px);
+    }
+
+    .countdown-overlay.active { display: flex; }
+
+    #countdownNumber {
+      font-family: var(--font-display);
+      font-size: 100px;
+      font-weight: 800;
+      color: var(--accent);
+      animation: countdownPulse 0.5s ease-out;
+    }
+
+    @keyframes countdownPulse {
+      from { transform: scale(0.5); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    /* Confetti */
+    .confetti-piece {
+      position: fixed;
+      top: -12px;
+      width: 8px;
+      height: 14px;
+      opacity: 0.9;
+      z-index: 70;
+      pointer-events: none;
+      border-radius: 2px;
+      animation: confettiFall linear forwards;
+    }
+
+    @keyframes confettiFall {
+      to { transform: translateY(110vh) rotate(540deg); opacity: 0; }
+    }
+
+    /* Stats screen */
+    .best-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      margin-bottom: 6px;
+    }
+
+    .best-card {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-left: 3px solid var(--card-accent, var(--accent));
+      border-radius: 16px;
+      padding: 14px;
+    }
+
+    .best-icon { font-size: 20px; margin-bottom: 4px; }
+    .best-name { font-size: 12px; color: var(--muted); }
+    .best-score {
+      font-family: var(--font-display);
+      font-size: 22px;
+      font-weight: 800;
+      margin-top: 2px;
+    }
+
+    .activity-chart {
+      display: flex;
+      align-items: flex-end;
+      gap: 6px;
+      height: 100px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 14px;
+      padding: 10px;
+      margin-bottom: 6px;
+    }
+
+    .chart-bar {
+      flex: 1;
+      border-radius: 6px 6px 2px 2px;
+      min-height: 6px;
+      transition: height 0.3s ease;
+    }
+
+    .muted-note {
+      color: var(--muted);
+      font-size: 13px;
+      text-align: center;
+      padding: 10px 0;
+      margin: 0;
+    }
+
+    .achievements-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }
+
+    .achievement {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px;
+      padding: 14px 10px;
+      text-align: center;
+      opacity: 0.45;
+      filter: grayscale(1);
+      transition: 0.2s;
+    }
+
+    .achievement.unlocked {
+      opacity: 1;
+      filter: none;
+      border-color: rgba(250,204,21,0.35);
+      background: rgba(250,204,21,0.06);
+    }
+
+    .achievement-icon { font-size: 26px; margin-bottom: 4px; }
+    .achievement-name { font-weight: 700; font-size: 12.5px; }
+    .achievement-desc {
+      color: var(--muted);
+      font-size: 11px;
+      margin-top: 3px;
+      line-height: 1.3;
+    }
+
+    /* Settings */
+    .setting-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 14px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .setting-row:last-of-type { border-bottom: none; }
+    .setting-row strong { display: block; font-size: 15px; }
+    .setting-row p { margin: 3px 0 0; font-size: 12px; color: var(--muted); }
+
+    .toggle {
+      width: 50px;
+      height: 30px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.12);
+      position: relative;
+      padding: 0;
+      flex-shrink: 0;
+      transition: background 0.2s;
+    }
+
+    .toggle::after {
+      content: '';
+      position: absolute;
+      top: 3px;
+      left: 3px;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: var(--muted);
+      transition: left 0.2s, background 0.2s;
+    }
+
+    .toggle.on { background: rgba(56,189,248,0.32); }
+    .toggle.on::after { left: 23px; background: var(--accent); }
+
+    .footer-note {
+      color: var(--muted);
+      font-size: 12px;
+      text-align: center;
+      line-height: 1.4;
+      margin-top: auto;
+      padding-top: 18px;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
     }
 
     @media (max-width: 390px) {
-      .brand h1 {
-        font-size: 30px;
-      }
-
-      .big-prompt {
-        font-size: 46px;
-      }
-
-      .tile {
-        font-size: 20px;
-        border-radius: 17px;
-      }
-
-      button {
-        padding: 14px;
-      }
-
-      .hud .stat strong {
-        font-size: 16px;
-      }
-
-      .hud .stat span {
-        font-size: 10px;
-      }
+      .brand h1 { font-size: 25px; }
+      .big-prompt { font-size: 46px; }
+      .recall-prompt { font-size: 58px; }
+      .tile { font-size: 20px; border-radius: 17px; }
+      button { padding: 14px 14px; }
+      .results-score { font-size: 46px; }
+      #countdownNumber { font-size: 80px; }
+      .reaction-box { min-height: 190px; font-size: 19px; }
     }
   </style>
 </head>
@@ -393,7 +751,11 @@
     <header>
       <div class="brand">
         <h1>MindSprint</h1>
-        <span>Brain-training games with progress tracking</span>
+        <span>Fast brain-training mini games</span>
+      </div>
+      <div class="header-actions">
+        <button class="icon-btn" onclick="showScreen('stats')" aria-label="Stats">ð</button>
+        <button class="icon-btn" onclick="showScreen('settings')" aria-label="Settings">âï¸</button>
       </div>
     </header>
 
@@ -405,8 +767,8 @@
           <span>Total Score</span>
         </div>
         <div class="stat">
-          <strong id="trainingScore">0</strong>
-          <span>Training Score</span>
+          <strong id="streakValue">0</strong>
+          <span>ð¥ Day Streak</span>
         </div>
         <div class="stat">
           <strong id="plays">0</strong>
@@ -414,68 +776,87 @@
         </div>
       </div>
 
-      <div class="settings-row">
-        <button data-sound-button class="secondary" onclick="toggleSound()">Sound: On</button>
-        <button class="secondary" onclick="resetStats()">Reset Stats</button>
-      </div>
-
-      <div class="card">
-        <h2 class="section-title">Player</h2>
-        <div class="profile-row">
-          <input id="playerName" type="text" placeholder="Name" oninput="saveProfile()" />
-          <input id="playerEmail" type="email" placeholder="Email" oninput="saveProfile()" />
-        </div>
-        <button onclick="emailResults()">Email Results</button>
-      </div>
-
-      <div class="card">
-        <h2 class="section-title">Progress</h2>
-        <p id="progressInsight" class="small-text">Play a game to start tracking speed, accuracy, and progress.</p>
-
-        <div class="metric-grid">
-          <div class="stat">
-            <strong id="overallAccuracy">0%</strong>
-            <span>Accuracy</span>
-          </div>
-          <div class="stat">
-            <strong id="overallSpeed">—</strong>
-            <span>Avg Speed</span>
-          </div>
-        </div>
-
-        <canvas id="progressChart"></canvas>
-      </div>
-
       <div class="card game-card" onclick="showScreen('memory')">
-        <h2>Memory Grid</h2>
-        <p>Watch the pattern, listen to the tones, then repeat it. Each tile has its own sound. You have three lives.</p>
-        <button>Play Memory Grid</button>
+        <div class="game-card-head">
+          <div class="game-icon" style="background:rgba(56,189,248,0.16); color:#38bdf8;">ð§ </div>
+          <div class="game-card-text">
+            <h2>Memory Grid</h2>
+            <p>Watch the pattern, then repeat it. Three lives, growing sequences.</p>
+          </div>
+        </div>
+        <div class="game-card-foot">
+          <span class="best-pill">Best <strong id="homeBestMemory">0</strong></span>
+          <button>Play</button>
+        </div>
       </div>
 
       <div class="card game-card" onclick="showScreen('focus')">
-        <h2>Focus Colors</h2>
-        <p>Ignore the word. Tap the actual color of the text before time runs out.</p>
-        <button>Play Focus Colors</button>
+        <div class="game-card-head">
+          <div class="game-icon" style="background:rgba(250,204,21,0.16); color:#facc15;">ð¯</div>
+          <div class="game-card-text">
+            <h2>Focus Colors</h2>
+            <p>Ignore the word, tap the actual color. 30 seconds on the clock.</p>
+          </div>
+        </div>
+        <div class="game-card-foot">
+          <span class="best-pill">Best <strong id="homeBestFocus">0</strong></span>
+          <button>Play</button>
+        </div>
       </div>
 
       <div class="card game-card" onclick="showScreen('math')">
-        <h2>Speed Math</h2>
-        <p>Solve quick arithmetic problems under pressure. Speed and accuracy both matter.</p>
-        <button>Play Speed Math</button>
+        <div class="game-card-head">
+          <div class="game-icon" style="background:rgba(251,146,60,0.16); color:#fb923c;">ð§®</div>
+          <div class="game-card-text">
+            <h2>Speed Math</h2>
+            <p>Solve quick arithmetic problems before time runs out.</p>
+          </div>
+        </div>
+        <div class="game-card-foot">
+          <span class="best-pill">Best <strong id="homeBestMath">0</strong></span>
+          <button>Play</button>
+        </div>
+      </div>
+
+      <div class="card game-card" onclick="showScreen('reaction')">
+        <div class="game-card-head">
+          <div class="game-icon" style="background:rgba(34,197,94,0.16); color:#22c55e;">â¡</div>
+          <div class="game-card-text">
+            <h2>Reaction Time</h2>
+            <p>Tap the instant it turns green. Five rounds, milliseconds matter.</p>
+          </div>
+        </div>
+        <div class="game-card-foot">
+          <span class="best-pill">Best <strong id="homeBestReaction">0</strong></span>
+          <button>Play</button>
+        </div>
+      </div>
+
+      <div class="card game-card" onclick="showScreen('recall')">
+        <div class="game-card-head">
+          <div class="game-icon" style="background:rgba(168,85,247,0.16); color:#a855f7;">ð¢</div>
+          <div class="game-card-text">
+            <h2>Number Recall</h2>
+            <p>Memorize a growing string of digits, then tap them back in order.</p>
+          </div>
+        </div>
+        <div class="game-card-foot">
+          <span class="best-pill">Best <strong id="homeBestRecall">0</strong></span>
+          <button>Play</button>
+        </div>
       </div>
     </section>
 
-    <!-- MEMORY GAME -->
+    <!-- MEMORY GRID -->
     <section id="memory" class="screen">
       <div class="topbar">
         <button class="secondary" onclick="returnHome()">Home</button>
-        <button data-sound-button class="secondary" onclick="toggleSound()">Sound: On</button>
         <button onclick="startMemory()">Start</button>
       </div>
 
       <div class="card">
         <h2 class="game-title">Memory Grid</h2>
-        <p class="instructions">Watch and listen. Repeat the same pattern in order. A mistake costs one life and replays the same pattern.</p>
+        <p class="instructions">Watch the glowing tiles. When the pattern ends, tap the same tiles in order. A mistake costs one life and replays the same pattern.</p>
 
         <div class="hud">
           <div class="stat">
@@ -490,15 +871,10 @@
             <strong id="memoryLives">3</strong>
             <span>Lives</span>
           </div>
-          <div class="stat">
-            <strong id="memoryAvgSpeed">—</strong>
-            <span>Avg Tap</span>
-          </div>
         </div>
 
         <div class="grid" id="memoryGrid"></div>
         <div id="memoryFeedback" class="feedback"></div>
-        <div id="memorySummary" class="summary-box"></div>
       </div>
     </section>
 
@@ -506,7 +882,6 @@
     <section id="focus" class="screen">
       <div class="topbar">
         <button class="secondary" onclick="returnHome()">Home</button>
-        <button data-sound-button class="secondary" onclick="toggleSound()">Sound: On</button>
         <button onclick="startFocus()">Start</button>
       </div>
 
@@ -524,12 +899,8 @@
             <span>Score</span>
           </div>
           <div class="stat">
-            <strong id="focusCorrect">0</strong>
-            <span>Correct</span>
-          </div>
-          <div class="stat">
-            <strong id="focusAvgSpeed">—</strong>
-            <span>Avg Tap</span>
+            <strong id="focusStreak">0</strong>
+            <span>Streak</span>
           </div>
         </div>
 
@@ -543,7 +914,6 @@
         </div>
 
         <div id="focusFeedback" class="feedback"></div>
-        <div id="focusSummary" class="summary-box"></div>
       </div>
     </section>
 
@@ -551,7 +921,6 @@
     <section id="math" class="screen">
       <div class="topbar">
         <button class="secondary" onclick="returnHome()">Home</button>
-        <button data-sound-button class="secondary" onclick="toggleSound()">Sound: On</button>
         <button onclick="startMath()">Start</button>
       </div>
 
@@ -569,265 +938,577 @@
             <span>Score</span>
           </div>
           <div class="stat">
-            <strong id="mathCorrect">0</strong>
-            <span>Correct</span>
-          </div>
-          <div class="stat">
-            <strong id="mathAvgSpeed">—</strong>
-            <span>Avg Tap</span>
+            <strong id="mathStreak">0</strong>
+            <span>Streak</span>
           </div>
         </div>
 
         <div id="mathPrompt" class="big-prompt math-box">READY</div>
         <div id="mathChoices" class="choice-grid"></div>
         <div id="mathFeedback" class="feedback"></div>
-        <div id="mathSummary" class="summary-box"></div>
       </div>
     </section>
+
+    <!-- REACTION TIME -->
+    <section id="reaction" class="screen">
+      <div class="topbar">
+        <button class="secondary" onclick="returnHome()">Home</button>
+        <button onclick="startReaction()">Start</button>
+      </div>
+
+      <div class="card">
+        <h2 class="game-title">Reaction Time</h2>
+        <p class="instructions">Wait for the box to turn green, then tap it as fast as you can. Tapping too early restarts the round.</p>
+
+        <div class="hud">
+          <div class="stat">
+            <strong id="reactionRound">0 / 5</strong>
+            <span>Round</span>
+          </div>
+          <div class="stat">
+            <strong id="reactionLast">â</strong>
+            <span>Last (ms)</span>
+          </div>
+          <div class="stat">
+            <strong id="reactionBest">â</strong>
+            <span>Best (ms)</span>
+          </div>
+        </div>
+
+        <div id="reactionBox" class="reaction-box" onclick="handleReactionTap()">
+          <span id="reactionText">Tap Start to begin</span>
+        </div>
+        <div id="reactionFeedback" class="feedback"></div>
+      </div>
+    </section>
+
+    <!-- NUMBER RECALL -->
+    <section id="recall" class="screen">
+      <div class="topbar">
+        <button class="secondary" onclick="returnHome()">Home</button>
+        <button onclick="startRecall()">Start</button>
+      </div>
+
+      <div class="card">
+        <h2 class="game-title">Number Recall</h2>
+        <p class="instructions">Watch the digits appear one at a time, then tap them back in the same order. A mistake costs one life.</p>
+
+        <div class="hud">
+          <div class="stat">
+            <strong id="recallLevel">1</strong>
+            <span>Level</span>
+          </div>
+          <div class="stat">
+            <strong id="recallScore">0</strong>
+            <span>Score</span>
+          </div>
+          <div class="stat">
+            <strong id="recallLives">3</strong>
+            <span>Lives</span>
+          </div>
+        </div>
+
+        <div id="recallPrompt" class="big-prompt recall-prompt">Ready</div>
+        <div class="numpad" id="recallPad"></div>
+        <div id="recallFeedback" class="feedback"></div>
+      </div>
+    </section>
+
+    <!-- STATS & ACHIEVEMENTS -->
+    <section id="stats" class="screen">
+      <div class="topbar">
+        <button class="secondary" onclick="returnHome()">Home</button>
+      </div>
+
+      <div class="card">
+        <h2 class="game-title">Your Stats</h2>
+
+        <div class="stats-row">
+          <div class="stat">
+            <strong id="statsTotalScore">0</strong>
+            <span>Total Score</span>
+          </div>
+          <div class="stat">
+            <strong id="statsStreak">0</strong>
+            <span>Day Streak</span>
+          </div>
+          <div class="stat">
+            <strong id="statsBestStreak">0</strong>
+            <span>Best Streak</span>
+          </div>
+        </div>
+
+        <div class="section-title">Personal Bests</div>
+        <div class="best-grid" id="bestGrid"></div>
+
+        <div class="section-title">Recent Activity</div>
+        <div class="activity-chart" id="activityChart"></div>
+
+        <div class="section-title">Achievements</div>
+        <div class="achievements-grid" id="achievementsGrid"></div>
+      </div>
+    </section>
+
+    <!-- SETTINGS -->
+    <section id="settings" class="screen">
+      <div class="topbar">
+        <button class="secondary" onclick="returnHome()">Home</button>
+      </div>
+
+      <div class="card">
+        <h2 class="game-title">Settings</h2>
+
+        <div class="setting-row">
+          <div>
+            <strong>Sound effects</strong>
+            <p>Tones for correct and incorrect answers</p>
+          </div>
+          <button class="toggle" id="soundToggle" onclick="toggleSound()" aria-label="Toggle sound"></button>
+        </div>
+
+        <div class="setting-row">
+          <div>
+            <strong>Haptics</strong>
+            <p>Vibration feedback on supported devices</p>
+          </div>
+          <button class="toggle" id="hapticsToggle" onclick="toggleHaptics()" aria-label="Toggle haptics"></button>
+        </div>
+
+        <button class="danger" style="margin-top: 20px;" onclick="openConfirmReset()">Reset All Stats</button>
+      </div>
+    </section>
+
+    <!-- RESULTS MODAL -->
+    <div id="resultsModal" class="modal-overlay">
+      <div class="modal-card">
+        <h2 id="resultsGameName" class="game-title" style="margin-bottom: 0;">Game</h2>
+        <div class="results-score" id="resultsScore">0</div>
+        <div class="results-best" id="resultsBestRow"></div>
+        <div id="resultsToasts"></div>
+        <div class="results-stats" id="resultsStats"></div>
+        <div class="modal-actions">
+          <button class="secondary" onclick="resultsHome()">Home</button>
+          <button onclick="playAgainFromResults()">Play Again</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- RESET CONFIRM MODAL -->
+    <div id="confirmModal" class="modal-overlay">
+      <div class="modal-card">
+        <h2 class="game-title">Reset everything?</h2>
+        <p class="instructions" style="margin-bottom: 4px;">This clears your total score, streak, personal bests, and achievements. It can't be undone.</p>
+        <div class="modal-actions">
+          <button class="secondary" onclick="closeConfirmReset()">Cancel</button>
+          <button class="danger" onclick="doResetStats()">Reset</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- COUNTDOWN OVERLAY -->
+    <div id="countdownOverlay" class="countdown-overlay">
+      <div id="countdownNumber">3</div>
+    </div>
+
+    <div class="footer-note">
+      Original web game. No Lumosity branding, assets, or exact game copies included.
+    </div>
   </main>
 
   <script>
-    const STORAGE_KEYS = {
-      totalScore: "ms_totalScore",
-      plays: "ms_plays",
-      sound: "ms_soundEnabled",
-      sessions: "ms_sessions",
-      name: "ms_playerName",
-      email: "ms_playerEmail"
+    // ---------------------------
+    // CONSTANTS & LABELS
+    // ---------------------------
+
+    const gameLabels = { Memory: 'Memory Grid', Focus: 'Focus Colors', Math: 'Speed Math', Reaction: 'Reaction Time', Recall: 'Number Recall' };
+    const gameIcons  = { Memory: 'ð§ ', Focus: 'ð¯', Math: 'ð§®', Reaction: 'â¡', Recall: 'ð¢' };
+    const gameColors = { Memory: '#38bdf8', Focus: '#facc15', Math: '#fb923c', Reaction: '#22c55e', Recall: '#a855f7' };
+
+    const hasStorage = typeof window !== 'undefined' && !!window.storage;
+    const reduceMotion = typeof window.matchMedia === 'function' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    const defaultProfile = {
+      totalScore: 0,
+      plays: 0,
+      bestScores: { Memory: 0, Focus: 0, Math: 0, Reaction: 0, Recall: 0 },
+      bestLevels: { Memory: 0, Recall: 0 },
+      bestStreaks: { Focus: 0, Math: 0 },
+      bestReactionMs: null,
+      streak: { current: 0, longest: 0, lastDate: null },
+      settings: { sound: true, haptics: true },
+      achievements: []
     };
 
-    const state = {
-      totalScore: Number(localStorage.getItem(STORAGE_KEYS.totalScore) || 0),
-      plays: Number(localStorage.getItem(STORAGE_KEYS.plays) || 0),
-      soundEnabled: localStorage.getItem(STORAGE_KEYS.sound) !== "false",
-      playerName: localStorage.getItem(STORAGE_KEYS.name) || "",
-      playerEmail: localStorage.getItem(STORAGE_KEYS.email) || "",
-      sessions: loadSessions()
-    };
+    function clone(obj) {
+      return JSON.parse(JSON.stringify(obj));
+    }
 
-    let audioContext = null;
+    let profile = clone(defaultProfile);
+    let history = [];
+    let activeGameKey = null;
 
-    function loadSessions() {
+    // ---------------------------
+    // PERSISTENCE
+    // ---------------------------
+
+    function normalizeProfile(loaded) {
+      const p = clone(defaultProfile);
+      if (!loaded) return p;
+      p.totalScore = Number(loaded.totalScore) || 0;
+      p.plays = Number(loaded.plays) || 0;
+      p.bestScores = { ...p.bestScores, ...(loaded.bestScores || {}) };
+      p.bestLevels = { ...p.bestLevels, ...(loaded.bestLevels || {}) };
+      p.bestStreaks = { ...p.bestStreaks, ...(loaded.bestStreaks || {}) };
+      p.bestReactionMs = (typeof loaded.bestReactionMs === 'number') ? loaded.bestReactionMs : null;
+      p.streak = { ...p.streak, ...(loaded.streak || {}) };
+      p.settings = { ...p.settings, ...(loaded.settings || {}) };
+      p.achievements = Array.isArray(loaded.achievements) ? loaded.achievements : [];
+      return p;
+    }
+
+    async function loadData() {
+      if (!hasStorage) return;
       try {
-        return JSON.parse(localStorage.getItem(STORAGE_KEYS.sessions) || "[]");
-      } catch {
-        return [];
-      }
-    }
-
-    function saveSessions() {
-      localStorage.setItem(STORAGE_KEYS.sessions, JSON.stringify(state.sessions.slice(-100)));
-    }
-
-    function saveProfile() {
-      state.playerName = document.getElementById("playerName").value.trim();
-      state.playerEmail = document.getElementById("playerEmail").value.trim();
-
-      localStorage.setItem(STORAGE_KEYS.name, state.playerName);
-      localStorage.setItem(STORAGE_KEYS.email, state.playerEmail);
-    }
-
-    function loadProfileToInputs() {
-      document.getElementById("playerName").value = state.playerName;
-      document.getElementById("playerEmail").value = state.playerEmail;
-    }
-
-    function updateHomeStats() {
-      const aggregate = getAggregateStats();
-
-      document.getElementById("totalScore").textContent = state.totalScore;
-      document.getElementById("plays").textContent = state.plays;
-      document.getElementById("trainingScore").textContent = aggregate.latestTrainingScore;
-      document.getElementById("overallAccuracy").textContent = `${aggregate.accuracy}%`;
-      document.getElementById("overallSpeed").textContent = aggregate.avgMs ? formatMs(aggregate.avgMs) : "—";
-      document.getElementById("progressInsight").textContent = getProgressInsight();
-
-      updateSoundButtons();
-      drawProgressChart();
-    }
-
-    function getAggregateStats() {
-      const sessions = state.sessions;
-      const latest = sessions[sessions.length - 1];
-
-      let correct = 0;
-      let wrong = 0;
-      let totalMs = 0;
-      let speedCount = 0;
-
-      sessions.forEach(session => {
-        correct += session.correct || 0;
-        wrong += session.wrong || 0;
-
-        if (session.avgMs) {
-          totalMs += session.avgMs;
-          speedCount += 1;
+        const result = await window.storage.get('gamedata');
+        if (result && result.value) {
+          const parsed = JSON.parse(result.value);
+          profile = normalizeProfile(parsed.profile);
+          history = Array.isArray(parsed.history) ? parsed.history.slice(-30) : [];
         }
-      });
-
-      const totalAnswers = correct + wrong;
-      const accuracy = totalAnswers ? Math.round((correct / totalAnswers) * 100) : 0;
-      const avgMs = speedCount ? Math.round(totalMs / speedCount) : null;
-
-      return {
-        latestTrainingScore: latest ? latest.trainingScore : 0,
-        accuracy,
-        avgMs
-      };
+      } catch (err) {
+        // No saved data yet - start fresh with defaults.
+      }
     }
 
-    function getProgressInsight() {
-      const sessions = state.sessions;
-
-      if (!sessions.length) {
-        return "Play a game to start tracking speed, accuracy, and progress.";
+    async function saveData() {
+      if (!hasStorage) return;
+      try {
+        await window.storage.set('gamedata', JSON.stringify({ profile, history }));
+      } catch (err) {
+        console.error('MindSprint: could not save progress', err);
       }
-
-      const last = sessions[sessions.length - 1];
-      const lastText = `Last round: ${last.game} — ${last.accuracy}% accuracy, ${formatMs(last.avgMs)} average response, training score ${last.trainingScore}.`;
-
-      if (sessions.length < 4) {
-        return `${lastText} Keep playing to build a trend.`;
-      }
-
-      const recent = average(sessions.slice(-3).map(s => s.trainingScore));
-      const prior = average(sessions.slice(-6, -3).map(s => s.trainingScore));
-
-      if (!prior) {
-        return `${lastText} Keep playing to build a stronger trend.`;
-      }
-
-      const diff = Math.round(recent - prior);
-
-      if (diff > 3) {
-        return `${lastText} Recent performance is trending up by ${diff} points.`;
-      }
-
-      if (diff < -3) {
-        return `${lastText} Recent performance is down by ${Math.abs(diff)} points. Focus on accuracy before speed.`;
-      }
-
-      return `${lastText} Recent performance is stable.`;
     }
 
-    function recordSession(game, score, correct, wrong, avgMs, extra = {}) {
-      const total = correct + wrong;
-      const accuracy = total ? Math.round((correct / total) * 100) : 0;
-      const speedScore = avgMs ? clamp(Math.round(100 - avgMs / 20), 0, 100) : 0;
-      const scoreScore = clamp(Math.round(score / 5), 0, 100);
-      const trainingScore = clamp(Math.round((accuracy * 0.45) + (speedScore * 0.35) + (scoreScore * 0.20)), 0, 100);
-
-      const session = {
-        id: Date.now(),
-        date: new Date().toLocaleString(),
-        game,
-        score,
-        correct,
-        wrong,
-        accuracy,
-        avgMs: avgMs || 0,
-        trainingScore,
-        ...extra
-      };
-
-      state.sessions.push(session);
-      saveSessions();
-
-      state.totalScore += score;
-      state.plays += 1;
-
-      localStorage.setItem(STORAGE_KEYS.totalScore, state.totalScore);
-      localStorage.setItem(STORAGE_KEYS.plays, state.plays);
-
-      updateHomeStats();
-
-      return session;
-    }
-
-    function resetStats() {
-      localStorage.removeItem(STORAGE_KEYS.totalScore);
-      localStorage.removeItem(STORAGE_KEYS.plays);
-      localStorage.removeItem(STORAGE_KEYS.sessions);
-
-      state.totalScore = 0;
-      state.plays = 0;
-      state.sessions = [];
-
-      updateHomeStats();
-    }
+    // ---------------------------
+    // NAVIGATION
+    // ---------------------------
 
     function showScreen(id) {
-      document.querySelectorAll(".screen").forEach(screen => screen.classList.remove("active"));
-      document.getElementById(id).classList.add("active");
+      document.querySelectorAll('.screen').forEach(screen => screen.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
       initializeAudio();
+
+      if (id === 'home') renderHome();
+      if (id === 'stats') renderStats();
+      if (id === 'settings') applySettingsUI();
     }
 
     function returnHome() {
-      stopMemory();
       stopFocus();
       stopMath();
-      showScreen("home");
-      updateHomeStats();
+      stopReaction();
+      memory.gameStarted = false;
+      memory.acceptingInput = false;
+      recall.gameStarted = false;
+      recall.acceptingInput = false;
+      showScreen('home');
     }
 
-    function toggleSound() {
-      state.soundEnabled = !state.soundEnabled;
-      localStorage.setItem(STORAGE_KEYS.sound, String(state.soundEnabled));
-      updateSoundButtons();
+    // ---------------------------
+    // HOME / STATS RENDERING
+    // ---------------------------
 
-      if (state.soundEnabled) {
-        initializeAudio();
-        playTone(660, 0.07, "sine", 0.06);
-      }
-    }
+    function renderHome() {
+      document.getElementById('totalScore').textContent = profile.totalScore;
+      document.getElementById('plays').textContent = profile.plays;
+      document.getElementById('streakValue').textContent = profile.streak.current;
 
-    function updateSoundButtons() {
-      const label = state.soundEnabled ? "Sound: On" : "Sound: Off";
-
-      document.querySelectorAll("[data-sound-button]").forEach(button => {
-        button.textContent = label;
+      Object.keys(gameLabels).forEach(key => {
+        const el = document.getElementById('homeBest' + key);
+        if (el) el.textContent = profile.bestScores[key] || 0;
       });
     }
 
-    function emailResults() {
-      saveProfile();
+    function renderStats() {
+      document.getElementById('statsTotalScore').textContent = profile.totalScore;
+      document.getElementById('statsStreak').textContent = profile.streak.current;
+      document.getElementById('statsBestStreak').textContent = profile.streak.longest;
 
-      if (!state.playerEmail) {
-        alert("Enter an email address first.");
+      const bestGrid = document.getElementById('bestGrid');
+      bestGrid.innerHTML = '';
+      Object.keys(gameLabels).forEach(key => {
+        const card = document.createElement('div');
+        card.className = 'best-card';
+        card.style.setProperty('--card-accent', gameColors[key]);
+        card.innerHTML =
+          '<div class="best-icon">' + gameIcons[key] + '</div>' +
+          '<div class="best-name">' + gameLabels[key] + '</div>' +
+          '<div class="best-score">' + (profile.bestScores[key] || 0) + '</div>';
+        bestGrid.appendChild(card);
+      });
+
+      renderActivityChart();
+      renderAchievements();
+    }
+
+    function renderActivityChart() {
+      const container = document.getElementById('activityChart');
+      container.innerHTML = '';
+
+      if (!history.length) {
+        container.innerHTML = '<p class="muted-note">Play a game to start tracking your activity.</p>';
         return;
       }
 
-      const aggregate = getAggregateStats();
-      const recent = state.sessions.slice(-10).reverse();
+      const recent = history.slice(-10);
+      const max = Math.max(...recent.map(h => h.score), 1);
 
-      const lines = [
-        `MindSprint Results`,
-        ``,
-        `Name: ${state.playerName || "Not entered"}`,
-        `Email: ${state.playerEmail}`,
-        `Total Score: ${state.totalScore}`,
-        `Plays: ${state.plays}`,
-        `Current Training Score: ${aggregate.latestTrainingScore}`,
-        `Overall Accuracy: ${aggregate.accuracy}%`,
-        `Overall Avg Speed: ${aggregate.avgMs ? formatMs(aggregate.avgMs) : "N/A"}`,
-        ``,
-        `Recent Sessions:`
-      ];
+      recent.forEach(h => {
+        const bar = document.createElement('div');
+        bar.className = 'chart-bar';
+        bar.style.height = Math.max(6, Math.round((h.score / max) * 100)) + '%';
+        bar.style.background = gameColors[h.game] || 'var(--accent)';
+        bar.title = (gameLabels[h.game] || h.game) + ': ' + h.score;
+        container.appendChild(bar);
+      });
+    }
 
-      if (!recent.length) {
-        lines.push(`No sessions recorded yet.`);
-      } else {
-        recent.forEach((s, index) => {
-          lines.push(
-            `${index + 1}. ${s.date} | ${s.game} | Score: ${s.score} | Accuracy: ${s.accuracy}% | Avg Speed: ${formatMs(s.avgMs)} | Training Score: ${s.trainingScore}`
-          );
-        });
+    function renderAchievements() {
+      const grid = document.getElementById('achievementsGrid');
+      grid.innerHTML = '';
+
+      achievementDefs.forEach(def => {
+        const unlocked = profile.achievements.includes(def.id);
+        const el = document.createElement('div');
+        el.className = 'achievement' + (unlocked ? ' unlocked' : '');
+        el.innerHTML =
+          '<div class="achievement-icon">' + def.icon + '</div>' +
+          '<div class="achievement-name">' + def.name + '</div>' +
+          '<div class="achievement-desc">' + def.desc + '</div>';
+        grid.appendChild(el);
+      });
+    }
+
+    // ---------------------------
+    // STREAK
+    // ---------------------------
+
+    function localDateStr(d) {
+      return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+    }
+
+    function updateStreak() {
+      const today = new Date();
+      const todayStr = localDateStr(today);
+
+      if (profile.streak.lastDate === todayStr) {
+        return { changed: false, current: profile.streak.current };
       }
 
-      const subject = encodeURIComponent("MindSprint Results");
-      const body = encodeURIComponent(lines.join("\n"));
+      const yesterday = new Date(today);
+      yesterday.setDate(yesterday.getDate() - 1);
+      const yesterdayStr = localDateStr(yesterday);
 
-      window.location.href = `mailto:${state.playerEmail}?subject=${subject}&body=${body}`;
+      profile.streak.current = (profile.streak.lastDate === yesterdayStr) ? profile.streak.current + 1 : 1;
+      profile.streak.lastDate = todayStr;
+      profile.streak.longest = Math.max(profile.streak.longest, profile.streak.current);
+
+      return { changed: true, current: profile.streak.current };
+    }
+
+    // ---------------------------
+    // ACHIEVEMENTS
+    // ---------------------------
+
+    const achievementDefs = [
+      { id: 'first_play',     icon: 'ð®', name: 'First Steps',       desc: 'Play your first game',                    check: p => p.plays >= 1 },
+      { id: 'score_500',      icon: 'â­', name: 'Rising Star',        desc: 'Reach 500 total score',                   check: p => p.totalScore >= 500 },
+      { id: 'score_2000',     icon: 'ð', name: 'Brain Champion',     desc: 'Reach 2,000 total score',                 check: p => p.totalScore >= 2000 },
+      { id: 'score_5000',     icon: 'ð', name: 'Grand Master',       desc: 'Reach 5,000 total score',                 check: p => p.totalScore >= 5000 },
+      { id: 'memory_lvl6',    icon: 'ð§ ', name: 'Pattern Master',     desc: 'Reach level 6 in Memory Grid',            check: p => p.bestLevels.Memory >= 6 },
+      { id: 'recall_lvl6',    icon: 'ð¢', name: 'Sequence Sage',      desc: 'Reach level 6 in Number Recall',          check: p => p.bestLevels.Recall >= 6 },
+      { id: 'focus_streak10', icon: 'ð¯', name: 'Sharp Focus',        desc: 'Hit a streak of 10 in Focus Colors',      check: p => p.bestStreaks.Focus >= 10 },
+      { id: 'math_streak10',  icon: 'â', name: 'Math Whiz',          desc: 'Hit a streak of 10 in Speed Math',        check: p => p.bestStreaks.Math >= 10 },
+      { id: 'reaction_300',   icon: 'â¡', name: 'Quick Draw',         desc: 'Average under 300ms in Reaction Time',    check: p => p.bestReactionMs !== null && p.bestReactionMs < 300 },
+      { id: 'reaction_220',   icon: 'ð', name: 'Lightning Reflexes', desc: 'Average under 220ms in Reaction Time',    check: p => p.bestReactionMs !== null && p.bestReactionMs < 220 },
+      { id: 'streak_3',       icon: 'ð¥', name: 'On a Roll',          desc: 'Reach a 3-day streak',                    check: p => p.streak.longest >= 3 },
+      { id: 'streak_7',       icon: 'ð', name: 'Dedicated',          desc: 'Reach a 7-day streak',                    check: p => p.streak.longest >= 7 },
+      { id: 'plays_30',       icon: 'ð', name: 'Marathoner',         desc: 'Play 30 games total',                     check: p => p.plays >= 30 },
+      { id: 'all_games',      icon: 'ð°', name: 'Well Rounded',       desc: 'Set a best score in every game',          check: p => Object.values(p.bestScores).every(v => v > 0) }
+    ];
+
+    function checkAchievements() {
+      const unlocked = [];
+      achievementDefs.forEach(def => {
+        if (!profile.achievements.includes(def.id) && def.check(profile)) {
+          profile.achievements.push(def.id);
+          unlocked.push(def);
+        }
+      });
+      return unlocked;
+    }
+
+    // ---------------------------
+    // RESULTS MODAL & CONFETTI
+    // ---------------------------
+
+    function pushHistory(gameKey, score) {
+      history.push({ game: gameKey, score, date: localDateStr(new Date()) });
+      if (history.length > 30) history = history.slice(-30);
+    }
+
+    function finishGame(gameKey, score, extraStats) {
+      const previousBest = profile.bestScores[gameKey] || 0;
+      const isNewBest = score > previousBest;
+
+      profile.totalScore += score;
+      profile.plays += 1;
+      if (isNewBest) profile.bestScores[gameKey] = score;
+
+      const streakInfo = updateStreak();
+      pushHistory(gameKey, score);
+      const unlocked = checkAchievements();
+
+      saveData();
+
+      showResultsModal(gameKey, score, extraStats, isNewBest, previousBest, streakInfo, unlocked);
+    }
+
+    function showResultsModal(gameKey, score, extraStats, isNewBest, previousBest, streakInfo, unlocked) {
+      activeGameKey = gameKey;
+
+      document.getElementById('resultsGameName').textContent = gameLabels[gameKey];
+      document.getElementById('resultsScore').textContent = score;
+
+      const bestRow = document.getElementById('resultsBestRow');
+      if (isNewBest) {
+        bestRow.textContent = previousBest > 0 ? 'New personal best!' : 'First score recorded!';
+        bestRow.className = 'results-best new';
+      } else {
+        bestRow.textContent = 'Personal best: ' + previousBest;
+        bestRow.className = 'results-best';
+      }
+
+      const toasts = document.getElementById('resultsToasts');
+      toasts.innerHTML = '';
+
+      if (streakInfo.changed && streakInfo.current > 1) {
+        const t = document.createElement('div');
+        t.className = 'toast streak';
+        t.textContent = 'ð¥ ' + streakInfo.current + '-day streak!';
+        toasts.appendChild(t);
+      }
+
+      unlocked.forEach(def => {
+        const t = document.createElement('div');
+        t.className = 'toast achievement';
+        t.textContent = def.icon + ' Achievement unlocked: ' + def.name;
+        toasts.appendChild(t);
+      });
+
+      const statsBox = document.getElementById('resultsStats');
+      statsBox.innerHTML = '';
+      extraStats.forEach(s => {
+        const row = document.createElement('div');
+        row.className = 'results-stat-row';
+        row.innerHTML = '<span>' + s.label + '</span><strong>' + s.value + '</strong>';
+        statsBox.appendChild(row);
+      });
+
+      document.getElementById('resultsModal').classList.add('active');
+
+      if (isNewBest && previousBest > 0) launchConfetti();
+    }
+
+    function closeResults() {
+      document.getElementById('resultsModal').classList.remove('active');
+    }
+
+    function resultsHome() {
+      closeResults();
+      returnHome();
+    }
+
+    function playAgainFromResults() {
+      closeResults();
+      const starter = gameStarters[activeGameKey];
+      if (starter) starter();
+    }
+
+    function launchConfetti() {
+      if (reduceMotion) return;
+      const colors = [gameColors.Memory, gameColors.Focus, gameColors.Math, gameColors.Reaction, gameColors.Recall, '#f9fafb'];
+
+      for (let i = 0; i < 26; i++) {
+        const piece = document.createElement('div');
+        piece.className = 'confetti-piece';
+        piece.style.left = Math.random() * 100 + 'vw';
+        piece.style.background = colors[Math.floor(Math.random() * colors.length)];
+        piece.style.animationDuration = (1.5 + Math.random() * 1.3) + 's';
+        piece.style.transform = 'rotate(' + Math.round(Math.random() * 360) + 'deg)';
+        document.body.appendChild(piece);
+        setTimeout(() => piece.remove(), 3200);
+      }
+    }
+
+    // ---------------------------
+    // RESET CONFIRMATION
+    // ---------------------------
+
+    function openConfirmReset() {
+      document.getElementById('confirmModal').classList.add('active');
+    }
+
+    function closeConfirmReset() {
+      document.getElementById('confirmModal').classList.remove('active');
+    }
+
+    function doResetStats() {
+      profile = clone(defaultProfile);
+      history = [];
+      saveData();
+      applySettingsUI();
+      renderHome();
+      renderStats();
+      closeConfirmReset();
+    }
+
+    // ---------------------------
+    // COUNTDOWN
+    // ---------------------------
+
+    function runCountdown(onComplete) {
+      const overlay = document.getElementById('countdownOverlay');
+      const numberEl = document.getElementById('countdownNumber');
+      let count = 3;
+
+      const pulse = () => {
+        numberEl.style.animation = 'none';
+        requestAnimationFrame(() => { numberEl.style.animation = ''; });
+      };
+
+      overlay.classList.add('active');
+      numberEl.textContent = count;
+      pulse();
+      playTone(440, 0.1, 'sine', 0.05);
+
+      const interval = setInterval(() => {
+        count -= 1;
+        if (count > 0) {
+          numberEl.textContent = count;
+          pulse();
+          playTone(440, 0.1, 'sine', 0.05);
+        } else {
+          numberEl.textContent = 'GO!';
+          pulse();
+          playTone(660, 0.16, 'sine', 0.08);
+          clearInterval(interval);
+          setTimeout(() => {
+            overlay.classList.remove('active');
+            onComplete();
+          }, 450);
+        }
+      }, 600);
     }
 
     // ---------------------------
@@ -841,27 +1522,14 @@
       score: 0,
       lives: 3,
       acceptingInput: false,
-      gameStarted: false,
-      correct: 0,
-      wrong: 0,
-      responseTimes: [],
-      turnStartedAt: 0,
-      runId: 0
+      gameStarted: false
     };
 
-    const memoryFrequencies = [
-      261.63, 293.66, 329.63, 392.00,
-      440.00, 493.88, 523.25, 587.33,
-      659.25, 783.99, 880.00, 987.77,
-      1046.50, 1174.66, 1318.51, 1567.98
-    ];
-
-    const memoryGrid = document.getElementById("memoryGrid");
+    const memoryGrid = document.getElementById('memoryGrid');
 
     for (let i = 0; i < 16; i++) {
-      const tile = document.createElement("div");
-      tile.className = "tile";
-      tile.textContent = i + 1;
+      const tile = document.createElement('div');
+      tile.className = 'tile';
       tile.onclick = () => handleMemoryTap(i);
       memoryGrid.appendChild(tile);
     }
@@ -876,30 +1544,16 @@
       memory.lives = 3;
       memory.acceptingInput = false;
       memory.gameStarted = true;
-      memory.correct = 0;
-      memory.wrong = 0;
-      memory.responseTimes = [];
-      memory.turnStartedAt = 0;
-      memory.runId += 1;
-
-      document.getElementById("memorySummary").classList.remove("active");
 
       updateMemoryHud();
-      setFeedback("memoryFeedback", "Watch and listen to the pattern.", "");
+      setFeedback('memoryFeedback', 'Watch the pattern.', '');
       nextMemoryRound();
     }
 
-    function stopMemory() {
-      memory.acceptingInput = false;
-      memory.gameStarted = false;
-      memory.runId += 1;
-    }
-
     function updateMemoryHud() {
-      document.getElementById("memoryLevel").textContent = memory.level;
-      document.getElementById("memoryScore").textContent = memory.score;
-      document.getElementById("memoryLives").textContent = memory.lives;
-      document.getElementById("memoryAvgSpeed").textContent = memory.responseTimes.length ? formatMs(average(memory.responseTimes)) : "—";
+      document.getElementById('memoryLevel').textContent = memory.level;
+      document.getElementById('memoryScore').textContent = memory.score;
+      document.getElementById('memoryLives').textContent = memory.lives;
     }
 
     function nextMemoryRound() {
@@ -907,34 +1561,23 @@
       memory.inputIndex = 0;
       memory.sequence.push(Math.floor(Math.random() * 16));
       updateMemoryHud();
-      playMemorySequence(memory.runId);
+      playMemorySequence();
     }
 
-    async function playMemorySequence(runId) {
-      const tiles = [...document.querySelectorAll("#memoryGrid .tile")];
+    async function playMemorySequence() {
+      const tiles = [...document.querySelectorAll('#memoryGrid .tile')];
 
       memory.acceptingInput = false;
       memory.inputIndex = 0;
 
       for (const index of memory.sequence) {
-        if (runId !== memory.runId || !memory.gameStarted) return;
-
         await wait(350);
-
-        if (runId !== memory.runId || !memory.gameStarted) return;
-
-        tiles[index].classList.add("active");
-        playMemoryTileSound(index);
-
+        tiles[index].classList.add('active');
         await wait(450);
-
-        tiles[index].classList.remove("active");
+        tiles[index].classList.remove('active');
       }
 
-      if (runId !== memory.runId || !memory.gameStarted) return;
-
-      setFeedback("memoryFeedback", "Your turn.", "");
-      memory.turnStartedAt = performance.now();
+      setFeedback('memoryFeedback', 'Your turn.', '');
       memory.acceptingInput = true;
     }
 
@@ -943,39 +1586,31 @@
 
       initializeAudio();
 
-      const now = performance.now();
-      if (memory.turnStartedAt) {
-        memory.responseTimes.push(now - memory.turnStartedAt);
-      }
-
-      const tiles = [...document.querySelectorAll("#memoryGrid .tile")];
+      const tiles = [...document.querySelectorAll('#memoryGrid .tile')];
       const expected = memory.sequence[memory.inputIndex];
 
       if (index === expected) {
-        memory.correct += 1;
-        playMemoryTileSound(index);
+        playCorrectSignal();
 
-        tiles[index].classList.add("correct");
-        setTimeout(() => tiles[index].classList.remove("correct"), 180);
+        tiles[index].classList.add('correct');
+        setTimeout(() => tiles[index].classList.remove('correct'), 180);
 
         memory.inputIndex += 1;
         memory.score += 10;
-        memory.turnStartedAt = performance.now();
 
         if (memory.inputIndex === memory.sequence.length) {
           memory.level += 1;
           memory.score += 25;
           memory.acceptingInput = false;
-          setFeedback("memoryFeedback", "Correct. Next round.", "good");
+          setFeedback('memoryFeedback', 'Correct. Next round.', 'good');
           updateMemoryHud();
           setTimeout(nextMemoryRound, 800);
         }
       } else {
-        memory.wrong += 1;
         playWrongSignal();
 
-        tiles[index].classList.add("wrong");
-        setTimeout(() => tiles[index].classList.remove("wrong"), 220);
+        tiles[index].classList.add('wrong');
+        setTimeout(() => tiles[index].classList.remove('wrong'), 220);
 
         memory.lives -= 1;
         memory.acceptingInput = false;
@@ -985,37 +1620,20 @@
 
         if (memory.lives <= 0) {
           memory.gameStarted = false;
+          setFeedback('memoryFeedback', 'Game over.', 'bad');
 
-          const session = recordSession(
-            "Memory Grid",
-            memory.score,
-            memory.correct,
-            memory.wrong,
-            Math.round(average(memory.responseTimes)),
-            { level: memory.level }
-          );
+          if (memory.level > profile.bestLevels.Memory) profile.bestLevels.Memory = memory.level;
 
-          setFeedback("memoryFeedback", `Game over. Score: ${memory.score}`, "bad");
-          showRoundSummary("memorySummary", session);
+          finishGame('Memory', memory.score, [
+            { label: 'Level reached', value: memory.level }
+          ]);
         } else {
-          setFeedback("memoryFeedback", "Wrong tile. Watch the pattern again.", "bad");
-          setTimeout(() => playMemorySequence(memory.runId), 900);
+          setFeedback('memoryFeedback', 'Wrong tile. Watch the pattern again.', 'bad');
+          setTimeout(playMemorySequence, 900);
         }
       }
 
       updateMemoryHud();
-    }
-
-    function playMemoryTileSound(index) {
-      if (!state.soundEnabled) return;
-
-      const frequency = memoryFrequencies[index % memoryFrequencies.length];
-
-      playTone(frequency, 0.18, "sine", 0.09);
-
-      if (navigator.vibrate) {
-        navigator.vibrate(15);
-      }
     }
 
     // ---------------------------
@@ -1023,10 +1641,10 @@
     // ---------------------------
 
     const focusColors = [
-      { name: "red", label: "RED", css: "#ef4444" },
-      { name: "blue", label: "BLUE", css: "#3b82f6" },
-      { name: "green", label: "GREEN", css: "#22c55e" },
-      { name: "yellow", label: "YELLOW", css: "#facc15" }
+      { name: 'red',    label: 'RED',    css: '#ef4444' },
+      { name: 'blue',   label: 'BLUE',   css: '#3b82f6' },
+      { name: 'green',  label: 'GREEN',  css: '#22c55e' },
+      { name: 'yellow', label: 'YELLOW', css: '#facc15' }
     ];
 
     const focus = {
@@ -1034,41 +1652,53 @@
       locked: false,
       time: 30,
       score: 0,
-      correct: 0,
-      wrong: 0,
       streak: 0,
+      maxStreak: 0,
+      correct: 0,
+      attempts: 0,
       answer: null,
-      timer: null,
-      promptStartedAt: 0,
-      responseTimes: []
+      timer: null
     };
 
     function startFocus() {
       initializeAudio();
       stopFocus();
 
-      focus.active = true;
-      focus.locked = false;
+      focus.locked = true;
       focus.time = 30;
       focus.score = 0;
-      focus.correct = 0;
-      focus.wrong = 0;
       focus.streak = 0;
-      focus.responseTimes = [];
-
-      document.getElementById("focusSummary").classList.remove("active");
+      focus.maxStreak = 0;
+      focus.correct = 0;
+      focus.attempts = 0;
 
       updateFocusHud();
-      nextFocusPrompt();
+      setFeedback('focusFeedback', '', '');
+      document.getElementById('focusPrompt').textContent = 'READY';
+      document.getElementById('focusPrompt').style.color = '';
 
-      focus.timer = setInterval(() => {
-        focus.time -= 1;
-        updateFocusHud();
+      runCountdown(() => {
+        focus.active = true;
+        focus.locked = false;
+        nextFocusPrompt();
 
-        if (focus.time <= 0) {
-          endFocusGame();
-        }
-      }, 1000);
+        focus.timer = setInterval(() => {
+          focus.time -= 1;
+          updateFocusHud();
+
+          if (focus.time <= 0) {
+            stopFocus();
+            const accuracy = focus.attempts ? Math.round((focus.correct / focus.attempts) * 100) : 0;
+
+            if (focus.maxStreak > profile.bestStreaks.Focus) profile.bestStreaks.Focus = focus.maxStreak;
+
+            finishGame('Focus', focus.score, [
+              { label: 'Accuracy', value: accuracy + '%' },
+              { label: 'Best streak', value: focus.maxStreak }
+            ]);
+          }
+        }, 1000);
+      });
     }
 
     function stopFocus() {
@@ -1078,32 +1708,10 @@
       focus.locked = false;
     }
 
-    function endFocusGame() {
-      if (!focus.active) return;
-
-      const score = focus.score;
-      const session = recordSession(
-        "Focus Colors",
-        score,
-        focus.correct,
-        focus.wrong,
-        Math.round(average(focus.responseTimes)),
-        { streak: focus.streak }
-      );
-
-      stopFocus();
-
-      setFeedback("focusFeedback", `Time. Score: ${score}`, "good");
-      document.getElementById("focusPrompt").textContent = "DONE";
-      document.getElementById("focusPrompt").style.color = "white";
-      showRoundSummary("focusSummary", session);
-    }
-
     function updateFocusHud() {
-      document.getElementById("focusTime").textContent = focus.time;
-      document.getElementById("focusScore").textContent = focus.score;
-      document.getElementById("focusCorrect").textContent = focus.correct;
-      document.getElementById("focusAvgSpeed").textContent = focus.responseTimes.length ? formatMs(average(focus.responseTimes)) : "—";
+      document.getElementById('focusTime').textContent = focus.time;
+      document.getElementById('focusScore').textContent = focus.score;
+      document.getElementById('focusStreak').textContent = focus.streak;
     }
 
     function nextFocusPrompt() {
@@ -1114,9 +1722,8 @@
 
       focus.answer = color.name;
       focus.locked = false;
-      focus.promptStartedAt = performance.now();
 
-      const prompt = document.getElementById("focusPrompt");
+      const prompt = document.getElementById('focusPrompt');
       prompt.textContent = word.label;
       prompt.style.color = color.css;
     }
@@ -1126,31 +1733,29 @@
 
       initializeAudio();
       focus.locked = true;
-
-      const responseMs = performance.now() - focus.promptStartedAt;
-      focus.responseTimes.push(responseMs);
+      focus.attempts += 1;
 
       if (color === focus.answer) {
         playCorrectSignal();
 
-        focus.correct += 1;
         focus.streak += 1;
+        focus.correct += 1;
+        if (focus.streak > focus.maxStreak) focus.maxStreak = focus.streak;
         focus.score += 10 + Math.min(focus.streak * 2, 20);
-        setFeedback("focusFeedback", "Correct", "good");
+        setFeedback('focusFeedback', 'Correct', 'good');
       } else {
         playWrongSignal();
 
-        focus.wrong += 1;
         focus.streak = 0;
         focus.score = Math.max(0, focus.score - 5);
-        setFeedback("focusFeedback", "Wrong", "bad");
+        setFeedback('focusFeedback', 'Wrong', 'bad');
       }
 
       updateFocusHud();
 
       setTimeout(() => {
         if (focus.active) {
-          setFeedback("focusFeedback", "", "");
+          setFeedback('focusFeedback', '', '');
           nextFocusPrompt();
         }
       }, 180);
@@ -1165,41 +1770,56 @@
       locked: false,
       time: 30,
       score: 0,
-      correct: 0,
-      wrong: 0,
       streak: 0,
+      maxStreak: 0,
+      correct: 0,
+      attempts: 0,
       answer: null,
-      timer: null,
-      promptStartedAt: 0,
-      responseTimes: []
+      timer: null
     };
 
     function startMath() {
       initializeAudio();
       stopMath();
 
-      math.active = true;
-      math.locked = false;
+      math.locked = true;
       math.time = 30;
       math.score = 0;
-      math.correct = 0;
-      math.wrong = 0;
       math.streak = 0;
-      math.responseTimes = [];
-
-      document.getElementById("mathSummary").classList.remove("active");
+      math.maxStreak = 0;
+      math.correct = 0;
+      math.attempts = 0;
 
       updateMathHud();
-      nextMathProblem();
+      setFeedback('mathFeedback', '', '');
+      document.getElementById('mathPrompt').textContent = 'READY';
+      document.getElementById('mathChoices').innerHTML = '';
 
-      math.timer = setInterval(() => {
-        math.time -= 1;
-        updateMathHud();
+      runCountdown(() => {
+        math.active = true;
+        math.locked = false;
+        nextMathProblem();
 
-        if (math.time <= 0) {
-          endMathGame();
-        }
-      }, 1000);
+        math.timer = setInterval(() => {
+          math.time -= 1;
+          updateMathHud();
+
+          if (math.time <= 0) {
+            stopMath();
+            const accuracy = math.attempts ? Math.round((math.correct / math.attempts) * 100) : 0;
+
+            if (math.maxStreak > profile.bestStreaks.Math) profile.bestStreaks.Math = math.maxStreak;
+
+            document.getElementById('mathPrompt').textContent = 'DONE';
+            document.getElementById('mathChoices').innerHTML = '';
+
+            finishGame('Math', math.score, [
+              { label: 'Accuracy', value: accuracy + '%' },
+              { label: 'Best streak', value: math.maxStreak }
+            ]);
+          }
+        }, 1000);
+      });
     }
 
     function stopMath() {
@@ -1209,32 +1829,10 @@
       math.locked = false;
     }
 
-    function endMathGame() {
-      if (!math.active) return;
-
-      const score = math.score;
-      const session = recordSession(
-        "Speed Math",
-        score,
-        math.correct,
-        math.wrong,
-        Math.round(average(math.responseTimes)),
-        { streak: math.streak }
-      );
-
-      stopMath();
-
-      setFeedback("mathFeedback", `Time. Score: ${score}`, "good");
-      document.getElementById("mathPrompt").textContent = "DONE";
-      document.getElementById("mathChoices").innerHTML = "";
-      showRoundSummary("mathSummary", session);
-    }
-
     function updateMathHud() {
-      document.getElementById("mathTime").textContent = math.time;
-      document.getElementById("mathScore").textContent = math.score;
-      document.getElementById("mathCorrect").textContent = math.correct;
-      document.getElementById("mathAvgSpeed").textContent = math.responseTimes.length ? formatMs(average(math.responseTimes)) : "—";
+      document.getElementById('mathTime').textContent = math.time;
+      document.getElementById('mathScore').textContent = math.score;
+      document.getElementById('mathStreak').textContent = math.streak;
     }
 
     function nextMathProblem() {
@@ -1242,36 +1840,35 @@
 
       const a = rand(2, 20);
       const b = rand(2, 20);
-      const operations = ["+", "-", "×"];
+      const operations = ['+', '-', 'Ã'];
       const op = randomItem(operations);
 
       let answer;
       let prompt;
 
-      if (op === "+") {
+      if (op === '+') {
         answer = a + b;
-        prompt = `${a} + ${b}`;
-      } else if (op === "-") {
+        prompt = a + ' + ' + b;
+      } else if (op === '-') {
         answer = Math.max(a, b) - Math.min(a, b);
-        prompt = `${Math.max(a, b)} - ${Math.min(a, b)}`;
+        prompt = Math.max(a, b) + ' - ' + Math.min(a, b);
       } else {
         answer = a * b;
-        prompt = `${a} × ${b}`;
+        prompt = a + ' Ã ' + b;
       }
 
       math.answer = answer;
       math.locked = false;
-      math.promptStartedAt = performance.now();
 
-      document.getElementById("mathPrompt").textContent = prompt;
+      document.getElementById('mathPrompt').textContent = prompt;
 
       const choices = makeMathChoices(answer);
-      const box = document.getElementById("mathChoices");
-      box.innerHTML = "";
+      const box = document.getElementById('mathChoices');
+      box.innerHTML = '';
 
       choices.forEach(choice => {
-        const button = document.createElement("button");
-        button.className = "secondary";
+        const button = document.createElement('button');
+        button.className = 'secondary';
         button.textContent = choice;
         button.onclick = () => answerMath(choice);
         box.appendChild(button);
@@ -1298,39 +1895,300 @@
 
       initializeAudio();
       math.locked = true;
-
-      const responseMs = performance.now() - math.promptStartedAt;
-      math.responseTimes.push(responseMs);
+      math.attempts += 1;
 
       if (choice === math.answer) {
         playCorrectSignal();
 
-        math.correct += 1;
         math.streak += 1;
+        math.correct += 1;
+        if (math.streak > math.maxStreak) math.maxStreak = math.streak;
         math.score += 10 + Math.min(math.streak * 2, 20);
-        setFeedback("mathFeedback", "Correct", "good");
+        setFeedback('mathFeedback', 'Correct', 'good');
       } else {
         playWrongSignal();
 
-        math.wrong += 1;
         math.streak = 0;
         math.score = Math.max(0, math.score - 5);
-        setFeedback("mathFeedback", "Wrong", "bad");
+        setFeedback('mathFeedback', 'Wrong', 'bad');
       }
 
       updateMathHud();
 
       setTimeout(() => {
         if (math.active) {
-          setFeedback("mathFeedback", "", "");
+          setFeedback('mathFeedback', '', '');
           nextMathProblem();
         }
       }, 180);
     }
 
     // ---------------------------
+    // REACTION TIME
+    // ---------------------------
+
+    const reaction = {
+      active: false,
+      state: 'idle', // idle | waiting | go | early
+      round: 0,
+      totalRounds: 5,
+      times: [],
+      startTime: 0,
+      timeoutId: null
+    };
+
+    function startReaction() {
+      initializeAudio();
+      stopReaction();
+
+      reaction.active = true;
+      reaction.round = 0;
+      reaction.times = [];
+
+      setFeedback('reactionFeedback', '', '');
+      document.getElementById('reactionLast').textContent = 'â';
+      updateReactionHud();
+      nextReactionRound();
+    }
+
+    function stopReaction() {
+      if (reaction.timeoutId) clearTimeout(reaction.timeoutId);
+      reaction.timeoutId = null;
+      reaction.active = false;
+      setReactionState('idle');
+    }
+
+    function updateReactionHud() {
+      document.getElementById('reactionRound').textContent = reaction.round + ' / ' + reaction.totalRounds;
+      document.getElementById('reactionBest').textContent = (profile.bestReactionMs !== null) ? profile.bestReactionMs : 'â';
+    }
+
+    function nextReactionRound() {
+      reaction.round += 1;
+      updateReactionHud();
+      setReactionState('waiting');
+
+      const delay = rand(1000, 3000);
+      reaction.timeoutId = setTimeout(() => {
+        reaction.startTime = performance.now();
+        setReactionState('go');
+      }, delay);
+    }
+
+    function setReactionState(state) {
+      reaction.state = state;
+      const box = document.getElementById('reactionBox');
+      const text = document.getElementById('reactionText');
+
+      box.className = 'reaction-box' + (state === 'waiting' ? ' wait' : state === 'go' ? ' go' : state === 'early' ? ' early' : '');
+
+      if (state === 'waiting') text.textContent = 'Wait for green...';
+      else if (state === 'go') text.textContent = 'TAP NOW!';
+      else if (state === 'early') text.textContent = 'Too soon! Get ready again...';
+      else text.textContent = 'Tap Start to begin';
+    }
+
+    function handleReactionTap() {
+      if (!reaction.active) return;
+      initializeAudio();
+
+      if (reaction.state === 'waiting') {
+        clearTimeout(reaction.timeoutId);
+        reaction.timeoutId = null;
+        setReactionState('early');
+        playWrongSignal();
+        setFeedback('reactionFeedback', 'Jumped the gun - try again.', 'bad');
+
+        setTimeout(() => {
+          if (reaction.active) {
+            reaction.round -= 1;
+            setFeedback('reactionFeedback', '', '');
+            nextReactionRound();
+          }
+        }, 700);
+        return;
+      }
+
+      if (reaction.state === 'go') {
+        const elapsed = Math.round(performance.now() - reaction.startTime);
+        reaction.times.push(elapsed);
+
+        document.getElementById('reactionLast').textContent = elapsed;
+        document.getElementById('reactionText').textContent = elapsed + ' ms';
+        document.getElementById('reactionBox').className = 'reaction-box';
+
+        playCorrectSignal();
+
+        if (reaction.round >= reaction.totalRounds) {
+          finishReaction();
+        } else {
+          setTimeout(() => { if (reaction.active) nextReactionRound(); }, 900);
+        }
+      }
+    }
+
+    function finishReaction() {
+      reaction.active = false;
+
+      const avg = Math.round(reaction.times.reduce((a, b) => a + b, 0) / reaction.times.length);
+      const fastest = Math.min(...reaction.times);
+      const score = Math.max(0, Math.round((600 - avg) * 1.5));
+
+      if (profile.bestReactionMs === null || avg < profile.bestReactionMs) {
+        profile.bestReactionMs = avg;
+      }
+      updateReactionHud();
+
+      setFeedback('reactionFeedback', 'Done.', 'good');
+
+      finishGame('Reaction', score, [
+        { label: 'Average reaction', value: avg + ' ms' },
+        { label: 'Fastest', value: fastest + ' ms' }
+      ]);
+    }
+
+    // ---------------------------
+    // NUMBER RECALL
+    // ---------------------------
+
+    const recall = {
+      sequence: [],
+      inputIndex: 0,
+      level: 1,
+      score: 0,
+      lives: 3,
+      acceptingInput: false,
+      gameStarted: false
+    };
+
+    const recallPad = document.getElementById('recallPad');
+
+    for (let i = 0; i <= 9; i++) {
+      const tile = document.createElement('div');
+      tile.className = 'tile';
+      tile.textContent = i;
+      tile.onclick = () => handleRecallTap(i);
+      recallPad.appendChild(tile);
+    }
+
+    function startRecall() {
+      initializeAudio();
+
+      recall.sequence = [];
+      recall.inputIndex = 0;
+      recall.level = 1;
+      recall.score = 0;
+      recall.lives = 3;
+      recall.acceptingInput = false;
+      recall.gameStarted = true;
+
+      updateRecallHud();
+      setFeedback('recallFeedback', 'Watch the numbers.', '');
+      document.getElementById('recallPrompt').textContent = '';
+      nextRecallRound();
+    }
+
+    function updateRecallHud() {
+      document.getElementById('recallLevel').textContent = recall.level;
+      document.getElementById('recallScore').textContent = recall.score;
+      document.getElementById('recallLives').textContent = recall.lives;
+    }
+
+    function nextRecallRound() {
+      recall.acceptingInput = false;
+      recall.inputIndex = 0;
+      recall.sequence.push(rand(0, 9));
+      updateRecallHud();
+      playRecallSequence();
+    }
+
+    async function playRecallSequence() {
+      const prompt = document.getElementById('recallPrompt');
+
+      recall.acceptingInput = false;
+      recall.inputIndex = 0;
+
+      prompt.textContent = '';
+      prompt.classList.remove('pulse');
+      await wait(400);
+
+      for (const digit of recall.sequence) {
+        prompt.textContent = digit;
+        prompt.classList.remove('pulse');
+        // eslint-disable-next-line no-unused-expressions
+        prompt.offsetWidth; // restart animation
+        prompt.classList.add('pulse');
+        await wait(650);
+        prompt.textContent = '';
+        await wait(250);
+      }
+
+      prompt.textContent = '?';
+      setFeedback('recallFeedback', 'Your turn. Tap the numbers in order.', '');
+      recall.acceptingInput = true;
+    }
+
+    function handleRecallTap(digit) {
+      if (!recall.acceptingInput || !recall.gameStarted) return;
+
+      initializeAudio();
+
+      const tiles = [...document.querySelectorAll('#recallPad .tile')];
+      const expected = recall.sequence[recall.inputIndex];
+
+      if (digit === expected) {
+        playCorrectSignal();
+
+        tiles[digit].classList.add('correct');
+        setTimeout(() => tiles[digit].classList.remove('correct'), 180);
+
+        recall.inputIndex += 1;
+        recall.score += 10;
+
+        if (recall.inputIndex === recall.sequence.length) {
+          recall.level += 1;
+          recall.score += 25;
+          recall.acceptingInput = false;
+          setFeedback('recallFeedback', 'Correct. Next round.', 'good');
+          updateRecallHud();
+          setTimeout(nextRecallRound, 800);
+        }
+      } else {
+        playWrongSignal();
+
+        tiles[digit].classList.add('wrong');
+        setTimeout(() => tiles[digit].classList.remove('wrong'), 220);
+
+        recall.lives -= 1;
+        recall.acceptingInput = false;
+        recall.inputIndex = 0;
+
+        updateRecallHud();
+
+        if (recall.lives <= 0) {
+          recall.gameStarted = false;
+          setFeedback('recallFeedback', 'Game over.', 'bad');
+          document.getElementById('recallPrompt').textContent = '';
+
+          if (recall.level > profile.bestLevels.Recall) profile.bestLevels.Recall = recall.level;
+
+          finishGame('Recall', recall.score, [
+            { label: 'Level reached', value: recall.level }
+          ]);
+        } else {
+          setFeedback('recallFeedback', 'Wrong number. Watch again.', 'bad');
+          setTimeout(playRecallSequence, 900);
+        }
+      }
+
+      updateRecallHud();
+    }
+
+    // ---------------------------
     // SOUND + HAPTIC FEEDBACK
     // ---------------------------
+
+    let audioContext = null;
 
     function initializeAudio() {
       const AudioContext = window.AudioContext || window.webkitAudioContext;
@@ -1340,37 +2198,37 @@
         audioContext = new AudioContext();
       }
 
-      if (audioContext.state === "suspended") {
+      if (audioContext.state === 'suspended') {
         audioContext.resume();
       }
 
       return audioContext;
     }
 
-    function playCorrectSignal() {
-      if (!state.soundEnabled) return;
-
-      playTone(880, 0.08, "sine", 0.08);
-      setTimeout(() => playTone(1175, 0.09, "sine", 0.07), 75);
-
-      if (navigator.vibrate) {
-        navigator.vibrate(20);
+    function vibrate(pattern) {
+      if (profile.settings.haptics && navigator.vibrate) {
+        navigator.vibrate(pattern);
       }
+    }
+
+    function playCorrectSignal() {
+      if (!profile.settings.sound) return;
+
+      playTone(880, 0.08, 'sine', 0.08);
+      setTimeout(() => playTone(1175, 0.09, 'sine', 0.07), 75);
+      vibrate(20);
     }
 
     function playWrongSignal() {
-      if (!state.soundEnabled) return;
+      if (!profile.settings.sound) return;
 
-      playTone(160, 0.16, "sawtooth", 0.09);
-      setTimeout(() => playTone(110, 0.18, "sawtooth", 0.08), 110);
-
-      if (navigator.vibrate) {
-        navigator.vibrate([60, 30, 60]);
-      }
+      playTone(160, 0.16, 'sawtooth', 0.09);
+      setTimeout(() => playTone(110, 0.18, 'sawtooth', 0.08), 110);
+      vibrate([60, 30, 60]);
     }
 
-    function playTone(frequency, duration, type = "sine", volume = 0.08) {
-      if (!state.soundEnabled) return;
+    function playTone(frequency, duration, type = 'sine', volume = 0.08) {
+      if (!profile.settings.sound) return;
 
       const context = initializeAudio();
       if (!context) return;
@@ -1392,114 +2250,29 @@
     }
 
     // ---------------------------
-    // CHART + SUMMARY
+    // SETTINGS
     // ---------------------------
 
-    function drawProgressChart() {
-      const canvas = document.getElementById("progressChart");
-      if (!canvas) return;
-
-      const rect = canvas.getBoundingClientRect();
-      const dpr = window.devicePixelRatio || 1;
-      const width = Math.max(300, Math.floor(rect.width));
-      const height = 170;
-
-      canvas.width = width * dpr;
-      canvas.height = height * dpr;
-
-      const ctx = canvas.getContext("2d");
-      ctx.scale(dpr, dpr);
-      ctx.clearRect(0, 0, width, height);
-
-      ctx.fillStyle = "rgba(255,255,255,0.04)";
-      ctx.fillRect(0, 0, width, height);
-
-      const sessions = state.sessions.slice(-12);
-      const padding = 28;
-      const chartW = width - padding * 2;
-      const chartH = height - padding * 2;
-
-      ctx.strokeStyle = "rgba(255,255,255,0.12)";
-      ctx.lineWidth = 1;
-
-      for (let i = 0; i <= 4; i++) {
-        const y = padding + (chartH / 4) * i;
-        ctx.beginPath();
-        ctx.moveTo(padding, y);
-        ctx.lineTo(width - padding, y);
-        ctx.stroke();
-      }
-
-      ctx.fillStyle = "rgba(255,255,255,0.55)";
-      ctx.font = "12px system-ui";
-
-      if (!sessions.length) {
-        ctx.fillText("No progress data yet", padding, height / 2);
-        return;
-      }
-
-      if (sessions.length === 1) {
-        const x = width / 2;
-        const y = padding + chartH - (sessions[0].trainingScore / 100) * chartH;
-
-        ctx.fillStyle = "#38bdf8";
-        ctx.beginPath();
-        ctx.arc(x, y, 5, 0, Math.PI * 2);
-        ctx.fill();
-
-        ctx.fillStyle = "rgba(255,255,255,0.75)";
-        ctx.fillText(`${sessions[0].trainingScore}`, x + 8, y - 8);
-        return;
-      }
-
-      const points = sessions.map((session, index) => {
-        const x = padding + (chartW / (sessions.length - 1)) * index;
-        const y = padding + chartH - (session.trainingScore / 100) * chartH;
-        return { x, y, score: session.trainingScore };
-      });
-
-      ctx.strokeStyle = "#38bdf8";
-      ctx.lineWidth = 3;
-      ctx.beginPath();
-
-      points.forEach((point, index) => {
-        if (index === 0) {
-          ctx.moveTo(point.x, point.y);
-        } else {
-          ctx.lineTo(point.x, point.y);
-        }
-      });
-
-      ctx.stroke();
-
-      points.forEach(point => {
-        ctx.fillStyle = "#38bdf8";
-        ctx.beginPath();
-        ctx.arc(point.x, point.y, 4, 0, Math.PI * 2);
-        ctx.fill();
-      });
-
-      ctx.fillStyle = "rgba(255,255,255,0.6)";
-      ctx.fillText("0", 8, height - padding + 4);
-      ctx.fillText("100", 4, padding + 4);
+    function applySettingsUI() {
+      document.getElementById('soundToggle').classList.toggle('on', profile.settings.sound);
+      document.getElementById('hapticsToggle').classList.toggle('on', profile.settings.haptics);
     }
 
-    function showRoundSummary(elementId, session) {
-      const el = document.getElementById(elementId);
+    function toggleSound() {
+      profile.settings.sound = !profile.settings.sound;
+      applySettingsUI();
+      saveData();
+      if (profile.settings.sound) {
+        initializeAudio();
+        playTone(660, 0.07, 'sine', 0.06);
+      }
+    }
 
-      el.innerHTML = `
-        <strong>Round Summary</strong><br>
-        Score: ${session.score}<br>
-        Correct: ${session.correct}<br>
-        Wrong: ${session.wrong}<br>
-        Accuracy: ${session.accuracy}%<br>
-        Average response: ${formatMs(session.avgMs)}<br>
-        Training score: ${session.trainingScore}<br>
-        ${session.level ? `Level reached: ${session.level}<br>` : ""}
-        ${session.streak ? `Final streak: ${session.streak}<br>` : ""}
-      `;
-
-      el.classList.add("active");
+    function toggleHaptics() {
+      profile.settings.haptics = !profile.settings.haptics;
+      applySettingsUI();
+      saveData();
+      if (profile.settings.haptics) vibrate(15);
     }
 
     // ---------------------------
@@ -1521,29 +2294,40 @@
     function setFeedback(id, text, type) {
       const el = document.getElementById(id);
       el.textContent = text;
-      el.className = `feedback ${type || ""}`;
+      el.className = 'feedback ' + (type || '');
     }
 
-    function average(values) {
-      const clean = values.filter(value => Number.isFinite(value) && value > 0);
-      if (!clean.length) return 0;
-      return clean.reduce((sum, value) => sum + value, 0) / clean.length;
+    // ---------------------------
+    // INIT
+    // ---------------------------
+
+    const gameStarters = {
+      Memory: startMemory,
+      Focus: startFocus,
+      Math: startMath,
+      Reaction: startReaction,
+      Recall: startRecall
+    };
+
+    // Keyboard accessibility for tile/card style controls
+    document.querySelectorAll('.game-card, .tile').forEach(el => {
+      el.setAttribute('tabindex', '0');
+      el.setAttribute('role', 'button');
+      el.addEventListener('keydown', e => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          el.click();
+        }
+      });
+    });
+
+    async function init() {
+      await loadData();
+      applySettingsUI();
+      renderHome();
     }
 
-    function formatMs(ms) {
-      if (!ms) return "—";
-      if (ms >= 1000) return `${(ms / 1000).toFixed(2)}s`;
-      return `${Math.round(ms)}ms`;
-    }
-
-    function clamp(value, min, max) {
-      return Math.max(min, Math.min(max, value));
-    }
-
-    window.addEventListener("resize", drawProgressChart);
-
-    loadProfileToInputs();
-    updateHomeStats();
+    init();
   </script>
 </body>
 </html>
