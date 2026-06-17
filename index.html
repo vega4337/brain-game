@@ -688,6 +688,8 @@
       padding: 24px 20px;
       animation: modalIn 0.22s ease-out;
       text-align: center;
+      max-height: 92vh;
+      overflow-y: auto;
     }
 
     @keyframes modalIn {
@@ -696,11 +698,20 @@
     }
 
     .results-score {
-      margin: 6px 0 4px;
+      margin: 6px 0 0;
       font-family: var(--font-display);
       font-size: 58px;
       color: var(--accent);
       line-height: 1;
+    }
+
+    .results-score-label {
+      color: var(--muted);
+      font-size: 13px;
+      margin-top: 4px;
+      margin-bottom: 6px;
+      font-weight: 700;
+      letter-spacing: 0.02em;
     }
 
     .results-best {
@@ -817,6 +828,7 @@
     }
   </style>
 </head>
+
 <body>
   <main class="app">
     <header>
@@ -1211,6 +1223,7 @@
       <div class="modal-card">
         <h2 id="resultsGameName" class="game-title" style="margin-bottom:0;">Game</h2>
         <div id="resultsScore" class="results-score">0</div>
+        <div class="results-score-label">Round Score</div>
         <div id="resultsBestRow" class="results-best"></div>
         <div id="resultsStats" class="results-stats"></div>
         <div id="resultsExplainer" class="results-explainer"></div>
@@ -1247,7 +1260,7 @@
     // -----------------------------------------
     // STORAGE / STATE
     // -----------------------------------------
-    const STORAGE_KEY = "mindSprint_v3";
+    const STORAGE_KEY = "mindSprint_v4";
 
     const defaultState = {
       totalScore: 0,
@@ -1284,6 +1297,10 @@
       sessions: []
     };
 
+    function cloneDefault() {
+      return JSON.parse(JSON.stringify(defaultState));
+    }
+
     let state = loadState();
     let audioContext = null;
     let activeGameKey = null;
@@ -1292,22 +1309,24 @@
     function loadState() {
       try {
         const raw = localStorage.getItem(STORAGE_KEY);
-        if (!raw) return structuredClone(defaultState);
+        if (!raw) return cloneDefault();
+
         const parsed = JSON.parse(raw);
+        const base = cloneDefault();
 
         return {
-          ...structuredClone(defaultState),
+          ...base,
           ...parsed,
-          player: { ...structuredClone(defaultState).player, ...(parsed.player || {}) },
-          bestScores: { ...structuredClone(defaultState).bestScores, ...(parsed.bestScores || {}) },
-          bestLevels: { ...structuredClone(defaultState).bestLevels, ...(parsed.bestLevels || {}) },
-          bestStreaks: { ...structuredClone(defaultState).bestStreaks, ...(parsed.bestStreaks || {}) },
-          streak: { ...structuredClone(defaultState).streak, ...(parsed.streak || {}) },
-          settings: { ...structuredClone(defaultState).settings, ...(parsed.settings || {}) },
+          player: { ...base.player, ...(parsed.player || {}) },
+          bestScores: { ...base.bestScores, ...(parsed.bestScores || {}) },
+          bestLevels: { ...base.bestLevels, ...(parsed.bestLevels || {}) },
+          bestStreaks: { ...base.bestStreaks, ...(parsed.bestStreaks || {}) },
+          streak: { ...base.streak, ...(parsed.streak || {}) },
+          settings: { ...base.settings, ...(parsed.settings || {}) },
           sessions: Array.isArray(parsed.sessions) ? parsed.sessions.slice(-60) : []
         };
       } catch {
-        return structuredClone(defaultState);
+        return cloneDefault();
       }
     }
 
@@ -1409,6 +1428,7 @@
       });
 
       const totalAnswers = totalCorrect + totalWrong;
+
       return {
         accuracy: totalAnswers ? Math.round((totalCorrect / totalAnswers) * 100) : 0,
         avgMs: speedSamples.length ? Math.round(average(speedSamples)) : 0,
@@ -1424,9 +1444,12 @@
       const recentAvg = Math.round(average(sessions.map(s => s.brainIndex || 0)));
 
       let trendText = "steady";
+
       if (sessions.length >= 4) {
-        const earlier = average(sessions.slice(0, Math.floor(sessions.length / 2)).map(s => s.brainIndex || 0));
-        const later = average(sessions.slice(Math.floor(sessions.length / 2)).map(s => s.brainIndex || 0));
+        const split = Math.floor(sessions.length / 2);
+        const earlier = average(sessions.slice(0, split).map(s => s.brainIndex || 0));
+        const later = average(sessions.slice(split).map(s => s.brainIndex || 0));
+
         if (later > earlier + 4) trendText = "improving";
         else if (later < earlier - 4) trendText = "slipping";
       }
@@ -1472,6 +1495,7 @@
       }
 
       const recent = sessions.slice(-12);
+
       if (!recent.length) {
         ctx.fillStyle = "rgba(255,255,255,0.55)";
         ctx.font = "12px system-ui";
@@ -1490,10 +1514,12 @@
       ctx.strokeStyle = "#38bdf8";
       ctx.lineWidth = 3;
       ctx.beginPath();
+
       points.forEach((p, i) => {
         if (i === 0) ctx.moveTo(p.x, p.y);
         else ctx.lineTo(p.x, p.y);
       });
+
       ctx.stroke();
 
       points.forEach(p => {
@@ -1527,8 +1553,7 @@
       document.getElementById("bestMemory").textContent = state.bestScores.Memory || 0;
       document.getElementById("bestFocus").textContent = state.bestScores.Focus || 0;
       document.getElementById("bestMath").textContent = state.bestScores.Math || 0;
-      document.getElementById("bestReaction").textContent =
-        state.bestReactionMs !== null ? state.bestReactionMs + "ms" : "0";
+      document.getElementById("bestReaction").textContent = state.bestScores.Reaction || 0;
       document.getElementById("bestRecall").textContent = state.bestScores.Recall || 0;
 
       drawLineChart("homeChart", state.sessions);
@@ -1536,6 +1561,7 @@
 
     function renderStats() {
       const agg = getAggregateStats();
+
       document.getElementById("statsTotalScore").textContent = state.totalScore;
       document.getElementById("statsBrain").textContent = agg.brainIndex;
       document.getElementById("statsBestStreak").textContent = state.streak.longest;
@@ -1550,6 +1576,7 @@
       list.innerHTML = "";
 
       const recent = state.sessions.slice(-8).reverse();
+
       if (!recent.length) {
         list.innerHTML = `<div class="empty-note">No sessions yet. Play a game to start building your history.</div>`;
         return;
@@ -1616,6 +1643,7 @@
       state.settings.sound = !state.settings.sound;
       saveState();
       applySettingsUI();
+
       if (state.settings.sound) {
         initializeAudio();
         playTone(660, 0.07, "sine", 0.06);
@@ -1626,6 +1654,7 @@
       state.settings.haptics = !state.settings.haptics;
       saveState();
       applySettingsUI();
+
       if (state.settings.haptics) vibrate(20);
     }
 
@@ -1638,7 +1667,7 @@
     }
 
     function doResetStats() {
-      state = structuredClone(defaultState);
+      state = cloneDefault();
       saveState();
       closeConfirmReset();
       renderAll();
@@ -1660,6 +1689,7 @@
 
     function playTone(frequency, duration, type = "sine", volume = 0.08) {
       if (!state.settings.sound) return;
+
       const ctx = initializeAudio();
       if (!ctx) return;
 
@@ -1700,7 +1730,9 @@
 
     function playMemoryTileSound(index) {
       if (!state.settings.sound) return;
+
       const frequency = memoryFrequencies[index % memoryFrequencies.length];
+
       playTone(frequency, 0.18, "sine", 0.09);
       vibrate(12);
     }
@@ -1754,6 +1786,7 @@
       const accuracy = attempts ? Math.round((correct / attempts) * 100) : 0;
 
       let speedScore = 0;
+
       if (game === "Reaction") {
         speedScore = bestMs ? clamp(Math.round(140 - (bestMs / 4)), 0, 100) : 0;
       } else {
@@ -1776,9 +1809,11 @@
         if (session.bestMs && session.bestMs < 220) {
           return "Very fast reactions. You’re showing excellent response speed and strong sensorimotor timing.";
         }
+
         if (session.bestMs && session.bestMs < 300) {
           return "Good reaction speed. You’re responding quickly, with room to sharpen consistency even further.";
         }
+
         return "Your reaction speed is building. Focus on staying relaxed and tapping only when the signal turns green.";
       }
 
@@ -1786,6 +1821,7 @@
         if (session.level >= 6) {
           return "Strong pattern memory. You’re holding longer sequences well and responding with solid consistency.";
         }
+
         return "You’re building working memory. Try to prioritize pattern recognition first, then speed.";
       }
 
@@ -1793,6 +1829,7 @@
         if (session.level >= 6) {
           return "Nice recall performance. Your short-term sequence retention is trending strong.";
         }
+
         return "Your number recall is developing. Slowing down slightly can improve accuracy and boost your overall index.";
       }
 
@@ -1800,6 +1837,7 @@
         if (session.accuracy >= 85) {
           return "Strong selective attention. You’re filtering the distracting word and choosing the correct color efficiently.";
         }
+
         return "Focus is improving. Try to slow your first impulse and aim for slightly higher accuracy.";
       }
 
@@ -1807,10 +1845,76 @@
         if (session.accuracy >= 85) {
           return "Good speed and mental arithmetic control. You’re balancing quick solving with solid accuracy.";
         }
+
         return "Math speed is coming along. Improving accuracy first will raise your overall performance faster.";
       }
 
       return "Good work. Keep playing consistently to improve your Brain Activity Index over time.";
+    }
+
+    function buildResultRows(session) {
+      if (session.game === "Reaction") {
+        return [
+          { label: "Valid taps", value: session.correct },
+          { label: "False starts", value: session.wrong },
+          { label: "Accuracy", value: session.accuracy + "%" },
+          { label: "Average reaction", value: formatMs(session.avgMs) },
+          { label: "Fastest reaction", value: session.bestMs ? session.bestMs + "ms" : "—" },
+          { label: "Brain Index", value: session.brainIndex }
+        ];
+      }
+
+      if (session.game === "Memory") {
+        return [
+          { label: "Level reached", value: session.level },
+          { label: "Correct taps", value: session.correct },
+          { label: "Mistakes", value: session.wrong },
+          { label: "Accuracy", value: session.accuracy + "%" },
+          { label: "Average tap", value: formatMs(session.avgMs) },
+          { label: "Brain Index", value: session.brainIndex }
+        ];
+      }
+
+      if (session.game === "Recall") {
+        return [
+          { label: "Level reached", value: session.level },
+          { label: "Correct digits", value: session.correct },
+          { label: "Mistakes", value: session.wrong },
+          { label: "Accuracy", value: session.accuracy + "%" },
+          { label: "Average tap", value: formatMs(session.avgMs) },
+          { label: "Brain Index", value: session.brainIndex }
+        ];
+      }
+
+      if (session.game === "Focus") {
+        return [
+          { label: "Correct answers", value: session.correct },
+          { label: "Wrong answers", value: session.wrong },
+          { label: "Accuracy", value: session.accuracy + "%" },
+          { label: "Average response", value: formatMs(session.avgMs) },
+          { label: "Best streak", value: session.streak || 0 },
+          { label: "Brain Index", value: session.brainIndex }
+        ];
+      }
+
+      if (session.game === "Math") {
+        return [
+          { label: "Correct answers", value: session.correct },
+          { label: "Wrong answers", value: session.wrong },
+          { label: "Accuracy", value: session.accuracy + "%" },
+          { label: "Average response", value: formatMs(session.avgMs) },
+          { label: "Best streak", value: session.streak || 0 },
+          { label: "Brain Index", value: session.brainIndex }
+        ];
+      }
+
+      return [
+        { label: "Correct", value: session.correct },
+        { label: "Wrong", value: session.wrong },
+        { label: "Accuracy", value: session.accuracy + "%" },
+        { label: "Average speed", value: formatMs(session.avgMs) },
+        { label: "Brain Index", value: session.brainIndex }
+      ];
     }
 
     function finalizeSession({
@@ -1822,11 +1926,20 @@
       avgMs = 0,
       level = 0,
       streak = 0,
-      bestMs = 0,
-      extraRows = []
+      bestMs = 0
     }) {
       const accuracy = (correct + wrong) ? Math.round((correct / (correct + wrong)) * 100) : 0;
-      const brainIndex = computeBrainIndex({ game, score, correct, wrong, avgMs, level, streak, bestMs });
+
+      const brainIndex = computeBrainIndex({
+        game,
+        score,
+        correct,
+        wrong,
+        avgMs,
+        level,
+        streak,
+        bestMs
+      });
 
       const session = {
         id: Date.now(),
@@ -1849,51 +1962,45 @@
 
       const previousBest = state.bestScores[game] || 0;
       const isNewBest = score > previousBest;
+
       if (isNewBest) state.bestScores[game] = score;
 
       if (game === "Memory") {
         state.bestLevels.Memory = Math.max(state.bestLevels.Memory || 0, level || 0);
       }
+
       if (game === "Recall") {
         state.bestLevels.Recall = Math.max(state.bestLevels.Recall || 0, level || 0);
       }
+
       if (game === "Focus") {
         state.bestStreaks.Focus = Math.max(state.bestStreaks.Focus || 0, streak || 0);
       }
+
       if (game === "Math") {
         state.bestStreaks.Math = Math.max(state.bestStreaks.Math || 0, streak || 0);
       }
+
       if (game === "Reaction" && bestMs) {
         state.bestReactionMs = state.bestReactionMs === null ? bestMs : Math.min(state.bestReactionMs, bestMs);
       }
 
       updateStreak();
+
       state.sessions.push(session);
       state.sessions = state.sessions.slice(-60);
+
       saveState();
 
       lastSession = session;
+
       renderAll();
-
-      const rows = [
-        { label: "Correct", value: correct },
-        { label: "Wrong", value: wrong },
-        { label: "Accuracy", value: accuracy + "%" },
-        { label: "Avg speed", value: formatMs(avgMs) },
-        { label: "Brain Index", value: brainIndex }
-      ];
-
-      if (level) rows.unshift({ label: "Level", value: level });
-      if (streak) rows.push({ label: "Best streak", value: streak });
-      if (bestMs) rows.push({ label: "Best time", value: bestMs + "ms" });
-
-      extraRows.forEach(r => rows.push(r));
 
       showResultsModal({
         game,
         gameLabel,
         score,
-        rows,
+        rows: buildResultRows(session),
         isNewBest,
         previousBest,
         explainer: buildExplainer(session)
@@ -1902,20 +2009,23 @@
 
     function showResultsModal({ game, gameLabel, score, rows, isNewBest, previousBest, explainer }) {
       activeGameKey = game;
+
       document.getElementById("resultsGameName").textContent = gameLabel;
       document.getElementById("resultsScore").textContent = score;
 
       const bestRow = document.getElementById("resultsBestRow");
+
       if (isNewBest) {
-        bestRow.textContent = previousBest > 0 ? "New personal best" : "First score recorded";
+        bestRow.textContent = previousBest > 0 ? "New best score" : "First score recorded";
         bestRow.className = "results-best new";
       } else {
-        bestRow.textContent = "Personal best: " + previousBest;
+        bestRow.textContent = "Best score: " + previousBest;
         bestRow.className = "results-best";
       }
 
       const stats = document.getElementById("resultsStats");
       stats.innerHTML = "";
+
       rows.forEach(row => {
         const el = document.createElement("div");
         el.className = "results-stat-row";
@@ -1938,6 +2048,7 @@
 
     function playAgainFromResults() {
       closeResults();
+
       const starters = {
         Memory: startMemory,
         Focus: startFocus,
@@ -1945,6 +2056,7 @@
         Reaction: startReaction,
         Recall: startRecall
       };
+
       if (starters[activeGameKey]) starters[activeGameKey]();
     }
 
@@ -1955,6 +2067,7 @@
       savePlayerProfile();
 
       const email = state.player.email;
+
       if (!email) {
         alert("Enter an email address first.");
         return;
@@ -1985,6 +2098,7 @@
       }
 
       lines.push("Recent Sessions:");
+
       if (!recent.length) {
         lines.push("No sessions recorded yet.");
       } else {
@@ -1997,6 +2111,7 @@
 
       const subject = encodeURIComponent("MindSprint Results");
       const body = encodeURIComponent(lines.join("\n"));
+
       window.location.href = `mailto:${email}?subject=${subject}&body=${body}`;
     }
 
@@ -2072,6 +2187,7 @@
 
     async function playMemorySequence(runId) {
       const tiles = [...document.querySelectorAll("#memoryGrid .tile")];
+
       memory.acceptingInput = false;
       memory.inputIndex = 0;
 
@@ -2079,15 +2195,19 @@
         if (runId !== memory.runId || !memory.gameStarted) return;
 
         await wait(320);
+
         if (runId !== memory.runId || !memory.gameStarted) return;
 
         tiles[index].classList.add("active");
         playMemoryTileSound(index);
+
         await wait(420);
+
         tiles[index].classList.remove("active");
       }
 
       if (runId !== memory.runId || !memory.gameStarted) return;
+
       setFeedback("memoryFeedback", "Your turn.", "");
       memory.turnStartedAt = performance.now();
       memory.acceptingInput = true;
@@ -2097,6 +2217,7 @@
       if (!memory.acceptingInput || !memory.gameStarted) return;
 
       const now = performance.now();
+
       if (memory.turnStartedAt) {
         memory.responseTimes.push(now - memory.turnStartedAt);
       }
@@ -2133,6 +2254,7 @@
         memory.lives -= 1;
         memory.acceptingInput = false;
         memory.inputIndex = 0;
+
         updateMemoryHud();
 
         if (memory.lives <= 0) {
@@ -2226,6 +2348,7 @@
 
     function endFocusGame() {
       if (!focus.active) return;
+
       stopFocus();
 
       finalizeSession({
@@ -2242,6 +2365,7 @@
     function updateFocusHud() {
       const attempts = focus.correct + focus.wrong;
       const accuracy = attempts ? Math.round((focus.correct / attempts) * 100) : 0;
+
       document.getElementById("focusTime").textContent = focus.time;
       document.getElementById("focusScore").textContent = focus.score;
       document.getElementById("focusCorrect").textContent = focus.correct;
@@ -2271,16 +2395,20 @@
 
       if (color === focus.answer) {
         playCorrectSignal();
+
         focus.correct += 1;
         focus.streak += 1;
         focus.maxStreak = Math.max(focus.maxStreak, focus.streak);
         focus.score += 10 + Math.min(focus.streak * 2, 20);
+
         setFeedback("focusFeedback", "Correct", "good");
       } else {
         playWrongSignal();
+
         focus.wrong += 1;
         focus.streak = 0;
         focus.score = Math.max(0, focus.score - 5);
+
         setFeedback("focusFeedback", "Wrong", "bad");
       }
 
@@ -2356,7 +2484,9 @@
 
     function endMathGame() {
       if (!math.active) return;
+
       stopMath();
+
       document.getElementById("mathPrompt").textContent = "DONE";
       document.getElementById("mathChoices").innerHTML = "";
 
@@ -2374,6 +2504,7 @@
     function updateMathHud() {
       const attempts = math.correct + math.wrong;
       const accuracy = attempts ? Math.round((math.correct / attempts) * 100) : 0;
+
       document.getElementById("mathTime").textContent = math.time;
       document.getElementById("mathScore").textContent = math.score;
       document.getElementById("mathCorrect").textContent = math.correct;
@@ -2405,6 +2536,7 @@
       math.answer = answer;
       math.locked = false;
       math.promptStartedAt = performance.now();
+
       document.getElementById("mathPrompt").textContent = prompt;
 
       const choices = makeMathChoices(answer);
@@ -2422,11 +2554,14 @@
 
     function makeMathChoices(answer) {
       const set = new Set([answer]);
+
       while (set.size < 4) {
         const offset = rand(-12, 12);
         const fake = answer + offset;
+
         if (fake >= 0 && fake !== answer) set.add(fake);
       }
+
       return [...set].sort(() => Math.random() - 0.5);
     }
 
@@ -2438,16 +2573,20 @@
 
       if (choice === math.answer) {
         playCorrectSignal();
+
         math.correct += 1;
         math.streak += 1;
         math.maxStreak = Math.max(math.maxStreak, math.streak);
         math.score += 10 + Math.min(math.streak * 2, 20);
+
         setFeedback("mathFeedback", "Correct", "good");
       } else {
         playWrongSignal();
+
         math.wrong += 1;
         math.streak = 0;
         math.score = Math.max(0, math.score - 5);
+
         setFeedback("mathFeedback", "Wrong", "bad");
       }
 
@@ -2490,6 +2629,7 @@
       document.getElementById("reactionBest").textContent =
         state.bestReactionMs !== null ? state.bestReactionMs + "ms" : "—";
       document.getElementById("reactionAvg").textContent = "—";
+
       setFeedback("reactionFeedback", "", "");
       setReactionState("idle");
 
@@ -2500,6 +2640,7 @@
 
     function stopReaction() {
       if (reaction.timeoutId) clearTimeout(reaction.timeoutId);
+
       reaction.timeoutId = null;
       reaction.active = false;
       reaction.state = "idle";
@@ -2515,6 +2656,7 @@
 
     function setReactionState(stateName) {
       reaction.state = stateName;
+
       const box = document.getElementById("reactionBox");
       const text = document.getElementById("reactionText");
 
@@ -2533,10 +2675,12 @@
       if (!reaction.active) return;
 
       reaction.round += 1;
+
       updateReactionHud();
       setReactionState("waiting");
 
       const delay = rand(1000, 3000);
+
       reaction.timeoutId = setTimeout(() => {
         reaction.startTime = performance.now();
         setReactionState("go");
@@ -2548,23 +2692,28 @@
 
       if (reaction.state === "waiting") {
         if (reaction.timeoutId) clearTimeout(reaction.timeoutId);
+
         reaction.timeoutId = null;
         reaction.falseStarts += 1;
+
         playWrongSignal();
         setReactionState("early");
         setFeedback("reactionFeedback", "Too early. Round restarting.", "bad");
 
         setTimeout(() => {
           if (!reaction.active) return;
+
           reaction.round -= 1;
           setFeedback("reactionFeedback", "", "");
           nextReactionRound();
         }, 700);
+
         return;
       }
 
       if (reaction.state === "go") {
         const elapsed = Math.round(performance.now() - reaction.startTime);
+
         reaction.times.push(elapsed);
 
         playCorrectSignal();
@@ -2586,6 +2735,7 @@
 
     function finishReaction() {
       reaction.active = false;
+
       const avg = Math.round(average(reaction.times));
       const fastest = Math.min(...reaction.times);
       const score = Math.max(0, Math.round((650 - avg) * 1.4));
@@ -2597,11 +2747,7 @@
         correct: reaction.times.length,
         wrong: reaction.falseStarts,
         avgMs: avg,
-        bestMs: fastest,
-        extraRows: [
-          { label: "Fastest", value: fastest + "ms" },
-          { label: "False starts", value: reaction.falseStarts }
-        ]
+        bestMs: fastest
       });
     }
 
@@ -2679,10 +2825,12 @@
 
     async function playRecallSequence(runId) {
       const prompt = document.getElementById("recallPrompt");
+
       recall.acceptingInput = false;
       recall.inputIndex = 0;
 
       prompt.textContent = "";
+
       await wait(350);
 
       for (const digit of recall.sequence) {
@@ -2692,14 +2840,18 @@
         prompt.classList.remove("pulse");
         void prompt.offsetWidth;
         prompt.classList.add("pulse");
+
         playTone(420 + digit * 30, 0.14, "sine", 0.05);
 
         await wait(620);
+
         prompt.textContent = "";
+
         await wait(240);
       }
 
       if (runId !== recall.runId || !recall.gameStarted) return;
+
       prompt.textContent = "?";
       setFeedback("recallFeedback", "Your turn. Tap the digits in order.", "");
       recall.turnStartedAt = performance.now();
@@ -2719,6 +2871,7 @@
 
       if (digit === expected) {
         recall.correct += 1;
+
         playCorrectSignal();
 
         tiles[digit].classList.add("correct");
@@ -2738,6 +2891,7 @@
         }
       } else {
         recall.wrong += 1;
+
         playWrongSignal();
 
         tiles[digit].classList.add("wrong");
@@ -2746,6 +2900,7 @@
         recall.lives -= 1;
         recall.acceptingInput = false;
         recall.inputIndex = 0;
+
         updateRecallHud();
 
         if (recall.lives <= 0) {
